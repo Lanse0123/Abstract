@@ -1,3 +1,0 @@
-In case we are just storing all the icons, I dont know if gradle would need it to be in the
-resources folder, but if it does, then the icons folder would be moved there.
-It is probably fine though
