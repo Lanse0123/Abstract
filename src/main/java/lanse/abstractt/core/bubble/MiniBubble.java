@@ -14,11 +14,13 @@ public class MiniBubble extends JPanel {
     private final boolean isCurrent;
     private final Color fillColor;
     private final int depth;
+    private String bubblePath;
 
-    public MiniBubble(int depth, int count, boolean isCurrent) {
+    public MiniBubble(int depth, int count, String path, boolean isCurrent) {
         this.isCurrent = isCurrent;
         this.depth = depth;
         this.fillColor = isCurrent ? new Color(60, 180, 100) : new Color(70, 130, 180);
+        this.bubblePath = path;
 
         setPreferredSize(new Dimension(60, 40));
         setMaximumSize(new Dimension(60, 40));

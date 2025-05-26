@@ -31,6 +31,7 @@ public class WorkSpaceScreen extends JPanel {
         worldMap.initializeListeners(this);
 
         if (Settings.selectedProjectPath != null) {
+            Storage.selectedBubblePath = Settings.selectedProjectPath;
             File folder = new File(Settings.selectedProjectPath);
             String projectName = folder.getName();
             String description = "Description: (DO SOMETHING WITH THIS)";

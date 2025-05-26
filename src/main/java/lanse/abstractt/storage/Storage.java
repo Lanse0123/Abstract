@@ -21,6 +21,10 @@ public class Storage {
         return depthToBubbles.getOrDefault(depth, Collections.emptyList());
     }
 
+    public static List<Bubble> getBubblesAtCurrentDepth() {
+        return depthToBubbles.getOrDefault(currentDepth, Collections.emptyList());
+    }
+
     //TODO - this needs to also set the SelectedBubblePath to the right spot
     public static void setCurrentDepth(int depth) {
         currentDepth = depth;

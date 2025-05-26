@@ -15,8 +15,7 @@ public class DisplayModeSelector {
 
     public static Point getNewBubblePosition(){
 
-        //TODO - EW, this can be made with way less boilerplate (do this later)
-        int bubbleCount = Storage.getBubblesAtDepth(Storage.getDepth()).size();
+        int bubbleCount = Storage.getBubblesAtCurrentDepth().size();
 
         return switch (displayMode) {
             case FILE_LIST -> FileList.getNewBubblePosition(bubbleCount);

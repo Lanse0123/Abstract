@@ -29,7 +29,7 @@ public class SideBar extends JPanel {
             int count = Storage.getBubblesAtDepth(depth).size();
             boolean isCurrent = (depth == currentDepth);
 
-            MiniBubble mini = new MiniBubble(depth, count, isCurrent);
+            MiniBubble mini = new MiniBubble(depth, count, "Bubble Path", isCurrent);
             depthBubbles.put(depth, mini);
             add(Box.createVerticalStrut(10));
             add(mini);
