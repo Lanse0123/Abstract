@@ -7,8 +7,8 @@ import java.util.*;
 public class Storage {
 
     //TODO - eventually, add this to the project structure using Storage class
-    public static String selectedBubblePath = null;
     private static final Map<Integer, List<Bubble>> depthToBubbles = new HashMap<>();
+    public static Stack<String> selectedBubblePath;
     private static int currentDepth = 1;
 
     public static void addBubble(int depth, Bubble bubble) {
@@ -27,7 +27,10 @@ public class Storage {
 
     //TODO - this needs to also set the SelectedBubblePath to the right spot
     public static void setCurrentDepth(int depth) {
-        currentDepth = depth;
+        assert (currentDepth >= depth);
+        while (currentDepth > depth) {
+            decreaseDepth();
+        }
     }
 
     public static int getCurrentDepth() {
@@ -38,14 +41,20 @@ public class Storage {
         return currentDepth;
     }
 
-    //TODO - this should also set SelectedBubblePath to right spot
-    public static void increaseDepth() {
+    public static void increaseDepth(String nextPathPiece) {
         currentDepth++;
+        selectedBubblePath.push(nextPathPiece);
     }
 
-    //TODO - this will be used when opening a new project / workspace. Set SelectedBubblePath too.
+    public static void decreaseDepth() {
+        currentDepth--;
+        selectedBubblePath.pop();
+    }
+
+    //TODO - this will be used when opening a new project / workspace.
     public static void reset() {
         depthToBubbles.clear();
         currentDepth = 1;
+        selectedBubblePath.clear();
     }
 }

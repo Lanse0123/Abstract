@@ -9,6 +9,7 @@ import lanse.abstractt.storage.StorageCompiler;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Stack;
 
 public class WorkSpaceScreen extends JPanel {
 
@@ -31,7 +32,8 @@ public class WorkSpaceScreen extends JPanel {
         worldMap.initializeListeners(this);
 
         if (Settings.selectedProjectPath != null) {
-            Storage.selectedBubblePath = Settings.selectedProjectPath;
+            Storage.selectedBubblePath = new Stack<>();
+            Storage.selectedBubblePath.push(Settings.selectedProjectPath);
             File folder = new File(Settings.selectedProjectPath);
             String projectName = folder.getName();
             String description = "Description: (DO SOMETHING WITH THIS)";

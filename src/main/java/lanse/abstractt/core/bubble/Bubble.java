@@ -40,7 +40,7 @@ public class Bubble extends JPanel {
 
                 if (ProgressBarPanel.isLoading()) return;
 
-                Storage.increaseDepth();
+                Storage.increaseDepth(filePath);
                 int newDepth = Storage.getDepth();
                 Storage.setCurrentDepth(newDepth);
 
@@ -71,6 +71,7 @@ public class Bubble extends JPanel {
                                     Bubble newBubble = new Bubble(childTitle, childDescription, childIcon, childPath);
                                     newBubble.setPos(pos.getX(), pos.getY());
 
+                                    //TODO: can we remove this?
                                     Storage.addBubble(newDepth, newBubble);
                                     parent.setLayout(null);
                                     newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
