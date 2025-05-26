@@ -3,7 +3,7 @@ package lanse.abstractt.core.bubble;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
-import lanse.abstractt.storage.AbstractionBubbleStorage;
+import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +68,7 @@ public class MiniBubble extends JPanel {
         if (isCurrent || ProgressBarPanel.isLoading()) return;
 
         // Set current depth
-        AbstractionBubbleStorage.setCurrentDepth(depth);
+        Storage.setCurrentDepth(depth);
 
         // Refresh parent (bubble screen)
         //TODO - something might be wrong about this
@@ -90,7 +90,7 @@ public class MiniBubble extends JPanel {
             workspacePanel.removeAll();
 
             //forced to use java.util here since java.awt also has Lists that work differently
-            java.util.List<Bubble> bubbles = AbstractionBubbleStorage.getBubblesAtDepth(depth);
+            java.util.List<Bubble> bubbles = Storage.getBubblesAtDepth(depth);
             //TODO - this loop is definitely doing something wrong
             for (Bubble bubble : bubbles) {
                 workspacePanel.setLayout(null);

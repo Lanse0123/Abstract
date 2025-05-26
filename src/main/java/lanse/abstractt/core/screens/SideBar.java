@@ -1,7 +1,7 @@
 package lanse.abstractt.core.screens;
 
 import lanse.abstractt.core.bubble.MiniBubble;
-import lanse.abstractt.storage.AbstractionBubbleStorage;
+import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,10 +23,10 @@ public class SideBar extends JPanel {
         removeAll();
         depthBubbles.clear();
 
-        int currentDepth = AbstractionBubbleStorage.getCurrentDepth();
+        int currentDepth = Storage.getCurrentDepth();
 
         for (int depth = 1; depth <= currentDepth; depth++) {
-            int count = AbstractionBubbleStorage.getBubblesAtDepth(depth).size();
+            int count = Storage.getBubblesAtDepth(depth).size();
             boolean isCurrent = (depth == currentDepth);
 
             MiniBubble mini = new MiniBubble(depth, count, isCurrent);

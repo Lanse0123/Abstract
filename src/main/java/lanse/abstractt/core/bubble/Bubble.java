@@ -4,7 +4,7 @@ import lanse.abstractt.core.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
-import lanse.abstractt.storage.AbstractionBubbleStorage;
+import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,9 +40,9 @@ public class Bubble extends JPanel {
 
                 if (ProgressBarPanel.isLoading()) return;
 
-                AbstractionBubbleStorage.increaseDepth();
-                int newDepth = AbstractionBubbleStorage.getDepth();
-                AbstractionBubbleStorage.setCurrentDepth(newDepth);
+                Storage.increaseDepth();
+                int newDepth = Storage.getDepth();
+                Storage.setCurrentDepth(newDepth);
 
                 Container parent = getParent();
                 if (parent != null) {
@@ -71,7 +71,7 @@ public class Bubble extends JPanel {
                                     Bubble newBubble = new Bubble(childTitle, childDescription, childIcon, childPath);
                                     newBubble.setPos(pos.getX(), pos.getY());
 
-                                    AbstractionBubbleStorage.addBubble(newDepth, newBubble);
+                                    Storage.addBubble(newDepth, newBubble);
                                     parent.setLayout(null);
                                     newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
                                     parent.add(newBubble);
@@ -87,7 +87,7 @@ public class Bubble extends JPanel {
                             Bubble fileBubble = new Bubble(fileTitle, fileDescription, fileIcon, filePath);
                             fileBubble.setPos(pos.getX(), pos.getY());
 
-                            AbstractionBubbleStorage.addBubble(newDepth, fileBubble);
+                            Storage.addBubble(newDepth, fileBubble);
                             parent.setLayout(null);
                             fileBubble.setBounds(pos.x, pos.y, fileBubble.width, fileBubble.height);
                             parent.add(fileBubble);

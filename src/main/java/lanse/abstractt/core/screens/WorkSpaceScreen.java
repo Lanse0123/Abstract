@@ -3,7 +3,7 @@ package lanse.abstractt.core.screens;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.*;
 import lanse.abstractt.storage.Settings;
-import lanse.abstractt.storage.AbstractionBubbleStorage;
+import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.StorageCompiler;
 
 import javax.swing.*;
@@ -39,8 +39,8 @@ public class WorkSpaceScreen extends JPanel {
             TopBubble bubble = new TopBubble(projectName, description, icon, Settings.selectedProjectPath);
             bubble.setPos(-bubble.getPreferredSize().width / 2.0, -bubble.getPreferredSize().height / 2.0);
 
-            AbstractionBubbleStorage.addBubble(1, bubble);
-            AbstractionBubbleStorage.setCurrentDepth(1);
+            Storage.addBubble(1, bubble);
+            Storage.setCurrentDepth(1);
 
             bubble.setSize(bubble.getPreferredSize());
             add(bubble);

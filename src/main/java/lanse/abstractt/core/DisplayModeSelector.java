@@ -1,7 +1,7 @@
 package lanse.abstractt.core;
 
 import lanse.abstractt.core.displaylogic.*;
-import lanse.abstractt.storage.AbstractionBubbleStorage;
+import lanse.abstractt.storage.Storage;
 
 import java.awt.*;
 
@@ -16,7 +16,7 @@ public class DisplayModeSelector {
     public static Point getNewBubblePosition(){
 
         //TODO - EW, this can be made with way less boilerplate (do this later)
-        int bubbleCount = AbstractionBubbleStorage.getBubblesAtDepth(AbstractionBubbleStorage.getDepth()).size();
+        int bubbleCount = Storage.getBubblesAtDepth(Storage.getDepth()).size();
 
         return switch (displayMode) {
             case FILE_LIST -> FileList.getNewBubblePosition(bubbleCount);
