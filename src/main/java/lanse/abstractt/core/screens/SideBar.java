@@ -1,0 +1,42 @@
+package lanse.abstractt.core.screens;
+
+import lanse.abstractt.core.bubble.MiniBubble;
+import lanse.abstractt.storage.AbstractionBubbleStorage;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class SideBar extends JPanel {
+
+    private final Map<Integer, MiniBubble> depthBubbles = new HashMap<>();
+
+    public SideBar() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(new Color(30, 30, 30));
+        refresh();
+    }
+
+    // Call this whenever the depth changes or bubbles are added
+    public void refresh() {
+        removeAll();
+        depthBubbles.clear();
+
+        int currentDepth = AbstractionBubbleStorage.getCurrentDepth();
+
+        for (int depth = 1; depth <= currentDepth; depth++) {
+            int count = AbstractionBubbleStorage.getBubblesAtDepth(depth).size();
+            boolean isCurrent = (depth == currentDepth);
+
+            MiniBubble mini = new MiniBubble(depth, count, isCurrent);
+            depthBubbles.put(depth, mini);
+            add(Box.createVerticalStrut(10));
+            add(mini);
+        }
+
+        add(Box.createVerticalGlue());
+        revalidate();
+        repaint();
+    }
+}
