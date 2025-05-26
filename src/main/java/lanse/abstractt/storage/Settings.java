@@ -1,5 +1,6 @@
 package lanse.abstractt.storage;
 
+import dev.dirs.ProjectDirectories;
 import lanse.abstractt.core.DisplayModeSelector;
 import org.json.JSONObject;
 
@@ -10,7 +11,8 @@ import java.util.List;
 
 public class Settings {
 
-    private static final String SETTINGS_PATH = System.getenv("APPDATA") + "/Abstract/settings/settings.json";
+    private static final Path SETTINGS_DIR = Paths.get(ProjectDirectories.from("dev", "Lanse", "Abstract").configDir);
+    private static final String SETTINGS_PATH = SETTINGS_DIR + "/settings.json";
     public static String selectedProjectPath = null;
     private static final int MAX_RECENT_PROJECTS = 10;
 
@@ -60,9 +62,8 @@ public class Settings {
     // Save settings to disk
     public static void save() {
         try {
-            Path settingsDir = Paths.get(System.getenv("APPDATA") + "/Abstract/settings");
-            if (!Files.exists(settingsDir)) {
-                Files.createDirectories(settingsDir);
+            if (!Files.exists(SETTINGS_DIR)) {
+                Files.createDirectories(SETTINGS_DIR);
             }
 
             JSONObject json = new JSONObject();
