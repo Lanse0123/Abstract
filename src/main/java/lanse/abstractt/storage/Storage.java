@@ -93,6 +93,7 @@ public class Storage {
 
     // Save settings to disk
     public static void save(Bubble bubble) {
+        if (bubble.getFilePath().contains("AbstractionVisualizerStorage")) return;
         try {
             if (!Files.exists(Path.of(bubble.getFilePath()))) {
                 Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath())));
@@ -116,6 +117,6 @@ public class Storage {
 
     public static String mapToAbstractionPath(String filePath){
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
-        return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage" + localPath + ".json";
+        return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + ".json";
     }
 }

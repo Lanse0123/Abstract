@@ -40,9 +40,6 @@ public class Bubble extends JPanel {
 
                 if (ProgressBarPanel.isLoading()) return;
 
-                //TODO - save the name, description, and path to Storage.save();
-                // save should take a bubble instead of a path.
-
                 Storage.increaseDepth(filePath);
                 int newDepth = Storage.getDepth();
                 Storage.setCurrentDepth(newDepth);

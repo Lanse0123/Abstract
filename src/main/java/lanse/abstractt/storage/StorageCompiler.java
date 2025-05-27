@@ -58,7 +58,7 @@ public class StorageCompiler {
         if (entries == null) return;
 
         for (File entry : entries) {
-            if (entry.getName().equals("AbstractionVisualizerStorage")) continue;
+            if (entry.getName().contains("AbstractionVisualizerStorage")) continue;
 
             if (entry.isDirectory()) {
                 File newDir = new File(mirroredDir, entry.getName());
