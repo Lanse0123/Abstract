@@ -18,11 +18,6 @@ public class Settings {
     public static TopBubble topBubble;
     private static final int MAX_RECENT_PROJECTS = 10;
 
-    //TODO - phase out the World War Chess settings eventually like sound, background, death markers, and illegal sounds.
-    private static int volume = 100;
-    private static String background = "Warped Plane";
-    private static boolean showDeathMarkers = true;
-    private static boolean playIllegalMoveSound = false;
     private static List<String> recentProjects = new ArrayList<>();
 
     // Load settings from JSON
@@ -37,10 +32,10 @@ public class Settings {
             JSONObject json = new JSONObject(jsonContent.toString());
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            volume = json.optInt("volume", 100);
-            background = json.optString("background", "Warped Plane");
-            showDeathMarkers = json.optBoolean("showDeathMarkers", true);
-            playIllegalMoveSound = json.optBoolean("playIllegalMoveSound", false);
+//            volume = json.optInt("volume", 100);
+//            background = json.optString("background", "Warped Plane");
+//            showDeathMarkers = json.optBoolean("showDeathMarkers", true);
+//            playIllegalMoveSound = json.optBoolean("playIllegalMoveSound", false);
 
             DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.valueOf(
                     json.optString("displayMode", DisplayModeSelector.DisplayMode.FILE_LIST.toString()));
@@ -71,10 +66,10 @@ public class Settings {
             JSONObject json = new JSONObject();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            json.put("volume", volume);
-            json.put("background", background);
-            json.put("showDeathMarkers", showDeathMarkers);
-            json.put("playIllegalMoveSound", playIllegalMoveSound);
+//            json.put("volume", volume);
+//            json.put("background", background);
+//            json.put("showDeathMarkers", showDeathMarkers);
+//            json.put("playIllegalMoveSound", playIllegalMoveSound);
 
             json.put("displayMode", DisplayModeSelector.displayMode.name());
 
@@ -91,10 +86,10 @@ public class Settings {
 
     public static void returnToDefaultSettings() {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        volume = 100;
-        background = "Warped Plane";
-        showDeathMarkers = true;
-        playIllegalMoveSound = false;
+//        volume = 100;
+//        background = "Warped Plane";
+//        showDeathMarkers = true;
+//        playIllegalMoveSound = false;
 
         DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.FILE_LIST;
 
@@ -104,17 +99,17 @@ public class Settings {
     }
 
     public static List<String> getRecentProjects() { return new ArrayList<>(recentProjects); }
-    public static int getVolume() { return volume; }
-    public static void setVolume(int v) { volume = v; }
-
-    public static String getBackground() { return background; }
-    public static void setBackground(String bg) { background = bg; }
-
-    public static boolean isShowDeathMarkers() { return showDeathMarkers; }
-    public static void setShowDeathMarkers(boolean show) { showDeathMarkers = show; }
-
-    public static boolean isPlayIllegalMoveSound() { return playIllegalMoveSound; }
-    public static void setPlayIllegalMoveSound(boolean play) { playIllegalMoveSound = play; }
+//    public static int getVolume() { return volume; }
+//    public static void setVolume(int v) { volume = v; }
+//
+//    public static String getBackground() { return background; }
+//    public static void setBackground(String bg) { background = bg; }
+//
+//    public static boolean isShowDeathMarkers() { return showDeathMarkers; }
+//    public static void setShowDeathMarkers(boolean show) { showDeathMarkers = show; }
+//
+//    public static boolean isPlayIllegalMoveSound() { return playIllegalMoveSound; }
+//    public static void setPlayIllegalMoveSound(boolean play) { playIllegalMoveSound = play; }
     public static void addRecentProject(String path) {
         recentProjects.remove(path);
         recentProjects.add(0, path);
