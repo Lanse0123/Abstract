@@ -10,10 +10,10 @@ import java.awt.event.ActionEvent;
 public class SettingsScreen extends JPanel {
 
     private final JFrame frame;
-    private final JSlider volumeSlider;
-    private final JComboBox<String> backgroundSelector;
-    private final JCheckBox showDeathMarkersBox;
-    private final JCheckBox playIllegalMoveSoundBox;
+//    private final JSlider volumeSlider;
+//    private final JComboBox<String> backgroundSelector;
+//    private final JCheckBox showDeathMarkersBox;
+//    private final JCheckBox playIllegalMoveSoundBox;
     private final JComboBox<DisplayModeSelector.DisplayMode> displayModeSelector;
 
     public SettingsScreen(JFrame frame, Color bgColor) {
@@ -23,26 +23,26 @@ public class SettingsScreen extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         // Volume Slider
-        volumeSlider = new JSlider(0, 100, Settings.getVolume());
-        volumeSlider.setMajorTickSpacing(25);
-        volumeSlider.setPaintTicks(true);
-        volumeSlider.setPaintLabels(true);
-        addLabeled("Volume:", volumeSlider);
-
-        // Background Selector
-        backgroundSelector = new JComboBox<>(new String[]{"Warped Plane", "Void", "Space", "Solid"});
-        backgroundSelector.setSelectedItem(Settings.getBackground());
-        addLabeled("Background:", backgroundSelector);
-
-        // Death Markers Checkbox
-        showDeathMarkersBox = new JCheckBox("Show Death Markers", Settings.isShowDeathMarkers());
-        styleCheckBox(showDeathMarkersBox);
-        add(showDeathMarkersBox);
+//        volumeSlider = new JSlider(0, 100, Settings.getVolume());
+//        volumeSlider.setMajorTickSpacing(25);
+//        volumeSlider.setPaintTicks(true);
+//        volumeSlider.setPaintLabels(true);
+//        addLabeled("Volume:", volumeSlider);
+//
+//        // Background Selector
+//        backgroundSelector = new JComboBox<>(new String[]{"Warped Plane", "Void", "Space", "Solid"});
+//        backgroundSelector.setSelectedItem(Settings.getBackground());
+//        addLabeled("Background:", backgroundSelector);
+//
+//        // Death Markers Checkbox
+//        showDeathMarkersBox = new JCheckBox("Show Death Markers", Settings.isShowDeathMarkers());
+//        styleCheckBox(showDeathMarkersBox);
+//        add(showDeathMarkersBox);
 
         // Illegal Move Sound Checkbox
-        playIllegalMoveSoundBox = new JCheckBox("Play Illegal Move Sound", Settings.isPlayIllegalMoveSound());
-        styleCheckBox(playIllegalMoveSoundBox);
-        add(playIllegalMoveSoundBox);
+//        playIllegalMoveSoundBox = new JCheckBox("Play Illegal Move Sound", Settings.isPlayIllegalMoveSound());
+//        styleCheckBox(playIllegalMoveSoundBox);
+//        add(playIllegalMoveSoundBox);
 
         // Display Mode
         displayModeSelector = new JComboBox<>(DisplayModeSelector.DisplayMode.values());
@@ -81,10 +81,10 @@ public class SettingsScreen extends JPanel {
     }
 
     private void saveSettings(ActionEvent e) {
-        Settings.setVolume(volumeSlider.getValue());
-        Settings.setBackground((String) backgroundSelector.getSelectedItem());
-        Settings.setShowDeathMarkers(showDeathMarkersBox.isSelected());
-        Settings.setPlayIllegalMoveSound(playIllegalMoveSoundBox.isSelected());
+//        Settings.setVolume(volumeSlider.getValue());
+//        Settings.setBackground((String) backgroundSelector.getSelectedItem());
+//        Settings.setShowDeathMarkers(showDeathMarkersBox.isSelected());
+//        Settings.setPlayIllegalMoveSound(playIllegalMoveSoundBox.isSelected());
 
         DisplayModeSelector.displayMode = (DisplayModeSelector.DisplayMode) displayModeSelector.getSelectedItem();
 
