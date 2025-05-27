@@ -3,10 +3,7 @@ package lanse.abstractt.storage;
 import lanse.abstractt.core.bubble.Bubble;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -14,22 +11,31 @@ import java.util.*;
 public class Storage {
 
     //TODO - eventually, add this to the project structure using Storage class
-    private static final Map<Integer, List<Bubble>> depthToBubbles = new HashMap<>();
+//    private static final Map<Integer, List<Bubble>> depthToBubbles = new HashMap<>();
     public static Stack<String> selectedBubblePath;
     private static int currentDepth = 1;
 
     public static List<Bubble> getBubblesAtDepth(int depth) {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
-        return depthToBubbles.getOrDefault(depth, Collections.emptyList());
+        File dir = new File(mapToAbstractionPath(selectedBubblePath.elementAt(depth), true));
+        List<Bubble> bubbles = new ArrayList<>();
+        for (File f : Objects.requireNonNull(dir.listFiles())){
+            bubbles.add(load(f.getPath()));
+        }
+        return bubbles;
     }
 
-    public static List<Bubble> getBubblesAtCurrentDepth() {
-        //TODO - rework this with getBubblesAtDepth
-        return depthToBubbles.getOrDefault(currentDepth, Collections.emptyList());
+    public static int getNumBubblesAtDepth(int depth) {
+        File dir = new File(mapToAbstractionPath(selectedBubblePath.elementAt(depth), true));
+        return Objects.requireNonNull(dir.listFiles()).length;
+    }
+
+    public static int getNumBubblesAtCurrentDepth() {
+        return getNumBubblesAtDepth(currentDepth-1);
     }
 
     public static void setCurrentDepth(int depth) {
-        assert (currentDepth >= depth);
+        assert (currentDepth > depth);
         while (currentDepth > depth) {
             decreaseDepth();
         }
@@ -55,7 +61,7 @@ public class Storage {
 
     //TODO - this will be used when opening a new project / workspace.
     public static void reset() {
-        depthToBubbles.clear();
+//        depthToBubbles.clear();
         currentDepth = 1;
         selectedBubblePath.clear();
     }
@@ -63,7 +69,7 @@ public class Storage {
     // Load settings from JSON
     //TODO: make this list into a class containing path, name and description
     public static Bubble load(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath, false)))) {
             StringBuilder jsonContent = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -93,7 +99,7 @@ public class Storage {
         if (bubble.getFilePath().contains("AbstractionVisualizerStorage")) return;
         try {
             if (!Files.exists(Path.of(bubble.getFilePath()))) {
-                Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath())));
+                Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath(), false)));
             }
 
             JSONObject json = new JSONObject();
@@ -104,7 +110,7 @@ public class Storage {
             json.put("description", bubble.getDescription());
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            try (FileWriter file = new FileWriter(mapToAbstractionPath(bubble.getFilePath()))) {
+            try (FileWriter file = new FileWriter(mapToAbstractionPath(bubble.getFilePath(), false))) {
                 file.write(json.toString(4));
             }
         } catch (IOException e) {
@@ -112,10 +118,10 @@ public class Storage {
         }
     }
 
-    public static String mapToAbstractionPath(String filePath){
+    public static String mapToAbstractionPath(String filePath, boolean wantDir){
         System.out.println("Mapping " + filePath);
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
         System.out.println("To " + localPath);
-        return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + ".json";
+        return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + (wantDir ? "" : ".json");
     }
 }

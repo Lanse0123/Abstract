@@ -25,9 +25,9 @@ public class SideBar extends JPanel {
 
         int currentDepth = Storage.getCurrentDepth();
 
-        for (int depth = 1; depth <= currentDepth; depth++) {
-            int count = Storage.getBubblesAtDepth(depth).size();
-            boolean isCurrent = (depth == currentDepth);
+        for (int depth = 1; depth < currentDepth; depth++) {
+            int count = Storage.getNumBubblesAtDepth(depth);
+            boolean isCurrent = (depth == currentDepth - 1);
 
             MiniBubble mini = new MiniBubble(depth, count, "Bubble Path", isCurrent);
             depthBubbles.put(depth, mini);

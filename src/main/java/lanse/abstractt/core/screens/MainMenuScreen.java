@@ -1,12 +1,14 @@
 package lanse.abstractt.core.screens;
 
 import lanse.abstractt.storage.Settings;
+import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Objects;
+import java.util.Stack;
 
 public class MainMenuScreen extends JPanel {
     public MainMenuScreen(JFrame frame, Color bgColor) {
@@ -47,6 +49,9 @@ public class MainMenuScreen extends JPanel {
                 Settings.addRecentProject(Settings.selectedProjectPath);
                 Settings.save();
 
+                Storage.selectedBubblePath = new Stack<>();
+                Storage.selectedBubblePath.push(Settings.selectedProjectPath);
+
                 // Switch to workspace screen
                 frame.getContentPane().removeAll();
                 frame.getContentPane().add(new WorkSpaceScreen(bgColor));
@@ -72,7 +77,10 @@ public class MainMenuScreen extends JPanel {
                 if (selectedFolder.exists() && selectedFolder.isDirectory()) {
                     Settings.selectedProjectPath = selected;
                     Settings.addRecentProject(selected); // move to top again
-                    new Settings().save(); // Save updated list
+                    Settings.save(); // Save updated list
+
+                    Storage.selectedBubblePath = new Stack<>();
+                    Storage.selectedBubblePath.push(Settings.selectedProjectPath);
 
                     frame.getContentPane().removeAll();
                     frame.getContentPane().add(new WorkSpaceScreen(bgColor));
