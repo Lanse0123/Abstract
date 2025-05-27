@@ -15,15 +15,15 @@ public class Storage {
     public static Stack<String> selectedBubblePath;
     private static int currentDepth = 1;
 
-    public static List<Bubble> getBubblesAtDepth(int depth) {
+    public static List<Bubble> getBubblesAtCurDepth() {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
-        File dir = new File(selectedBubblePath.elementAt(depth));
+        File dir = new File(selectedBubblePath.peek());
         if (!dir.isDirectory()) {
-            return List.of();
+            return List.of(load(dir.getPath()));
         }
         List<Bubble> bubbles = new ArrayList<>();
         for (File f : Objects.requireNonNull(dir.listFiles())){
-            if (f.getAbsolutePath().startsWith(Settings.selectedProjectPath)) {
+            if (f.getName().equals("AbstractionVisualizerStorage")) {
                 continue;
             }
             bubbles.add(load(f.getPath()));
@@ -32,11 +32,11 @@ public class Storage {
     }
 
     public static int getNumBubblesAtDepth(int depth) {
-        File dir = new File(mapToAbstractionPath(selectedBubblePath.elementAt(depth), true));
+        File dir = new File(selectedBubblePath.elementAt(depth));
         if (!dir.isDirectory()) {
             return 0;
         }
-        return Objects.requireNonNull(dir.listFiles()).length;
+        return Arrays.stream(dir.listFiles()).filter(f -> !f.getName().equals("AbstractionVisualizerStorage")).toArray().length;
     }
 
     public static int getNumBubblesAtCurrentDepth() {
@@ -44,8 +44,8 @@ public class Storage {
     }
 
     public static void setCurrentDepth(int depth) {
-        assert (currentDepth > depth);
-        while (currentDepth > depth) {
+        assert (currentDepth > depth+1);
+        while (currentDepth > depth+1) {
             decreaseDepth();
         }
     }

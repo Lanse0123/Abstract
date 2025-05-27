@@ -97,6 +97,15 @@ public class WorkSpaceScreen extends JPanel {
         }
     }
 
+    public void removeBubbles() {
+        Component[] componentList = getComponents();
+        for (Component component : componentList) {
+            if (component instanceof Bubble) {
+                remove(component);
+            }
+        }
+    }
+
     public void refreshSidebar() {
         sidebar.refresh();
     }

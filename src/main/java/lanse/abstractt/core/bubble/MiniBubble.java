@@ -70,29 +70,26 @@ public class MiniBubble extends JPanel {
     private void handleClick() {
         if (isCurrent || ProgressBarPanel.isLoading()) return;
 
+        // Set current depth
+        Storage.setCurrentDepth(depth);
+
         // Refresh parent (bubble screen)
         //TODO - something might be wrong about this
         Container parent = getParent();
-        System.out.println(parent);
-        if (parent != null) {
-            for (Component comp : parent.getComponents()) {
-                if (comp instanceof Bubble) {
-                    parent.remove(comp);
-                }
-            }
-        }
 
         while (parent != null && !(parent instanceof WorkSpaceScreen)) {
             parent = parent.getParent();
         }
 
         if (parent instanceof WorkSpaceScreen workspace) {
-            JPanel workspacePanel = (JPanel) workspace.getComponent(0); // Assumes 0 is the bubble layer
-            workspacePanel.removeAll();
+            workspace.removeBubbles();
             DisplayModeSelector.clearBubbles();
+            JPanel workspacePanel = (JPanel) workspace.getComponent(0); // Assumes 0 is the bubble layer
+//            workspacePanel.removeAll();
 
             //forced to use java.util here since java.awt also has Lists that work differently
-            java.util.List<Bubble> bubbles = Storage.getBubblesAtDepth(depth);
+            java.util.List<Bubble> bubbles = Storage.getBubblesAtCurDepth();
+            System.out.println(bubbles);
             //TODO - this loop is definitely doing something wrong
             for (Bubble bubble : bubbles) {
                 workspacePanel.setLayout(null);
@@ -106,8 +103,5 @@ public class MiniBubble extends JPanel {
             workspacePanel.revalidate();
             workspacePanel.repaint();
         }
-
-        // Set current depth
-        Storage.setCurrentDepth(depth);
     }
 }
