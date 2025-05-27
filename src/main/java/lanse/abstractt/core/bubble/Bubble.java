@@ -79,9 +79,10 @@ public class Bubble extends JPanel {
                                 }
                             }
                         } else {
-                            String fileTitle = file.getName();
-                            String filePath = file.getPath();
-                            String fileDescription = "File: " + file.getName();
+                            String[] fileInfo = Storage.load(filePath);
+                            String fileTitle = fileInfo[0];
+                            String filePath = fileInfo[1];
+                            String fileDescription = "File: " + fileInfo[2];
                             Icon fileIcon = UIManager.getIcon("FileView.fileIcon");
 
                             Point pos = DisplayModeSelector.getNewBubblePosition();

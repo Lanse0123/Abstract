@@ -65,9 +65,9 @@ public class Storage {
     }
 
     // Load settings from JSON
-    public static void load(String filePath) {
-        //TODO - this needs to be mapped to the Abstraction Storage thing
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    //TODO: make this list into a class containing path, name and description
+    public static String[] load(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath)))) {
             StringBuilder jsonContent = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -81,10 +81,13 @@ public class Storage {
             String name = json.optString("name", "null");
             String description = json.optString("description", "null");
 
+            return new String[]{path, name, description};
+
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } catch (IOException e) {
-            // No settings file yet? Just use defaults.
-            System.out.println("No settings file found. Using default settings.");
+            // TODO: throw an exception or just create defaults?
+            System.out.println("Unable to load info for file: " + e);
+            return new String[]{};
         }
     }
 
@@ -92,8 +95,7 @@ public class Storage {
     public static void save(String filePath, String name, String description) {
         try {
             if (!Files.exists(Path.of(filePath))) {
-                //TODO - This one should be mapped to the AbstractVisualizerStorage thing
-                Files.createDirectories(Path.of(filePath));
+                Files.createDirectories(Path.of(mapToAbstractionPath(filePath)));
             }
 
             JSONObject json = new JSONObject();
@@ -104,8 +106,7 @@ public class Storage {
             json.put("description", description);
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //TODO - this should also be mapped to the Abstract Storage
-            try (FileWriter file = new FileWriter(filePath)) {
+            try (FileWriter file = new FileWriter(mapToAbstractionPath(filePath))) {
                 file.write(json.toString(4));
             }
         } catch (IOException e) {
@@ -114,7 +115,7 @@ public class Storage {
     }
 
     public static String mapToAbstractionPath(String filePath){
-
-        return "egg";
+        String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
+        return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage" + localPath + ".json";
     }
 }
