@@ -43,8 +43,6 @@ public class Bubble extends JPanel {
                 if (ProgressBarPanel.isLoading()) return;
 
                 Storage.increaseDepth(filePath);
-                int newDepth = Storage.getDepth();
-                Storage.setCurrentDepth(newDepth);
 
                 Container parent = getParent();
                 if (parent != null) {

@@ -69,9 +69,6 @@ public class MiniBubble extends JPanel {
     private void handleClick() {
         if (isCurrent || ProgressBarPanel.isLoading()) return;
 
-        // Set current depth
-        Storage.setCurrentDepth(depth);
-
         // Refresh parent (bubble screen)
         //TODO - something might be wrong about this
         Container parent = getParent();
@@ -106,5 +103,8 @@ public class MiniBubble extends JPanel {
             workspacePanel.revalidate();
             workspacePanel.repaint();
         }
+
+        // Set current depth
+        Storage.setCurrentDepth(depth);
     }
 }
