@@ -85,7 +85,6 @@ public class MiniBubble extends JPanel {
 
             //forced to use java.util here since java.awt also has Lists that work differently
             java.util.List<Bubble> bubbles = Storage.getBubblesAtCurDepth();
-            System.out.println(bubbles);
             //TODO - this loop is definitely doing something wrong
             for (Bubble bubble : bubbles) {
                 workspace.setLayout(null);

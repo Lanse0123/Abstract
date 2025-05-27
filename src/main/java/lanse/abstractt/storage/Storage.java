@@ -115,7 +115,7 @@ public class Storage {
     public static void save(Bubble bubble) {
         if (bubble.getFilePath().contains("AbstractionVisualizerStorage")) return;
         try {
-            Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath(), false)));
+            Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath(), false)).getParent());
 
             JSONObject json = new JSONObject();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////

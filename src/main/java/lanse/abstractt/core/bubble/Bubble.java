@@ -77,11 +77,7 @@ public class Bubble extends JPanel {
     }
 
     public static void handleFile(String filePath, Container parent){
-        Point pos = DisplayModeSelector.getNewBubblePosition();
-        Bubble fileBubble = Storage.load(filePath);
-
-        parent.setLayout(null);
-        parent.add(fileBubble);
+        //TODO: create a new popup for editing the description
     }
 
     public static void handleDirectory(File file, Container parent){
