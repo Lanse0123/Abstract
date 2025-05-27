@@ -3,6 +3,7 @@ package lanse.abstractt.core.screens;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 
 public class CreditScreen extends JPanel {
 
@@ -20,12 +21,31 @@ public class CreditScreen extends JPanel {
         setBackground(bgColor);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
+        //TODO - add text next to icon
+        ImageIcon lanseLogoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/LanseIcon.png")));
+        Image image = lanseLogoIcon.getImage().getScaledInstance(187, 151, Image.SCALE_SMOOTH);
+        lanseLogoIcon = new ImageIcon(image);
+        JLabel logo = new JLabel(lanseLogoIcon);
+        logo.setAlignmentX(LEFT_ALIGNMENT);
+
+        //TODO - add text next to icon
+        ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/LanseIcon.png")));
+        Image image2 = logoIcon.getImage().getScaledInstance(187, 151, Image.SCALE_SMOOTH);
+        logoIcon = new ImageIcon(image2);
+        JLabel logo2 = new JLabel(logoIcon);
+        logo2.setAlignmentX(LEFT_ALIGNMENT);
+
         // Save Button
         JButton mainMenuButton = new JButton("Main Menu");
         mainMenuButton.addActionListener(this::mainMenu);
 
-        add(Box.createRigidArea(new Dimension(0, 10)));
         add(mainMenuButton);
+        add(Box.createRigidArea(new Dimension(0, 50)));
+        add(logo);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(logo2);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+
     }
 
     private void mainMenu(ActionEvent e){
