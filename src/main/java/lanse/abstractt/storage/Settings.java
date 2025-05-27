@@ -2,6 +2,7 @@ package lanse.abstractt.storage;
 
 import dev.dirs.ProjectDirectories;
 import lanse.abstractt.core.DisplayModeSelector;
+import lanse.abstractt.core.bubble.TopBubble;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -14,6 +15,7 @@ public class Settings {
     private static final Path SETTINGS_DIR = Paths.get(ProjectDirectories.from("dev", "Lanse", "Abstract").configDir);
     private static final String SETTINGS_PATH = SETTINGS_DIR + "/settings.json";
     public static String selectedProjectPath = null;
+    public static TopBubble topBubble;
     private static final int MAX_RECENT_PROJECTS = 10;
 
     //TODO - phase out the World War Chess settings eventually like sound, background, death markers, and illegal sounds.

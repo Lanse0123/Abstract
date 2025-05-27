@@ -43,6 +43,7 @@ public class WorkSpaceScreen extends JPanel {
             StorageCompiler.generateProjectDefaults();
 
             TopBubble bubble = new TopBubble(projectName, description, Settings.selectedProjectPath);
+            Settings.topBubble = bubble;
 
             try {
                 StorageCompiler.waitForRoot();

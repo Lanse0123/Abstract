@@ -1,6 +1,7 @@
 package lanse.abstractt.storage;
 
 import lanse.abstractt.core.bubble.Bubble;
+import lanse.abstractt.core.bubble.TopBubble;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -16,6 +17,9 @@ public class Storage {
     private static int currentDepth = 1;
 
     public static List<Bubble> getBubblesAtCurDepth() {
+        if (currentDepth == 1) {
+            return List.of(Settings.topBubble);
+        }
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
         File dir = new File(selectedBubblePath.peek());
         if (!dir.isDirectory()) {
@@ -32,6 +36,9 @@ public class Storage {
     }
 
     public static int getNumBubblesAtDepth(int depth) {
+        if (depth == 0) {
+            return 1;
+        }
         File dir = new File(selectedBubblePath.elementAt(depth));
         if (!dir.isDirectory()) {
             return 0;
@@ -108,9 +115,7 @@ public class Storage {
     public static void save(Bubble bubble) {
         if (bubble.getFilePath().contains("AbstractionVisualizerStorage")) return;
         try {
-            if (!Files.exists(Path.of(bubble.getFilePath()))) {
-                Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath(), false)));
-            }
+            Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath(), false)));
 
             JSONObject json = new JSONObject();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
