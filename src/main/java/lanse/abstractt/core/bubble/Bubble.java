@@ -46,34 +46,34 @@ public class Bubble extends JPanel {
                 DisplayModeSelector.clearBubbles();
 
                 Container parent = getParent();
-                if (parent != null) {
-                    for (Component comp : parent.getComponents()) {
-                        if (comp instanceof Bubble) {
-                            Storage.save((Bubble) comp);
-                            parent.remove(comp);
-                        }
+                if (parent == null) return;
+
+                for (Component comp : parent.getComponents()) {
+                    if (comp instanceof Bubble) {
+                        Storage.save((Bubble) comp);
+                        parent.remove(comp);
                     }
-
-                    File file = new File(filePath);
-                    if (!file.exists()) {
-                        JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
-                        error.setForeground(Color.RED);
-                        parent.add(error);
-                    }
-
-                    if (file.isDirectory()) {
-                        handleDirectory(file, parent);
-                    } else {
-                        handleFile(filePath, parent);
-                    }
-
-                    WorldMap.setCameraCoordinates(0, 0);
-
-                    if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
-
-                    parent.revalidate();
-                    parent.repaint();
                 }
+
+                File file = new File(filePath);
+                if (!file.exists()) {
+                    JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
+                    error.setForeground(Color.RED);
+                    parent.add(error);
+                }
+
+                if (file.isDirectory()) {
+                    handleDirectory(file, parent);
+                } else {
+                    handleFile(filePath, parent);
+                }
+
+                WorldMap.setCameraCoordinates(0, 0);
+
+                if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
+
+                parent.revalidate();
+                parent.repaint();
             }
         });
     }
