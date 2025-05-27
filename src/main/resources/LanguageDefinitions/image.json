@@ -1,0 +1,9 @@
+{
+  "extension": ".png .jpg",
+  "comment": "",
+  "function": "",
+  "defaultMain": "",
+  "icon": "leave this empty, I will add a path here",
+  "extra": "not a programming language, will have special cases",
+  "shouldWeUpgradeThisFromAJsonToAClass": ""
+}
