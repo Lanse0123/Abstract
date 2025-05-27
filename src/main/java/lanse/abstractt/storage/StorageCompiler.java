@@ -1,6 +1,6 @@
 package lanse.abstractt.storage;
 
-import lanse.abstractt.core.screens.ProgressBarPanel;
+import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import org.json.JSONObject;
 
 import javax.swing.*;
