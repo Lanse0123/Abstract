@@ -54,7 +54,6 @@ public class Bubble extends JPanel {
                         }
                     }
 
-                    //TODO - this code is more nested and id kinda like, clean this at some point plz
                     File file = new File(filePath);
                     if (!file.exists()) {
                         JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
@@ -63,32 +62,9 @@ public class Bubble extends JPanel {
                     }
 
                     if (file.isDirectory()) {
-                        File[] children = file.listFiles();
-                        if (children != null) {
-                            for (File child : children) {
-
-                                String childTitle = child.getName();
-
-                                if (childTitle.equals("AbstractionVisualizerStorage")) continue;
-
-                                Bubble newBubble = Storage.load(child.getPath());
-
-                                Point pos = DisplayModeSelector.getNewBubblePosition();
-                                newBubble.setPos(pos.getX(), pos.getY());
-
-                                parent.setLayout(null);
-                                newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
-                                parent.add(newBubble);
-                            }
-                        }
+                        handleDirectory(file, parent);
                     } else {
-                        Point pos = DisplayModeSelector.getNewBubblePosition();
-                        Bubble fileBubble = Storage.load(filePath);
-                        fileBubble.setPos(pos.getX(), pos.getY());
-
-                        parent.setLayout(null);
-                        fileBubble.setBounds(pos.x, pos.y, fileBubble.width, fileBubble.height);
-                        parent.add(fileBubble);
+                        handleFile(filePath, parent);
                     }
 
                     WorldMap.setCameraCoordinates(0, 0);
@@ -100,6 +76,37 @@ public class Bubble extends JPanel {
                 }
             }
         });
+    }
+
+    public static void handleFile(String filePath, Container parent){
+        Point pos = DisplayModeSelector.getNewBubblePosition();
+        Bubble fileBubble = Storage.load(filePath);
+        fileBubble.setPos(pos.getX(), pos.getY());
+
+        parent.setLayout(null);
+        fileBubble.setBounds(pos.x, pos.y, fileBubble.width, fileBubble.height);
+        parent.add(fileBubble);
+    }
+
+    public static void handleDirectory(File file, Container parent){
+        File[] children = file.listFiles();
+        if (children != null) {
+            for (File child : children) {
+
+                String childTitle = child.getName();
+
+                if (childTitle.equals("AbstractionVisualizerStorage")) continue;
+
+                Bubble newBubble = Storage.load(child.getPath());
+
+                Point pos = DisplayModeSelector.getNewBubblePosition();
+                newBubble.setPos(pos.getX(), pos.getY());
+
+                parent.setLayout(null);
+                newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
+                parent.add(newBubble);
+            }
+        }
     }
 
     protected void initUI() {
