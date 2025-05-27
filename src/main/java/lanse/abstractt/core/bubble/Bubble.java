@@ -18,8 +18,6 @@ public class Bubble extends JPanel {
     protected String description;
     protected Icon icon;
     protected final String filePath;
-    private double posX = 0;
-    private double posY = 0;
     protected int width = 680;
     protected int height = 360;
 
@@ -81,10 +79,8 @@ public class Bubble extends JPanel {
     public static void handleFile(String filePath, Container parent){
         Point pos = DisplayModeSelector.getNewBubblePosition();
         Bubble fileBubble = Storage.load(filePath);
-        fileBubble.setPos(pos.getX(), pos.getY());
 
         parent.setLayout(null);
-        fileBubble.setBounds(pos.x, pos.y, fileBubble.width, fileBubble.height);
         parent.add(fileBubble);
     }
 
@@ -99,11 +95,7 @@ public class Bubble extends JPanel {
 
                 Bubble newBubble = Storage.load(child.getPath());
 
-                Point pos = DisplayModeSelector.getNewBubblePosition();
-                newBubble.setPos(pos.getX(), pos.getY());
-
                 parent.setLayout(null);
-                newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
                 parent.add(newBubble);
             }
         }
@@ -192,14 +184,6 @@ public class Bubble extends JPanel {
             this.height = height;
             setPreferredSize(new Dimension(width, height));
         }
-    }
-
-    public double getPosX() { return posX; }
-    public double getPosY() { return posY; }
-
-    public void setPos(double x, double y) {
-        this.posX = x;
-        this.posY = y;
     }
 
     public String getFilePath() {

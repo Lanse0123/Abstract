@@ -1,5 +1,6 @@
 package lanse.abstractt.core.screens;
 
+import lanse.abstractt.core.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.*;
 import lanse.abstractt.storage.Settings;
@@ -42,7 +43,6 @@ public class WorkSpaceScreen extends JPanel {
             StorageCompiler.generateProjectDefaults();
 
             TopBubble bubble = new TopBubble(projectName, description, Settings.selectedProjectPath);
-            bubble.setPos(-bubble.getPreferredSize().width / 2.0, -bubble.getPreferredSize().height / 2.0);
 
             try {
                 StorageCompiler.waitForRoot();
@@ -76,10 +76,12 @@ public class WorkSpaceScreen extends JPanel {
             progressBar.setBounds(0, getHeight() - ProgressBarPanel.HEIGHT, getWidth(), ProgressBarPanel.HEIGHT);
         }
 
+        DisplayModeSelector.clearBubbles();
         for (Component comp : getComponents()) {
             if (comp instanceof Bubble bubble) {
-                double worldX = bubble.getPosX();
-                double worldY = bubble.getPosY();
+                Point pos = DisplayModeSelector.getNewBubblePosition();
+                double worldX = pos.x;
+                double worldY = pos.y;
                 Point screenPos = worldMap.transform(worldX, worldY);
 
                 double zoom = worldMap.getZoom();

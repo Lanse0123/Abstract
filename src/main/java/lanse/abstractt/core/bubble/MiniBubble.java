@@ -83,25 +83,21 @@ public class MiniBubble extends JPanel {
 
         if (parent instanceof WorkSpaceScreen workspace) {
             workspace.removeBubbles();
-            DisplayModeSelector.clearBubbles();
-            JPanel workspacePanel = (JPanel) workspace.getComponent(0); // Assumes 0 is the bubble layer
-//            workspacePanel.removeAll();
 
             //forced to use java.util here since java.awt also has Lists that work differently
             java.util.List<Bubble> bubbles = Storage.getBubblesAtCurDepth();
             System.out.println(bubbles);
             //TODO - this loop is definitely doing something wrong
             for (Bubble bubble : bubbles) {
-                workspacePanel.setLayout(null);
-                workspacePanel.add(bubble);
-                bubble.setBounds((int) bubble.getPosX(), (int) bubble.getPosY(), bubble.width, bubble.height);
+                workspace.setLayout(null);
+                workspace.add(bubble);
             }
 
             WorldMap.setCameraCoordinates(0, 0);
 
             workspace.refreshSidebar(); // Also updates MiniBubbles
-            workspacePanel.revalidate();
-            workspacePanel.repaint();
+            workspace.revalidate();
+            workspace.repaint();
         }
     }
 }
