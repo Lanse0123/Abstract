@@ -27,6 +27,9 @@ public class Storage {
 
     public static int getNumBubblesAtDepth(int depth) {
         File dir = new File(mapToAbstractionPath(selectedBubblePath.elementAt(depth), true));
+        if (!dir.isDirectory()) {
+            return 0;
+        }
         return Objects.requireNonNull(dir.listFiles()).length;
     }
 
@@ -106,7 +109,7 @@ public class Storage {
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             json.put("path", bubble.getFilePath());
-            json.put("name", bubble.getName());
+            json.put("name", bubble.getTitle());
             json.put("description", bubble.getDescription());
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,9 +122,7 @@ public class Storage {
     }
 
     public static String mapToAbstractionPath(String filePath, boolean wantDir){
-        System.out.println("Mapping " + filePath);
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
-        System.out.println("To " + localPath);
         return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + (wantDir ? "" : ".json");
     }
 }
