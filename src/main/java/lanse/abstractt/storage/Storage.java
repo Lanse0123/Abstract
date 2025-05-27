@@ -17,9 +17,15 @@ public class Storage {
 
     public static List<Bubble> getBubblesAtDepth(int depth) {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
-        File dir = new File(mapToAbstractionPath(selectedBubblePath.elementAt(depth), true));
+        File dir = new File(selectedBubblePath.elementAt(depth));
+        if (!dir.isDirectory()) {
+            return List.of();
+        }
         List<Bubble> bubbles = new ArrayList<>();
         for (File f : Objects.requireNonNull(dir.listFiles())){
+            if (f.getAbsolutePath().startsWith(Settings.selectedProjectPath)) {
+                continue;
+            }
             bubbles.add(load(f.getPath()));
         }
         return bubbles;
@@ -93,6 +99,7 @@ public class Storage {
             // TODO: throw an exception or just create defaults?
             System.out.println("Unable to load info for file: " + filePath);
             System.out.println("Error reading: " + e);
+            e.printStackTrace();
             return new Bubble("", "", "");
         }
     }

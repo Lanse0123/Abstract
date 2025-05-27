@@ -1,5 +1,6 @@
 package lanse.abstractt.core.bubble;
 
+import lanse.abstractt.core.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
@@ -72,6 +73,7 @@ public class MiniBubble extends JPanel {
         // Refresh parent (bubble screen)
         //TODO - something might be wrong about this
         Container parent = getParent();
+        System.out.println(parent);
         if (parent != null) {
             for (Component comp : parent.getComponents()) {
                 if (comp instanceof Bubble) {
@@ -87,6 +89,7 @@ public class MiniBubble extends JPanel {
         if (parent instanceof WorkSpaceScreen workspace) {
             JPanel workspacePanel = (JPanel) workspace.getComponent(0); // Assumes 0 is the bubble layer
             workspacePanel.removeAll();
+            DisplayModeSelector.clearBubbles();
 
             //forced to use java.util here since java.awt also has Lists that work differently
             java.util.List<Bubble> bubbles = Storage.getBubblesAtDepth(depth);

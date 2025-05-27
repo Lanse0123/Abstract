@@ -13,9 +13,11 @@ public class DisplayModeSelector {
 
     public static DisplayMode displayMode = DisplayMode.FILE_LIST;
 
+    public static int bubbleCount = 0;
+
     public static Point getNewBubblePosition(){
 
-        int bubbleCount = Storage.getNumBubblesAtCurrentDepth();
+        bubbleCount += 1;
 
         return switch (displayMode) {
             case FILE_LIST -> FileList.getNewBubblePosition(bubbleCount);
@@ -24,5 +26,9 @@ public class DisplayModeSelector {
             case ANTI_COLLIDER -> AntiCollider.getNewBubblePosition(bubbleCount);
             case TODO_VIEW -> TodoView.getNewBubblePosition(bubbleCount);
         };
+    }
+
+    public static void clearBubbles() {
+        bubbleCount = 0;
     }
 }
