@@ -18,17 +18,13 @@ public class Storage {
     public static Stack<String> selectedBubblePath;
     private static int currentDepth = 1;
 
-    public static void addBubble(int depth, Bubble bubble) {
-        //TODO - this will be used when the user wants to create a new bubble. Other than that, this is not needed.
-        depthToBubbles.computeIfAbsent(depth, k -> new ArrayList<>()).add(bubble);
-    }
-
     public static List<Bubble> getBubblesAtDepth(int depth) {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
         return depthToBubbles.getOrDefault(depth, Collections.emptyList());
     }
 
     public static List<Bubble> getBubblesAtCurrentDepth() {
+        //TODO - rework this with getBubblesAtDepth
         return depthToBubbles.getOrDefault(currentDepth, Collections.emptyList());
     }
 
@@ -66,7 +62,7 @@ public class Storage {
 
     // Load settings from JSON
     //TODO: make this list into a class containing path, name and description
-    public static String[] load(String filePath) {
+    public static Bubble load(String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath)))) {
             StringBuilder jsonContent = new StringBuilder();
             String line;
@@ -81,13 +77,13 @@ public class Storage {
             String name = json.optString("name", "null");
             String description = json.optString("description", "null");
 
-            return new String[]{path, name, description};
+            return new Bubble(path, name, description);
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } catch (IOException e) {
             // TODO: throw an exception or just create defaults?
             System.out.println("Unable to load info for file: " + e);
-            return new String[]{};
+            return new Bubble("", "", "");
         }
     }
 

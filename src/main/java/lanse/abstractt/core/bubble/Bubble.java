@@ -23,11 +23,13 @@ public class Bubble extends JPanel {
     protected int width = 680;
     protected int height = 360;
 
-    public Bubble(String title, String description, Icon icon, String filePath) {
+    public Bubble(String title, String description, String filePath) {
         this.title = title;
         this.description = description;
         this.filePath = filePath;
-        this.icon = icon;
+
+        //TODO - need to get the icon somehow
+        //this.icon = icon;
 
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
@@ -55,50 +57,39 @@ public class Bubble extends JPanel {
 
                     //TODO - this code is more nested and id kinda like, clean this at some point plz
                     File file = new File(filePath);
-                    if (file.exists()) {
-                        if (file.isDirectory()) {
-                            File[] children = file.listFiles();
-                            if (children != null) {
-                                for (File child : children) {
-
-                                    String childTitle = child.getName();
-                                    String childPath = child.getPath();
-                                    String childDescription = (child.isDirectory() ? "Folder" : "File") + ": " + child.getName();
-                                    Icon childIcon = UIManager.getIcon(child.isDirectory() ? "FileView.directoryIcon" : "FileView.fileIcon");
-
-                                    if (childTitle.equals("AbstractionVisualizerStorage")) continue;
-
-                                    Point pos = DisplayModeSelector.getNewBubblePosition();
-                                    Bubble newBubble = new Bubble(childTitle, childDescription, childIcon, childPath);
-                                    newBubble.setPos(pos.getX(), pos.getY());
-
-                                    //TODO: can we remove this?
-                                    Storage.addBubble(newDepth, newBubble);
-                                    parent.setLayout(null);
-                                    newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
-                                    parent.add(newBubble);
-                                }
-                            }
-                        } else {
-                            String[] fileInfo = Storage.load(filePath);
-                            String fileTitle = fileInfo[0];
-                            String filePath = fileInfo[1];
-                            String fileDescription = "File: " + fileInfo[2];
-                            Icon fileIcon = UIManager.getIcon("FileView.fileIcon");
-
-                            Point pos = DisplayModeSelector.getNewBubblePosition();
-                            Bubble fileBubble = new Bubble(fileTitle, fileDescription, fileIcon, filePath);
-                            fileBubble.setPos(pos.getX(), pos.getY());
-
-                            Storage.addBubble(newDepth, fileBubble);
-                            parent.setLayout(null);
-                            fileBubble.setBounds(pos.x, pos.y, fileBubble.width, fileBubble.height);
-                            parent.add(fileBubble);
-                        }
-                    } else {
+                    if (!file.exists()) {
                         JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
                         error.setForeground(Color.RED);
                         parent.add(error);
+                    }
+
+                    if (file.isDirectory()) {
+                        File[] children = file.listFiles();
+                        if (children != null) {
+                            for (File child : children) {
+
+                                String childTitle = child.getName();
+
+                                if (childTitle.equals("AbstractionVisualizerStorage")) continue;
+
+                                Bubble newBubble = Storage.load(child.getPath());
+
+                                Point pos = DisplayModeSelector.getNewBubblePosition();
+                                newBubble.setPos(pos.getX(), pos.getY());
+
+                                parent.setLayout(null);
+                                newBubble.setBounds(pos.x, pos.y, newBubble.width, newBubble.height);
+                                parent.add(newBubble);
+                            }
+                        }
+                    } else {
+                        Point pos = DisplayModeSelector.getNewBubblePosition();
+                        Bubble fileBubble = Storage.load(filePath);
+                        fileBubble.setPos(pos.getX(), pos.getY());
+
+                        parent.setLayout(null);
+                        fileBubble.setBounds(pos.x, pos.y, fileBubble.width, fileBubble.height);
+                        parent.add(fileBubble);
                     }
 
                     WorldMap.setCameraCoordinates(0, 0);

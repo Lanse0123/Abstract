@@ -42,7 +42,7 @@ public class WorkSpaceScreen extends JPanel {
             TopBubble bubble = new TopBubble(projectName, description, icon, Settings.selectedProjectPath);
             bubble.setPos(-bubble.getPreferredSize().width / 2.0, -bubble.getPreferredSize().height / 2.0);
 
-            Storage.addBubble(1, bubble);
+            Storage.load(Settings.selectedProjectPath);
             Storage.setCurrentDepth(1);
 
             bubble.setSize(bubble.getPreferredSize());
