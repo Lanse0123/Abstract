@@ -83,7 +83,7 @@ public class Storage {
             String name = json.optString("name", "null");
             String description = json.optString("description", "null");
 
-            return new Bubble(path, name, description);
+            return new Bubble(name, description, path);
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } catch (IOException e) {
