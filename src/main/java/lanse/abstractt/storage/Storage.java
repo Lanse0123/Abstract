@@ -92,21 +92,21 @@ public class Storage {
     }
 
     // Save settings to disk
-    public static void save(String filePath, String name, String description) {
+    public static void save(Bubble bubble) {
         try {
-            if (!Files.exists(Path.of(filePath))) {
-                Files.createDirectories(Path.of(mapToAbstractionPath(filePath)));
+            if (!Files.exists(Path.of(bubble.getFilePath()))) {
+                Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath())));
             }
 
             JSONObject json = new JSONObject();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            json.put("path", filePath);
-            json.put("name", name);
-            json.put("description", description);
+            json.put("path", bubble.getFilePath());
+            json.put("name", bubble.getName());
+            json.put("description", bubble.getDescription());
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            try (FileWriter file = new FileWriter(mapToAbstractionPath(filePath))) {
+            try (FileWriter file = new FileWriter(mapToAbstractionPath(bubble.getFilePath()))) {
                 file.write(json.toString(4));
             }
         } catch (IOException e) {

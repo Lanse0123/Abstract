@@ -14,7 +14,7 @@ import java.io.File;
 
 public class Bubble extends JPanel {
 
-    protected String name;
+    protected String title;
     protected String description;
     protected Icon icon;
     protected final String filePath;
@@ -23,8 +23,8 @@ public class Bubble extends JPanel {
     protected int width = 680;
     protected int height = 360;
 
-    public Bubble(String name, String description, Icon icon, String filePath) {
-        this.name = name;
+    public Bubble(String title, String description, Icon icon, String filePath) {
+        this.title = title;
         this.description = description;
         this.filePath = filePath;
         this.icon = icon;
@@ -51,6 +51,7 @@ public class Bubble extends JPanel {
                 if (parent != null) {
                     for (Component comp : parent.getComponents()) {
                         if (comp instanceof Bubble) {
+                            Storage.save((Bubble) comp);
                             parent.remove(comp);
                         }
                     }
@@ -98,7 +99,7 @@ public class Bubble extends JPanel {
                             parent.add(fileBubble);
                         }
                     } else {
-                        JLabel error = new JLabel("Invalid file path: " + name, SwingConstants.CENTER);
+                        JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
                         error.setForeground(Color.RED);
                         parent.add(error);
                     }
@@ -137,7 +138,7 @@ public class Bubble extends JPanel {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
 
-        JLabel titleLabel = new JLabel(name);
+        JLabel titleLabel = new JLabel(title);
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -205,5 +206,17 @@ public class Bubble extends JPanel {
     public void setPos(double x, double y) {
         this.posX = x;
         this.posY = y;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
