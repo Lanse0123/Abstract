@@ -1,50 +1,54 @@
 package lanse.abstractt.core.screens.bars;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-public class TopBar extends JPanel {
+public class TopBar {
 
-    public static final int HEIGHT = 50;
+    private static class Exit extends AbstractAction {
+        public Exit() {
+            super("Exit", UIManager.getIcon("quit"));
+            putValue(MNEMONIC_KEY, KeyEvent.VK_E);
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Q"));
+        }
 
-    public TopBar() {
-        setPreferredSize(new Dimension(0, HEIGHT));
-        setSize(new Dimension(0, HEIGHT));
-        setBackground(new Color(30, 30, 30));
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-
-        // TODO: Add buttons like "New Project", "Save", etc.
-
-        JButton file = new JButton("File");
-        JButton filter = new JButton("Filter");
-
-        styleButton(file);
-        styleButton(filter);
-
-        //File
-        file.addActionListener((ActionEvent e) -> {
-            //TODO - This should open button for Save, Load new project, and maybe more later
-        });
-
-        // Open Recent Project
-        filter.addActionListener((ActionEvent e) -> {
-            //TODO - lets you add new words or file types that should be filtered. You should also be able to remove
-            // filtered items. These could maybe be stored in Settings.
-        });
-
-        add(file);
-        add(Box.createRigidArea(new Dimension(0, 30)));
-        add(filter);
-        add(Box.createRigidArea(new Dimension(0, 10)));
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
     }
 
-    //kinda like a css stylesheet but java
-    private void styleButton(JButton button) {
-        button.setBackground(new Color(60, 60, 60));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        button.setAlignmentX(CENTER_ALIGNMENT);
+    public static JMenuBar createMenuBar(Color bgColor, Color fgColor) {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.setSize(new Dimension(100, 25));
+        menuBar.setBackground(bgColor);
+        menuBar.setForeground(fgColor);
+        menuBar.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60)));
+
+        JMenu file = new JMenu("File");
+        file.setMnemonic('F');
+        file.setOpaque(true);
+
+        Exit e = new Exit();
+        file.add(e);
+        styleMenu(file, fgColor, bgColor);
+        menuBar.add(file);
+
+        return menuBar;
+    }
+
+    public static void styleMenu(JMenu menu, Color bgColor, Color fgColor) {
+        menu.setBackground(bgColor);
+        menu.setForeground(fgColor);
+        for (Component comp : menu.getMenuComponents()) {
+            if (comp instanceof JMenuItem item) {
+                item.setBackground(bgColor);
+                item.setForeground(fgColor);
+            }
+        }
     }
 }

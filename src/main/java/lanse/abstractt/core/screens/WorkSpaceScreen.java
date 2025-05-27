@@ -19,12 +19,14 @@ public class WorkSpaceScreen extends JPanel {
 
     private final WorldMap worldMap = new WorldMap();
     private final SideBar sidebar = new SideBar();
-    private final TopBar topBar = new TopBar();
+    private final JMenuBar topBar;
     private final int SIDEBAR_WIDTH = 200;
 
     public WorkSpaceScreen(Color bgColor) {
         setBackground(bgColor);
         setLayout(null);
+
+        topBar = TopBar.createMenuBar(bgColor, Color.white);
 
         add(topBar);
         add(sidebar);
@@ -71,9 +73,9 @@ public class WorkSpaceScreen extends JPanel {
     public void doLayout() {
         refreshSidebar();
 
-        topBar.setBounds(0, 0, getWidth(), TopBar.HEIGHT);
+        topBar.setBounds(0, 0, getWidth(), topBar.getHeight());
 
-        sidebar.setBounds(0, TopBar.HEIGHT, SIDEBAR_WIDTH, getHeight() - TopBar.HEIGHT);
+        sidebar.setBounds(0, topBar.getHeight(), SIDEBAR_WIDTH, getHeight() - topBar.getHeight());
 
         JPanel progressBar = ProgressBarPanel.getPanel();
         if (progressBar.getParent() == this && progressBar.isVisible()) {
