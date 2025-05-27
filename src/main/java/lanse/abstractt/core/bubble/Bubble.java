@@ -14,7 +14,7 @@ import java.io.File;
 
 public class Bubble extends JPanel {
 
-    protected String title;
+    protected String name;
     protected String description;
     protected Icon icon;
     protected final String filePath;
@@ -23,11 +23,11 @@ public class Bubble extends JPanel {
     protected int width = 680;
     protected int height = 360;
 
-    public Bubble(String title, String description, Icon icon, String filePath) {
-        this.title = title;
+    public Bubble(String name, String description, Icon icon, String filePath) {
+        this.name = name;
         this.description = description;
-        this.icon = icon;
         this.filePath = filePath;
+        this.icon = icon;
 
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
@@ -39,6 +39,9 @@ public class Bubble extends JPanel {
             public void mouseClicked(MouseEvent e) {
 
                 if (ProgressBarPanel.isLoading()) return;
+
+                //TODO - save the name, description, and path to Storage.save();
+                // save should take a bubble instead of a path.
 
                 Storage.increaseDepth(filePath);
                 int newDepth = Storage.getDepth();
@@ -95,7 +98,7 @@ public class Bubble extends JPanel {
                             parent.add(fileBubble);
                         }
                     } else {
-                        JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
+                        JLabel error = new JLabel("Invalid file path: " + name, SwingConstants.CENTER);
                         error.setForeground(Color.RED);
                         parent.add(error);
                     }
@@ -134,7 +137,7 @@ public class Bubble extends JPanel {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
 
-        JLabel titleLabel = new JLabel(title);
+        JLabel titleLabel = new JLabel(name);
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
