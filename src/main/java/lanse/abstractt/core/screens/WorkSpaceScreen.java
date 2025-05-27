@@ -38,18 +38,21 @@ public class WorkSpaceScreen extends JPanel {
             String projectName = folder.getName();
             String description = "Description: (DO SOMETHING WITH THIS)";
 
-            Icon icon = UIManager.getIcon("FileView.directoryIcon");
-            TopBubble bubble = new TopBubble(projectName, description, icon, Settings.selectedProjectPath);
+            //Creates the project and saves it to JSON. Starts completely empty.
+            StorageCompiler.generateProjectDefaults();
+
+            TopBubble bubble = new TopBubble(projectName, description, Settings.selectedProjectPath);
             bubble.setPos(-bubble.getPreferredSize().width / 2.0, -bubble.getPreferredSize().height / 2.0);
 
+            try {
+                StorageCompiler.waitForRoot();
+            }
+            catch (InterruptedException ignored) {}
             Storage.load(Settings.selectedProjectPath);
             Storage.setCurrentDepth(1);
 
             bubble.setSize(bubble.getPreferredSize());
             add(bubble);
-
-            //Creates the project and saves it to JSON. Starts completely empty.
-            StorageCompiler.generateProjectDefaults();
 
         } else {
             JLabel label = new JLabel("No project selected", SwingConstants.CENTER);

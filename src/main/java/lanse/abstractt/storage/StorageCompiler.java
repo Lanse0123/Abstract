@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.Semaphore;
 
 public class StorageCompiler {
 
@@ -14,6 +15,13 @@ public class StorageCompiler {
 
     private static int totalItems = 0;
     private static int processedItems = 0;
+    private static final Semaphore rootWritten = new Semaphore(0);
+
+    public static void waitForRoot() throws InterruptedException {
+        synchronized (rootWritten) {
+            rootWritten.acquire();
+        }
+    }
 
     public static void generateProjectDefaults() {
         //This is asynchronous. Took a few tries to get working
@@ -37,6 +45,8 @@ public class StorageCompiler {
                 processedItems = 0;
                 ProgressBarPanel.setLoading(true, "Generating Project");
                 ProgressBarPanel.show();
+                writeMetadataJson(selectedProjectPath, storageRoot);
+                rootWritten.release();
                 processDirectory(selectedProjectPath, storageRoot);
 
                 return null;
@@ -67,7 +77,7 @@ public class StorageCompiler {
                     continue;
                 }
 
-                writeMetadataJson(entry, newDir);
+                writeMetadataJson(entry, mirroredDir);
                 processDirectory(entry, newDir);
             } else {
                 writeMetadataJson(entry, mirroredDir);
@@ -82,7 +92,11 @@ public class StorageCompiler {
     }
 
     private static void writeMetadataJson(File originalFile, File targetDir) {
-        File jsonFile = new File(targetDir, originalFile.getName() + ".json");
+        String filename = originalFile.getName();
+        if (originalFile.getAbsolutePath().equals(Settings.selectedProjectPath)) {
+            filename = "";
+        }
+        File jsonFile = new File(targetDir, filename + ".json");
 
         if (jsonFile.exists()) {
             // Don't overwrite existing metadata

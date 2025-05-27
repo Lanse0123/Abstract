@@ -82,7 +82,8 @@ public class Storage {
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } catch (IOException e) {
             // TODO: throw an exception or just create defaults?
-            System.out.println("Unable to load info for file: " + e);
+            System.out.println("Unable to load info for file: " + filePath);
+            System.out.println("Error reading: " + e);
             return new Bubble("", "", "");
         }
     }
@@ -112,7 +113,9 @@ public class Storage {
     }
 
     public static String mapToAbstractionPath(String filePath){
+        System.out.println("Mapping " + filePath);
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
+        System.out.println("To " + localPath);
         return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + ".json";
     }
 }

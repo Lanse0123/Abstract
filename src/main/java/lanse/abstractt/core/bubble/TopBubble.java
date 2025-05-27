@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TopBubble extends Bubble {
-    public TopBubble(String title, String description, Icon icon, String filePath) {
-        super(title, description, icon, filePath);
+    public TopBubble(String title, String description, String filePath) {
+        super(title, description, filePath);
         addLanguageBarPlaceholder();
     }
 
