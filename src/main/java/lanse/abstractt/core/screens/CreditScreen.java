@@ -29,23 +29,40 @@ public class CreditScreen extends JPanel {
         logo.setAlignmentX(LEFT_ALIGNMENT);
 
         //TODO - add text next to icon
-        ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/LanseIcon.png")));
-        Image image2 = logoIcon.getImage().getScaledInstance(187, 151, Image.SCALE_SMOOTH);
-        logoIcon = new ImageIcon(image2);
-        JLabel logo2 = new JLabel(logoIcon);
+        ImageIcon jamesLogoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/LanseIcon.png")));
+        Image image2 = jamesLogoIcon.getImage().getScaledInstance(187, 151, Image.SCALE_SMOOTH);
+        jamesLogoIcon = new ImageIcon(image2);
+        JLabel logo2 = new JLabel(jamesLogoIcon);
         logo2.setAlignmentX(LEFT_ALIGNMENT);
+
+        //TODO - add text next to icon
+        ImageIcon ytIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/ytIcon.png")));
+        Image image3 = ytIcon.getImage().getScaledInstance(187, 131, Image.SCALE_SMOOTH);
+        ytIcon = new ImageIcon(image3);
+        JLabel logo3 = new JLabel(ytIcon);
+        logo3.setAlignmentX(LEFT_ALIGNMENT);
+
+        //TODO - add text next to icon
+        ImageIcon discordIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/discordIcon.png")));
+        Image image4 = discordIcon.getImage().getScaledInstance(187, 121, Image.SCALE_SMOOTH);
+        discordIcon = new ImageIcon(image4);
+        JLabel logo4 = new JLabel(discordIcon);
+        logo4.setAlignmentX(LEFT_ALIGNMENT);
 
         // Save Button
         JButton mainMenuButton = new JButton("Main Menu");
         mainMenuButton.addActionListener(this::mainMenu);
 
         add(mainMenuButton);
-        add(Box.createRigidArea(new Dimension(0, 50)));
+        add(Box.createRigidArea(new Dimension(0, 70)));
         add(logo);
-        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(Box.createRigidArea(new Dimension(0, 0)));
         add(logo2);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-
+        add(Box.createRigidArea(new Dimension(0, 5)));
+        add(logo3);
+        add(Box.createRigidArea(new Dimension(0, 15)));
+        add(logo4);
+        add(Box.createRigidArea(new Dimension(0, 5)));
     }
 
     private void mainMenu(ActionEvent e){
