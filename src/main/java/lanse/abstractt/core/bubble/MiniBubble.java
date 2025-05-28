@@ -1,5 +1,6 @@
 package lanse.abstractt.core.bubble;
 
+import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
@@ -19,7 +20,7 @@ public class MiniBubble extends JPanel {
     public MiniBubble(int depth, int count, String path, boolean isCurrent) {
         this.isCurrent = isCurrent;
         this.depth = depth;
-        this.fillColor = isCurrent ? new Color(60, 180, 100) : new Color(70, 130, 180);
+        this.fillColor = isCurrent ? ColorPalette.ColorCategory.SUCCESS.getColor() : ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
         this.bubblePath = path;
 
         setPreferredSize(new Dimension(60, 40));

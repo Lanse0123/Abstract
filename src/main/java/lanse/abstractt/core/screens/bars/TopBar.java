@@ -1,8 +1,8 @@
 package lanse.abstractt.core.screens.bars;
 
+import lanse.abstractt.core.ColorPalette;
+
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -27,7 +27,7 @@ public class TopBar {
         menuBar.setSize(new Dimension(100, 25));
         menuBar.setBackground(bgColor);
         menuBar.setForeground(fgColor);
-        menuBar.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60)));
+        menuBar.setBorder(BorderFactory.createLineBorder(ColorPalette.ColorCategory.BUTTONS.getColor()));
 
         JMenu file = new JMenu("File");
         file.setMnemonic('F');

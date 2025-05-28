@@ -14,8 +14,8 @@ public class TopBubble extends Bubble {
         JPanel bar = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Placeholder gray bar
-                g.setColor(Color.GRAY);
+                // Placeholder red bar until it gets the average language colors and stuff
+                g.setColor(Color.RED);
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         };

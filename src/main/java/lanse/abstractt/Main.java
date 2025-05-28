@@ -1,5 +1,6 @@
 package lanse.abstractt;
 
+import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.screens.MainMenuScreen;
 import lanse.abstractt.storage.Settings;
 
@@ -25,10 +26,8 @@ public class Main {
             frame.setLocationRelativeTo(null);
             frame.setLayout(new BorderLayout());
 
-            Color bgColor = new Color(40, 40, 40); // Dark gray
-
             // Pass frame to the screen
-            frame.add(new MainMenuScreen(frame, bgColor), BorderLayout.CENTER);
+            frame.add(new MainMenuScreen(frame, ColorPalette.ColorCategory.PRIMARY_BACKGROUND.getColor()), BorderLayout.CENTER);
 
             frame.setVisible(true);
         });

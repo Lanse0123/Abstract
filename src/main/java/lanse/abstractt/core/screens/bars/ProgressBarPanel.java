@@ -1,5 +1,7 @@
 package lanse.abstractt.core.screens.bars;
 
+import lanse.abstractt.core.ColorPalette;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,13 +23,13 @@ public class ProgressBarPanel {
             int width = getWidth();
             int height = getHeight();
 
-            Color background = new Color(30, 30, 30);
+            Color background = ColorPalette.ColorCategory.BARS.getColor();
             g2.setColor(background);
             g2.fillRect(0, 0, width, height);
 
             int filledWidth = 0;
             if (loading) {
-                g2.setColor(new Color(80, 150, 255)); // Blue fill
+                g2.setColor(ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
                 filledWidth = (int) (width * (progress / 100.0));
                 g2.fillRect(0, 0, filledWidth, height);
             }
@@ -43,7 +45,7 @@ public class ProgressBarPanel {
                 int textY = (height - textHeight) / 2 + fm.getAscent();
 
                 // this probably does something cool
-                Color overColor = (textX + textWidth / 2 < filledWidth) ? new Color(80, 150, 255) : background;
+                Color overColor = (textX + textWidth / 2 < filledWidth) ? ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor() : background;
                 Color textColor = new Color(255 - overColor.getRed(), 255 - overColor.getGreen(), 255 - overColor.getBlue());
                 g2.setColor(textColor);
                 g2.drawString((statusText + ": " + progress + "%"), textX, textY);

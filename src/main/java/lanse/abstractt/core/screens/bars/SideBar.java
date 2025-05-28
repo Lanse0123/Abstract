@@ -1,5 +1,6 @@
 package lanse.abstractt.core.screens.bars;
 
+import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.bubble.MiniBubble;
 import lanse.abstractt.storage.Storage;
 
@@ -12,7 +13,7 @@ public class SideBar extends JPanel {
 
     public SideBar() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(new Color(30, 30, 30));
+        setBackground(ColorPalette.ColorCategory.BARS.getColor());
         refresh();
     }
 

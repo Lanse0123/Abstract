@@ -1,5 +1,6 @@
 package lanse.abstractt.core.screens;
 
+import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.storage.Settings;
 import lanse.abstractt.storage.Storage;
 
@@ -137,7 +138,7 @@ public class MainMenuScreen extends JPanel {
 
     //kinda like a css stylesheet but java
     private void styleButton(JButton button) {
-        button.setBackground(new Color(60, 60, 60));
+        button.setBackground(ColorPalette.ColorCategory.BUTTONS.getColor());
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));

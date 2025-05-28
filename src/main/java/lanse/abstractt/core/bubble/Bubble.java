@@ -1,5 +1,6 @@
 package lanse.abstractt.core.bubble;
 
+import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
@@ -107,7 +108,7 @@ public class Bubble extends JPanel {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor(Color.WHITE);
+                g.setColor(ColorPalette.ColorCategory.OUTLINE.getColor());
                 int y = (getHeight() - 160) / 2;
                 g.fillRect(getWidth() / 2, y, 1, 160);
             }
@@ -161,11 +162,11 @@ public class Bubble extends JPanel {
 
         // Fill with light blue
         //TODO - I might eventually make the color based on the average pixel colors of an Icon, with unknowns being light gray or light blue (dont do this yet)
-        g2.setColor(new Color(130, 180, 255));
+        g2.setColor(ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
         g2.fill(oval);
 
         // Draw outline
-        g2.setColor(Color.LIGHT_GRAY);
+        g2.setColor(ColorPalette.ColorCategory.OUTLINE.getColor());
         g2.setStroke(new BasicStroke(8));
         g2.draw(oval);
 
