@@ -6,6 +6,7 @@ import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 import lanse.abstractt.storage.Storage;
+import lanse.abstractt.storage.languages.LanguageManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,9 +27,7 @@ public class Bubble extends JPanel {
         this.title = title;
         this.description = description;
         this.filePath = filePath;
-
-        //TODO - need to get the icon somehow
-        //this.icon = icon;
+        this.icon = LanguageManager.getIconFromPath(filePath);
 
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
