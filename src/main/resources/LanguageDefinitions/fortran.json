@@ -1,9 +1,8 @@
 {
-  "extension": "",
+  "language": "fortran",
   "comment": "",
   "function": "",
   "defaultMain": "",
-  "icon": "leave this empty, I will add a path here",
   "extra": "this language is over 100 years old because its from 1950, so this might be hard",
   "shouldWeUpgradeThisFromAJsonToAClass": ""
 }

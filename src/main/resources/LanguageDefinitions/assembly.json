@@ -1,9 +1,8 @@
 {
-  "extension": "there are multiple types of assembly. Dont worry about this json rn.",
+  "language": "there are multiple types of assembly. Dont worry about this json rn.",
   "comment": "",
   "function": "",
   "defaultMain": "",
-  "icon": "leave this empty, I will add a path here",
   "extra": "Idk if i am going to make this work with assembly",
   "shouldWeUpgradeThisFromAJsonToAClass": "this is the lowest level language that I might add, this will need a class"
 }

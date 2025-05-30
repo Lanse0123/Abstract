@@ -1,9 +1,8 @@
 {
-  "extension": "",
+  "language": "dart",
   "comment": "",
   "function": "",
   "defaultMain": "",
-  "icon": "leave this empty, I will add a path here",
   "extra": "",
   "shouldWeUpgradeThisFromAJsonToAClass": "first one ive never seen on the list of me adding these lol"
 }

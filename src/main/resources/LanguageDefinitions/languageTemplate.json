@@ -1,9 +1,8 @@
 {
-  "extension": "What does it's file end in? for example, if this was python.json, it would be .py",
+  "language": "What does it's file end in? for example, if this was python.json, it would be .py",
   "comment": "what does it use to make comments? like // or # or /*?",
   "function": "How does it define a function",
   "defaultMain": "What is it's default Main function? (This can be specified by the user)",
-  "icon": "leave this empty, I will add a path here",
   "extra": "does it have weird exceptions or extra important things? Like SAS has input cards; ; which is notable enough to be a bubble since it takes up a large portion of the code",
   "shouldWeUpgradeThisFromAJsonToAClass": "(Dont worry too much about this, but if it has a lot of exceptions or stuff that make it harder, then it might need to use code to run. For example, Javascript's function is simply function, while java is a regex of () {}"
 }

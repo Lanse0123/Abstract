@@ -1,9 +1,8 @@
 {
-  "extension": "",
+  "language": "c",
   "comment": "",
   "function": "",
   "defaultMain": "",
-  "icon": "leave this empty, I will add a path here",
   "extra": "",
   "shouldWeUpgradeThisFromAJsonToAClass": "probably (this one is hard)"
 }

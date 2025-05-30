@@ -1,9 +1,8 @@
 {
-  "extension": ".java",
+  "language": ".java",
   "comment": "//, /*, /**, */",
   "function": "Regex of () {}",
   "defaultMain": "public static void main(String[] args) {",
-  "icon": "leave this empty, I will add a path here",
   "extra": "",
   "shouldWeUpgradeThisFromAJsonToAClass": "probably. Also hi lol"
 }

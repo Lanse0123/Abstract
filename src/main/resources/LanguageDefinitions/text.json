@@ -1,9 +1,8 @@
 {
-  "extension": ".txt",
+  "language": "text",
   "comment": "",
   "function": "",
   "defaultMain": "",
-  "icon": "leave this empty, I will add a path here",
   "extra": "this is not a programming language",
   "shouldWeUpgradeThisFromAJsonToAClass": ""
 }

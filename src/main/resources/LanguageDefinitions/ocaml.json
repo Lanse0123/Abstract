@@ -1,9 +1,8 @@
 {
-  "extension": "",
+  "language": "ocaml",
   "comment": "",
   "function": "",
   "defaultMain": "",
-  "icon": "leave this empty, I will add a path here",
   "extra": "weird language",
   "shouldWeUpgradeThisFromAJsonToAClass": ""
 }
