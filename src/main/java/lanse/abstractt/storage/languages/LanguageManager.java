@@ -6,6 +6,7 @@ import java.awt.*;
 public class LanguageManager {
 
     public static Image getImageFromLanguage(String extension) {
+        extension = extension.toLowerCase();
         String basePath = "/resources/images/LanguageIcons/";
 
         if (extension.equals("folder")) {

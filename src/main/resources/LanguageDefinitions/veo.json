@@ -1,0 +1,8 @@
+{
+  "language": "verilog",
+  "comment": "",
+  "function": "",
+  "defaultMain": "",
+  "extra": "nobody uses this language other than hardware creation. This might be removed",
+  "shouldWeUpgradeThisFromAJsonToAClass": ""
+}
