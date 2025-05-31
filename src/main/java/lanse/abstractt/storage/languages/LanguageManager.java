@@ -1,7 +1,13 @@
 package lanse.abstractt.storage.languages;
 
+import org.json.JSONObject;
+
 import javax.swing.*;
+import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class LanguageManager {
 
@@ -36,6 +42,7 @@ public class LanguageManager {
         return null;
     }
 
+    //TODO - this should also work if the path is already an extension.
     public static String getExtension(String path) {
         String fileName = path.replace('\\', '/'); //idk if this works outside of windows
         fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
@@ -47,4 +54,38 @@ public class LanguageManager {
             return ""; // No extension found
         }
     }
+
+    public static Color getLanguageColorFromPath(String path) {
+        String extension;
+
+        // Allow either a full path or just the extension
+        if (path.startsWith(".")) {
+            extension = path.toLowerCase();
+        } else {
+            File file = new File(path);
+            extension = file.isDirectory() ? "folder" : "." + getExtension(path);
+        }
+
+        String basePath = "/LanguageDefinitions/" + extension + ".json";
+        try {
+            InputStream stream = LanguageManager.class.getResourceAsStream(basePath);
+            if (stream == null) return null;
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            StringBuilder json = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                json.append(line);
+            }
+
+            JSONObject obj = new JSONObject(json.toString());
+            String hexColor = obj.getString("color");
+
+            return Color.decode(hexColor);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

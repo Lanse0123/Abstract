@@ -1,6 +1,8 @@
 package lanse.abstractt.storage;
 
+import lanse.abstractt.core.bubble.TopBubble;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
+import lanse.abstractt.storage.languages.LanguageManager;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -42,10 +44,13 @@ public class StorageCompiler {
 
                 // Start progress bar
                 totalItems = countItems(selectedProjectPath);
+                TopBubble.totalFiles = totalItems;
                 processedItems = 0;
+
                 ProgressBarPanel.setLoading(true, "Generating Project");
                 ProgressBarPanel.show();
                 writeMetadataJson(selectedProjectPath, storageRoot);
+
                 rootWritten.release();
                 processDirectory(selectedProjectPath, storageRoot);
 
@@ -56,6 +61,7 @@ public class StorageCompiler {
             protected void done() {
                 ProgressBarPanel.setLoading(false, "Waiting...");
                 ProgressBarPanel.hide();
+                TopBubble.calculateLanguageBar();
             }
         };
 
@@ -81,6 +87,12 @@ public class StorageCompiler {
                 processDirectory(entry, newDir);
             } else {
                 writeMetadataJson(entry, mirroredDir);
+                String extension = LanguageManager.getExtension(String.valueOf(entry));
+                if (TopBubble.languageMap.containsKey(extension)) {
+                    TopBubble.languageMap.merge(extension, 1, Integer::sum); //add 1 to the count that one has
+                } else {
+                    TopBubble.languageMap.put(extension, 1);
+                }
             }
 
             processedItems++;
@@ -122,7 +134,7 @@ public class StorageCompiler {
         int count = 0;
         for (File entry : entries) {
             if (entry.getName().equals("AbstractionVisualizerStorage")) continue;
-            count++; // count each file or directory
+            count++;
             if (entry.isDirectory()) {
                 count += countItems(entry);
             }

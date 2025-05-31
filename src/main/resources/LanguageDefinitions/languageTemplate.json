@@ -1,5 +1,6 @@
 {
   "language": "What does it's file end in? for example, if this was python.json, it would be .py",
+  "color": "RGB value of the color of the language",
   "comment": "what does it use to make comments? like // or # or /*?",
   "function": "How does it define a function",
   "defaultMain": "What is it's default Main function? (This can be specified by the user)",

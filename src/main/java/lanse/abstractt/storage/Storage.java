@@ -80,6 +80,9 @@ public class Storage {
 //        depthToBubbles.clear();
         currentDepth = 1;
         selectedBubblePath.clear();
+        TopBubble.languageMap.clear();
+        TopBubble.languagePercents.clear();
+        TopBubble.languageColors.clear();
     }
 
     // Load settings from JSON
