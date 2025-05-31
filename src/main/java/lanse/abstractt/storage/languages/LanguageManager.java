@@ -55,6 +55,7 @@ public class LanguageManager {
         }
     }
 
+    //TODO - this is still somehow wrong. Everything is returning red
     public static Color getLanguageColorFromPath(String path) {
         String extension;
 
@@ -69,7 +70,7 @@ public class LanguageManager {
         String basePath = "/LanguageDefinitions/" + extension + ".json";
         try {
             InputStream stream = LanguageManager.class.getResourceAsStream(basePath);
-            if (stream == null) return null;
+            if (stream == null) return Color.RED;
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             StringBuilder json = new StringBuilder();
@@ -84,7 +85,7 @@ public class LanguageManager {
             return Color.decode(hexColor);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return Color.BLACK;
         }
     }
 

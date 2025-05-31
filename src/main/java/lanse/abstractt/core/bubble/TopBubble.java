@@ -69,6 +69,8 @@ public class TopBubble extends Bubble {
         languageColors.clear();
         languagePercents.clear();
 
+        System.out.println(languageMap);
+
         int total = totalFiles == 0 ? 1 : totalFiles;
 
         //filter out extensions that aren't in the list of languages
