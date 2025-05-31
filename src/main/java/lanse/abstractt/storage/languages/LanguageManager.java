@@ -55,7 +55,7 @@ public class LanguageManager {
         }
     }
 
-    //TODO - this is still somehow wrong. Everything is returning red
+    //TODO - this is still somehow wrong. Everything is returning red, or white
     public static Color getLanguageColorFromPath(String path) {
         String extension;
 
