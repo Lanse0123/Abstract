@@ -27,3 +27,5 @@ If you'd like to improve the project, fix bugs, or add features:
 4. Submit a pull request.
 
 By submitting a pull request, you agree to license your contribution under the same **BUSL-1.1** terms as the rest of the project.
+Unlike the regular usage of BUSL-1.1, I do not set it to change in 4 years, so it will stay the same forever, unless I manually change it.
+I just dont want people to steal the project and make my life difficult D:
