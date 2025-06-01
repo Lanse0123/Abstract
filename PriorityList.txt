@@ -1,0 +1,29 @@
+Things that I want to add next:
+
+---------------------------------------------------------------------------------
+
+*Finish working on making the TopBubble display the language bar correctly (currently broken)
+
+*Make a new button on each bubble that will let you edit it's description
+
+*Might make a new screen or window that shows up when you edit a description so its easier to see
+
+*Make the description of a bubble fit in the oval, not a rectangle
+
+*Make new layout presets other than just top down file list, these are listed in the displayLogic folder with TODOs to explain them more
+
+*Fill out the list of language JSONs and PNGs
+
+*Add more languages to the JSON list
+
+*Apply the theme randomizer / creator and add it to Settings (randomizer should be completed)
+
+*EVENTUALLY start working on a way to get all of the functions of the program, add it to the initial progress bar loader that creates the project, and
+have it add all the functions as their own bubbles, and each function bubble should be able to see the fields of that class.
+
+*EVENTUALLY IN THE FUTURE learn how to incorporate AI to generate descriptions for each thing. the proompts folder in resources explains this more.
+
+---------------------------------------------------------------------------------
+
+I want this project to stay free and easy to use forever, which means I dont want this to cost me much or anything at all for people to run. This means
+I am not paying for an AI server, so either I need to learn more about local lightweight AI that fits on a PC, or API calls to one of thats even possible.
