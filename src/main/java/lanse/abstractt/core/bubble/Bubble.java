@@ -22,6 +22,7 @@ public class Bubble extends JPanel {
     protected final String filePath;
     protected int width = 680;
     protected int height = 360;
+    private JLabel iconLabel;
 
     public Bubble(String title, String description, String filePath) {
         this.title = title;
@@ -98,8 +99,9 @@ public class Bubble extends JPanel {
     }
 
     protected void initUI() {
-        // LEFT: icon
-        JLabel iconLabel = new JLabel(icon);
+        // scale icon
+        iconLabel = new JLabel();
+        updateIconSize(); // set icon at init
         iconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // VERTICAL DIVIDER
@@ -159,8 +161,7 @@ public class Bubble extends JPanel {
         Shape oval = new java.awt.geom.Ellipse2D.Double(0, 0, getWidth(), getHeight());
         g2.setClip(oval);
 
-        // Fill with light blue
-        //TODO - I might eventually make the color based on the average pixel colors of an Icon, with unknowns being light gray or light blue (dont do this yet)
+        //TODO - I will eventually make this use the color tag in the language's JSON file, and folders or other randoms will be light blue
         g2.setColor(ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
         g2.fill(oval);
 
@@ -168,6 +169,9 @@ public class Bubble extends JPanel {
         g2.setColor(ColorPalette.ColorCategory.OUTLINE.getColor());
         g2.setStroke(new BasicStroke(8));
         g2.draw(oval);
+
+        //laggy
+        updateIconSize();
 
         g2.dispose();
         super.paintComponent(g);
@@ -179,6 +183,18 @@ public class Bubble extends JPanel {
             this.width = width;
             this.height = height;
             setPreferredSize(new Dimension(width, height));
+        }
+    }
+
+    //TODO - this block of code is inefficient, and making it lag a lot.
+    public void updateIconSize() {
+        double zoom = WorldMap.getZoomStatic();
+        int size = (int) (80 * zoom);
+//      size = Math.max(16, Math.min(size, 512)); // CLAMP
+
+        if (icon instanceof ImageIcon imgIcon) {
+            Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
+            iconLabel.setIcon(new ImageIcon(scaledImage));
         }
     }
 

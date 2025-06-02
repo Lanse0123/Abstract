@@ -11,6 +11,12 @@ public class WorldMap {
     private boolean dragging = false;
     private int lastMouseX, lastMouseY;
 
+    private static WorldMap instance;
+
+    public WorldMap() {
+        instance = this;
+    }
+
     public void initializeListeners(Component component) {
         component.addMouseListener(new MouseAdapter() {
             @Override
@@ -78,6 +84,7 @@ public class WorldMap {
         return new Point(screenX, screenY);
     }
 
+    //TODO - I somehow ended up with 2 getZooms, which is kinda annoying
     public double getZoom() {
         return zoom;
     }
@@ -94,4 +101,5 @@ public class WorldMap {
         offsetX = x;
         offsetY = y;
     }
+    public static double getZoomStatic() { return instance != null ? instance.getZoom() : 1.0; }
 }
