@@ -16,6 +16,30 @@ This project is licensed under the **Business Source License 1.1 (BUSL-1.1)**.
 
 See the full [LICENSE](./LICENSE) file for details.
 
+## Dependencies
+
+ - Java 17.+
+ - Gradle 8.+
+
+## Build/Run Instructions
+
+BASH:
+```
+# to build
+git clone https://github.com/RiverDewberry/Abstract.git
+cd Abstract
+./gradlew build
+./gradlew shadow
+# to run (while still in the cloned repo)
+cd build/libs
+java -jar Abstract-1.0-SNAPSHOT-all.jar
+```
+
+## Troubleshooting
+
+If you are using linux with a non-reparenting wm and the output from running Abstract is a completely blank screen, run the following:
+``export _JAVA_AWT_WM_NONREPARENTING=1``
+
 ## Contributing
 
 Contributions are welcome!  
