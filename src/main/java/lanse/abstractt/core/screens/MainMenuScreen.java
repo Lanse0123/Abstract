@@ -41,6 +41,17 @@ public class MainMenuScreen extends JPanel {
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             chooser.setAcceptAllFileFilterUsed(false);
 
+            chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                @Override
+                public boolean accept(java.io.File file){
+                    return file.isDirectory() && !(file.getName().equals("AbstractionVisualizerStorage"));
+                }
+
+                public String getDescription(){
+                    return "Select Project Folder";
+                }
+            });
+
             int result = chooser.showOpenDialog(frame);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFolder = chooser.getSelectedFile();
