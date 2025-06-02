@@ -28,11 +28,9 @@ BASH:
 # to build
 git clone https://github.com/RiverDewberry/Abstract.git
 cd Abstract
-./gradlew build
-./gradlew shadowJar
+make build
 # to run (while still in the cloned repo)
-cd build/libs
-java -jar Abstract-1.0-SNAPSHOT-all.jar
+make run
 ```
 
 ## Troubleshooting
