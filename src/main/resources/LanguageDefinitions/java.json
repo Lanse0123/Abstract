@@ -1,0 +1,9 @@
+{
+  "language": ".java",
+  "color": "#b07219",
+  "comment": "//, /*, /**, */",
+  "function": "Regex of () {}",
+  "defaultMain": "public static void main(String[] args) {",
+  "extra": "",
+  "shouldWeUpgradeThisFromAJsonToAClass": "probably. Also hi lol"
+}

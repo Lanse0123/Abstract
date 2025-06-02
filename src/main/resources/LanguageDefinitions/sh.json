@@ -1,0 +1,9 @@
+{
+  "language": "shell",
+  "color": "#89e051",
+  "comment": "",
+  "function": "",
+  "defaultMain": "",
+  "extra": "",
+  "shouldWeUpgradeThisFromAJsonToAClass": "probably, this was in the list but it might be a bit over complex"
+}
