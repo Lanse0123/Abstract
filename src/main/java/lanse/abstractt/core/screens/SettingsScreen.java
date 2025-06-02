@@ -88,8 +88,11 @@ public class SettingsScreen extends JPanel {
 
         DisplayModeSelector.displayMode = (DisplayModeSelector.DisplayMode) displayModeSelector.getSelectedItem();
 
-        Settings.save(); // Save to file
-        JOptionPane.showMessageDialog(this, "Settings saved!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        if(Settings.save()) // Attempt save to file
+            JOptionPane.showMessageDialog(this, "Settings saved!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(this, "Settings unable to be saved.", "Error", JOptionPane.INFORMATION_MESSAGE);
+
         returnToMainMenu();
     }
 

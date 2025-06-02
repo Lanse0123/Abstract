@@ -23,6 +23,10 @@ public class Settings {
     // Load settings from JSON
     public static void load() {
         try (BufferedReader reader = new BufferedReader(new FileReader(SETTINGS_PATH))) {
+
+            //added this line to show where to find settings file
+            System.out.println("Settings file found at " + SETTINGS_PATH + " .");
+
             StringBuilder jsonContent = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -51,13 +55,24 @@ public class Settings {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } catch (IOException e) {
+
+            //provides clearer messages
+            File settingsFile = new File(SETTINGS_PATH);
+            if(!settingsFile.exists())
+                System.out.print("No settings file found at " + SETTINGS_PATH + " . ");
+            else if (settingsFile.isDirectory())
+                //this error message can happen, since "settings.json" is a valid directory name on linux 
+                System.out.print("File found at settings path ( " + SETTINGS_PATH + " ) but is a directory. ");
+            else
+                System.out.print("Error while reading settings file ( " + SETTINGS_PATH + " ). ");
+
             // No settings file yet? Just use defaults.
-            System.out.println("No settings file found. Using default settings.");
+            System.out.println("Using default settings.");
         }
     }
 
-    // Save settings to disk
-    public static void save() {
+    // Save settings to disk. returns true if settings could be saved, otherwise returns false
+    public static boolean save() {
         try {
             if (!Files.exists(SETTINGS_DIR)) {
                 Files.createDirectories(SETTINGS_DIR);
@@ -79,8 +94,27 @@ public class Settings {
             try (FileWriter file = new FileWriter(SETTINGS_PATH)) {
                 file.write(json.toString(4));
             }
+
+            //validates that settings were saved
+            try (BufferedReader reader = new BufferedReader(new FileReader(SETTINGS_PATH))) {
+                StringBuilder jsonContent = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jsonContent.append(line);
+                }
+
+                JSONObject savedJson = new JSONObject(jsonContent.toString());
+
+                return savedJson.toString(4).equals(json.toString(4));
+
+            } catch (IOException e) {
+                System.out.println("Unable to save settings ( " + SETTINGS_PATH + " ).");
+                return false;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

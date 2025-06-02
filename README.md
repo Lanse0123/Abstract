@@ -26,7 +26,7 @@ See the full [LICENSE](./LICENSE) file for details.
 BASH:
 ```
 # to build
-git clone https://github.com/RiverDewberry/Abstract.git
+git clone https://github.com/Lanse0123/Abstract.git
 cd Abstract
 ./gradlew build
 ./gradlew shadowJar
