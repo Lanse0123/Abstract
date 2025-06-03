@@ -1,7 +1,7 @@
 Abstract IDE
 
 Welcome to **Abstract**! This is a Universal Coding Editor which will work with ALL text based languages. It does this by formatting your files into bubbles, and lets
-you organize it with many different settings. It then uses AI to create descriptions for all parts of the project, or code from descriptions. In the futurue,
+you organize it with many different settings. It then uses AI to create descriptions for all parts of the project, or code from descriptions. In the future,
 hopefully it will be able to parse one function at a time, and translate it to any other language of your choice.
 
 This is a public, source-available coding project developed and maintained by Lanse.  
@@ -28,11 +28,9 @@ BASH:
 # to build
 git clone https://github.com/Lanse0123/Abstract.git
 cd Abstract
-./gradlew build
-./gradlew shadowJar
+make build
 # to run (while still in the cloned repo)
-cd build/libs
-java -jar Abstract-1.0-SNAPSHOT-all.jar
+make run
 ```
 
 ## Troubleshooting
