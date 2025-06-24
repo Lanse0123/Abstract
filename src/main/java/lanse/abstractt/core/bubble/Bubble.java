@@ -25,6 +25,9 @@ public class Bubble extends JPanel {
     private JLabel iconLabel;
     private double lastZoom = -40404;
 
+    //TODO - make use of isClickable. Some bubbles like Description bubbles should not clear other bubbles when clicked
+    private boolean isClickable = true;
+
     public Bubble(String title, String description, String filePath) {
         this.title = title;
         this.description = description;
@@ -36,12 +39,14 @@ public class Bubble extends JPanel {
         setLayout(new BorderLayout());
         initUI();
 
+        //Click handler
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 if (ProgressBarPanel.isLoading()) return;
 
+                //TODO - this is where isClickable might come in handy. I might need a better name for it.
                 Storage.increaseDepth(filePath);
                 DisplayModeSelector.clearBubbles();
 
@@ -79,7 +84,25 @@ public class Bubble extends JPanel {
     }
 
     public static void handleFile(String filePath, Container parent){
-        //TODO: create a new popup for editing the description
+        //TODO - FIRST: check if the file's extension is in the JSON list.
+        // If yes, then check it's parse value. If it should parse, continue on. Then, just open it like a txt file,
+        // and make a code view bubble (which is actually going to be a rectangle). There will be exceptions like PNG
+
+        //TODO - NEXT: (if continuing), go through each line. Add the line to a prompt to mobiLlama. If the line is
+        // less than 200 or so characters, add the next line. Keep adding lines as long as it doesn't become too big of a prompt.
+        // add line numbers for reference.
+
+        //TODO - then, ask mobiLlama if it is containing anything important, like fields, classes, functions, imports, or something else.
+        // It should either respond with NO, or line number + what it is. Make sure it has context like the language type, and file name.
+
+        //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
+        // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
+        // those class bubbles will contain the function bubbles. If there is only 1 class, make the bubbles split by functions.
+        // There should also be an imports and fields bubble. Each function bubble should be able to see fields if the option is enabled by the user.
+
+        //TODO - LASTLY, make sure this is added to storage, so it never needs to do this again unless the code is edited, or
+        // if the user refreshes it. It can also do this smartly, by saving the code, and checking for parts that changed.
+        // then only call the AI for those parts, because going through each line each update might take a while.
     }
 
     public static void handleDirectory(File file, Container parent){
