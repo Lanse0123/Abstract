@@ -23,6 +23,7 @@ public class Bubble extends JPanel {
     protected int width = 680;
     protected int height = 360;
     private JLabel iconLabel;
+    private double lastZoom = -40404;
 
     public Bubble(String title, String description, String filePath) {
         this.title = title;
@@ -170,7 +171,7 @@ public class Bubble extends JPanel {
         g2.setStroke(new BasicStroke(8));
         g2.draw(oval);
 
-        //laggy
+        //this should now only do anything if the scale changed
         updateIconSize();
 
         g2.dispose();
@@ -186,11 +187,12 @@ public class Bubble extends JPanel {
         }
     }
 
-    //TODO - this block of code is inefficient, and making it lag a lot.
     public void updateIconSize() {
         double zoom = WorldMap.getZoomStatic();
+        if (zoom == lastZoom) return;
+
+        lastZoom = zoom;
         int size = (int) (80 * zoom);
-//      size = Math.max(16, Math.min(size, 512)); // CLAMP
 
         if (icon instanceof ImageIcon imgIcon) {
             Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
