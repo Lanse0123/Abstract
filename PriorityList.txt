@@ -18,8 +18,7 @@ Things that I want to add next:
 
 *Apply the theme randomizer / creator and add it to Settings (randomizer should be completed)
 
-*EVENTUALLY start working on a way to get all of the functions of the program, add it to the initial progress bar loader that creates the project, and
-have it add all the functions as their own bubbles, and each function bubble should be able to see the fields of that class.
+*start working on the universal parser to split the code into functions and / or more digestible parts
 
 *EVENTUALLY IN THE FUTURE learn how to incorporate AI to generate descriptions for each thing. the proompts folder in resources explains this more.
 
