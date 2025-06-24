@@ -1,7 +1,7 @@
 package lanse.abstractt.storage;
 
 import dev.dirs.ProjectDirectories;
-import lanse.abstractt.core.DisplayModeSelector;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.bubble.TopBubble;
 import org.json.JSONObject;
 

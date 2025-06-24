@@ -1,6 +1,6 @@
 package lanse.abstractt.core.screens;
 
-import lanse.abstractt.core.DisplayModeSelector;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.storage.Settings;
 
 import javax.swing.*;

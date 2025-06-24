@@ -1,6 +1,6 @@
 package lanse.abstractt.core.screens;
 
-import lanse.abstractt.core.DisplayModeSelector;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.*;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;

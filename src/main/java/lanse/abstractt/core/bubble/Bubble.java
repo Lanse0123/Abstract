@@ -1,11 +1,12 @@
 package lanse.abstractt.core.bubble;
 
 import lanse.abstractt.core.ColorPalette;
-import lanse.abstractt.core.DisplayModeSelector;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 import lanse.abstractt.storage.Storage;
+import lanse.abstractt.storage.UniversalParser;
 import lanse.abstractt.storage.languages.LanguageManager;
 
 import javax.swing.*;
@@ -70,7 +71,7 @@ public class Bubble extends JPanel {
                 if (file.isDirectory()) {
                     handleDirectory(file, parent);
                 } else {
-                    handleFile(filePath, parent);
+                    UniversalParser.handleFile(filePath, parent);
                 }
 
                 WorldMap.setCameraCoordinates(0, 0);
@@ -81,79 +82,6 @@ public class Bubble extends JPanel {
                 parent.repaint();
             }
         });
-    }
-
-    //TODO - I might want to move this to a different class lol
-    public static void handleFile(String filePath, Container parent) {
-        // Check if the file is parseable via its language definition
-        if (!LanguageManager.isFileParsable(filePath)) {
-            System.out.println("Skipping file (not parseable): " + filePath);
-            return;
-        }
-
-        File file = new File(filePath);
-        if (!file.exists()) {
-            System.out.println("File does not exist: " + filePath);
-            return;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            StringBuilder prompt = new StringBuilder();
-            int lineNumber = 1;
-            int maxChars = 200;
-            String line;
-
-            System.out.println("=== PROMPTS FOR: " + file.getName() + " ===");
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    lineNumber++;
-                    continue;
-                }
-
-                String lineWithNumber = lineNumber + ": " + line + "\n";
-
-                if (prompt.length() + lineWithNumber.length() > maxChars) {
-                    // Output current prompt before it gets too long
-                    System.out.println("Prompt:\n" + prompt);
-                    System.out.println("-----");
-
-                    prompt.setLength(0); // reset prompt
-                }
-
-                prompt.append(lineWithNumber);
-                lineNumber++;
-            }
-
-            if (!prompt.isEmpty()) {
-                System.out.println("Prompt:\n" + prompt);
-                System.out.println("-----");
-            }
-
-        } catch (IOException e) {
-            System.err.println("Failed to read file: " + filePath);
-            e.printStackTrace();
-        }
-
-        //TODO - FIRST: (((DONE))) check if the file's extension is in the JSON list.
-        // If yes, then check it's parse value. If it should parse, continue on. Then, just open it like a txt file,
-        // and make a code view bubble (which is actually going to be a rectangle). There will be exceptions like PNG
-
-        //TODO - NEXT: (((DONE))) (if continuing), go through each line. Add the line to a prompt to mobiLlama. If the line is
-        // less than 200 or so characters, add the next line. Keep adding lines as long as it doesn't become too big of a prompt.
-        // add line numbers for reference.
-
-        //TODO - then, ask mobiLlama if it is containing anything important, like fields, classes, functions, imports, or something else.
-        // It should either respond with NO, or line number + what it is. Make sure it has context like the language type, and file name.
-
-        //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
-        // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
-        // those class bubbles will contain the function bubbles. If there is only 1 class, make the bubbles split by functions.
-        // There should also be an imports and fields bubble. Each function bubble should be able to see fields if the option is enabled by the user.
-
-        //TODO - LASTLY, make sure this is added to storage, so it never needs to do this again unless the code is edited, or
-        // if the user refreshes it. It can also do this smartly, by saving the code, and checking for parts that changed.
-        // then only call the AI for those parts, because going through each line each update might take a while.
     }
 
     public static void handleDirectory(File file, Container parent){
