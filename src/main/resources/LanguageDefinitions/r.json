@@ -1,9 +1,5 @@
 {
   "language": "r",
   "color": "#198ce7",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

@@ -1,9 +1,5 @@
 {
   "language": "visualbasic",
   "color": "#945db7",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

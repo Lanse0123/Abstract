@@ -1,9 +1,5 @@
 {
   "language": "abap",
   "color": "#e8274b",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

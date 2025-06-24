@@ -1,9 +1,5 @@
 {
   "language": "json",
   "color": "#C551E5",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": false
 }

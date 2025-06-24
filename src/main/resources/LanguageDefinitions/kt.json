@@ -1,9 +1,5 @@
 {
   "language": "kotlin",
   "color": "#f18e33",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

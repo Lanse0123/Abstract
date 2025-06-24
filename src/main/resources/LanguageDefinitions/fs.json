@@ -1,9 +1,5 @@
 {
   "language": "f#",
   "color": "#b845fc",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

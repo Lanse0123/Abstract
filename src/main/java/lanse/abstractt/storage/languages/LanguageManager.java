@@ -89,4 +89,35 @@ public class LanguageManager {
         }
     }
 
+    public static boolean isFileParsable(String path) {
+        String extension;
+
+        // Support both full file paths and raw extensions
+        if (path.startsWith(".")) {
+            extension = path.toLowerCase();
+        } else {
+            File file = new File(path);
+            extension = file.isDirectory() ? "folder" : getExtension(path);
+        }
+
+        String jsonPath = "/LanguageDefinitions/" + extension + ".json";
+
+        try (InputStream stream = LanguageManager.class.getResourceAsStream(jsonPath)) {
+            if (stream == null) return false;
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            StringBuilder json = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                json.append(line);
+            }
+
+            JSONObject obj = new JSONObject(json.toString());
+            return obj.optBoolean("parse", false); // returns false if key is missing
+        } catch (Exception e) {
+            e.printStackTrace(); // for debugging
+            return false;
+        }
+    }
+
 }

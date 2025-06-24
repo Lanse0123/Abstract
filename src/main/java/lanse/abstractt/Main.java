@@ -44,6 +44,5 @@ public class Main {
 
         //TODO - its already somehow laggy. Fix it. This might help, though I am not sure what I need this for yet.
 
-
     }
 }

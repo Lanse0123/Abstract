@@ -1,9 +1,5 @@
 {
   "language": "vdhl",
   "color": "#adb2cb",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

@@ -1,8 +1,4 @@
 {
   "language": "text",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "this is not a programming language",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": false
 }

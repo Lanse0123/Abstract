@@ -1,9 +1,5 @@
 {
   "language": "php",
   "color": "#4f5d95",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

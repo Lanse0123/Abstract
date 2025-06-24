@@ -1,9 +1,6 @@
 {
   "language": "verilog",
   "color": "#b2b7f8",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "nobody uses this language other than hardware creation. This might be removed",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true,
+  "extra": "nobody uses this language other than hardware creation. This might be removed"
 }

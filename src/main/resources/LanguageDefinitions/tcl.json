@@ -1,9 +1,5 @@
 {
   "language": "tcl",
   "color": "#e4cc98",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

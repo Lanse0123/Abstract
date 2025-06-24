@@ -1,9 +1,5 @@
 {
   "language": "c",
   "color": "#555",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": "probably (this one is hard)"
+  "parse": true
 }

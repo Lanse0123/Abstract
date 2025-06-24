@@ -1,9 +1,5 @@
 {
   "language": "ocaml",
   "color": "#3be133",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "weird language",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

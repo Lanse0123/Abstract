@@ -1,9 +1,5 @@
 {
   "language": "scala",
   "color": "#c22d40",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

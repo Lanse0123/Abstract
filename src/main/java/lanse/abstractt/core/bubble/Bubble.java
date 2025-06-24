@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
+import java.io.*;
 
 public class Bubble extends JPanel {
 
@@ -83,12 +83,63 @@ public class Bubble extends JPanel {
         });
     }
 
-    public static void handleFile(String filePath, Container parent){
-        //TODO - FIRST: check if the file's extension is in the JSON list.
+    //TODO - I might want to move this to a different class lol
+    public static void handleFile(String filePath, Container parent) {
+        // Check if the file is parseable via its language definition
+        if (!LanguageManager.isFileParsable(filePath)) {
+            System.out.println("Skipping file (not parseable): " + filePath);
+            return;
+        }
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.println("File does not exist: " + filePath);
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            StringBuilder prompt = new StringBuilder();
+            int lineNumber = 1;
+            int maxChars = 200;
+            String line;
+
+            System.out.println("=== PROMPTS FOR: " + file.getName() + " ===");
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    lineNumber++;
+                    continue;
+                }
+
+                String lineWithNumber = lineNumber + ": " + line + "\n";
+
+                if (prompt.length() + lineWithNumber.length() > maxChars) {
+                    // Output current prompt before it gets too long
+                    System.out.println("Prompt:\n" + prompt);
+                    System.out.println("-----");
+
+                    prompt.setLength(0); // reset prompt
+                }
+
+                prompt.append(lineWithNumber);
+                lineNumber++;
+            }
+
+            if (!prompt.isEmpty()) {
+                System.out.println("Prompt:\n" + prompt);
+                System.out.println("-----");
+            }
+
+        } catch (IOException e) {
+            System.err.println("Failed to read file: " + filePath);
+            e.printStackTrace();
+        }
+
+        //TODO - FIRST: (((DONE))) check if the file's extension is in the JSON list.
         // If yes, then check it's parse value. If it should parse, continue on. Then, just open it like a txt file,
         // and make a code view bubble (which is actually going to be a rectangle). There will be exceptions like PNG
 
-        //TODO - NEXT: (if continuing), go through each line. Add the line to a prompt to mobiLlama. If the line is
+        //TODO - NEXT: (((DONE))) (if continuing), go through each line. Add the line to a prompt to mobiLlama. If the line is
         // less than 200 or so characters, add the next line. Keep adding lines as long as it doesn't become too big of a prompt.
         // add line numbers for reference.
 

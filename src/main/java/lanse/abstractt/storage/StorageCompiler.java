@@ -13,7 +13,9 @@ import java.util.concurrent.Semaphore;
 
 public class StorageCompiler {
 
-    //TODO - this will be the green arrow that generates a default project of abstract from a project (dont do this part yet)
+    //TODO - this will be the green arrow that generates the entire description of abstract from a project using AI (dont do this part yet)
+
+    //TODO - this also creates the default project, which is mostly done by now.
 
     private static int totalItems = 0;
     private static int processedItems = 0;

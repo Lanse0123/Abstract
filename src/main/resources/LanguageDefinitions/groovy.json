@@ -1,9 +1,6 @@
 {
   "language": "groovy",
   "color": "#e69f56",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
+  "parse": true,
   "shouldWeUpgradeThisFromAJsonToAClass": "this is very difficult I think, it probably needs more"
 }

@@ -1,9 +1,5 @@
 {
   "language": ".javascript",
   "color": "#f1e05a",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

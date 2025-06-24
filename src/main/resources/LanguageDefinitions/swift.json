@@ -1,9 +1,5 @@
 {
   "language": "swift",
   "color": "#ffac45",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

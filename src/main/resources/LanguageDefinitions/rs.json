@@ -1,9 +1,5 @@
 {
   "language": "rust",
   "color": "#dea584",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": ""
+  "parse": true
 }

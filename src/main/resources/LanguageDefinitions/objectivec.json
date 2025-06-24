@@ -1,9 +1,6 @@
 {
   "language": "objectivec",
   "color": "#438eff",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
+  "parse": true,
   "shouldWeUpgradeThisFromAJsonToAClass": "wtf is this"
 }

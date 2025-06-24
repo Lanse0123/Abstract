@@ -1,8 +1,4 @@
 {
   "language": "apex",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "",
-  "shouldWeUpgradeThisFromAJsonToAClass": "this is like html?"
+  "parse": true
 }
