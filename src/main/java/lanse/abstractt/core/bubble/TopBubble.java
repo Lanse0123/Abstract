@@ -4,13 +4,16 @@ import lanse.abstractt.storage.languages.LanguageManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TopBubble extends Bubble {
 
     public static HashMap<String, Integer> languageMap = new HashMap<>();
     public static java.util.List<Color> languageColors = new java.util.ArrayList<>();
     public static java.util.List<Float> languagePercents = new java.util.ArrayList<>();
+    public static final java.util.List<String> languageExtensions = new ArrayList<>();
     public static int totalFiles = 0;
 
     public TopBubble(String title, String description, String filePath) {
@@ -27,14 +30,13 @@ public class TopBubble extends Bubble {
                 int w = getWidth();
                 int h = getHeight();
 
-                int i = 0;
-                for (String extension : languageMap.keySet()) {
+                for (int i = 0; i < languageExtensions.size(); i++) {
+                    String extension = languageExtensions.get(i);
                     int segmentWidth = Math.round(languagePercents.get(i) * w);
                     Color color = languageColors.get(i);
                     g.setColor(color);
                     g.fillRect(x, 0, segmentWidth, h);
 
-                    // Draw the language extension in the center of the bar segment
                     g.setColor(getContrastingColor(color));
                     String label = extension.startsWith(".") ? extension.substring(1) : extension;
                     FontMetrics fm = g.getFontMetrics();
@@ -49,7 +51,6 @@ public class TopBubble extends Bubble {
                     }
 
                     x += segmentWidth;
-                    i++;
                 }
             }
         };
@@ -68,24 +69,38 @@ public class TopBubble extends Bubble {
     public static void calculateLanguageBar() {
         languageColors.clear();
         languagePercents.clear();
+        languageExtensions.clear();
 
-        System.out.println(languageMap);
+        // Prepare a cleaned map of extensions -> count
+        Map<String, Integer> cleanedMap = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : languageMap.entrySet()) {
+            String key = entry.getKey();
+            int count = entry.getValue();
+
+            // Extract true extension (remove anything after '=')
+            String ext = key.contains("=") ? key.substring(0, key.indexOf("=")) : key;
+            if (!ext.startsWith(".")) ext = "." + ext;
+
+            Color color = LanguageManager.getLanguageColorFromPath(ext, true);
+            if (color != null && !color.equals(Color.RED)) {
+                cleanedMap.put(ext, cleanedMap.getOrDefault(ext, 0) + count);
+            }
+        }
 
         int total = totalFiles == 0 ? 1 : totalFiles;
 
-        //filter out extensions that aren't in the list of languages
-        languageMap.entrySet().removeIf(entry -> LanguageManager.getLanguageColorFromPath(entry.getKey()) == null);
+        for (Map.Entry<String, Integer> entry : cleanedMap.entrySet()) {
+            String ext = entry.getKey();
+            int count = entry.getValue();
 
-        for (String extension : languageMap.keySet()) {
-            Color color = LanguageManager.getLanguageColorFromPath(extension);
+            Color color = LanguageManager.getLanguageColorFromPath(ext, true);
+            if (color == null || color.equals(Color.RED)) continue;
 
-            if (color == null) continue;
-
-            float percent = languageMap.get(extension) / (float) total;
+            float percent = count / (float) total;
+            languageExtensions.add(ext);
             languageColors.add(color);
             languagePercents.add(percent);
         }
     }
-
 
 }
