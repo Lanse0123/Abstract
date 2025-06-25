@@ -85,7 +85,7 @@ public class UniversalParser {
             [/INST]
             """.formatted(extension, prompt);
 
-            //System.out.println(mergedPrompt);
+            System.out.println(mergedPrompt);
 
             Optional<String> response = LLMManager.runLLM(mergedPrompt);
             if (response.isPresent()) {
