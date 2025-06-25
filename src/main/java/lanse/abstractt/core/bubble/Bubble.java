@@ -21,6 +21,7 @@ public class Bubble extends JPanel {
     protected String description;
     protected Icon icon;
     protected final String filePath;
+    protected Color color;
     protected int width = 680;
     protected int height = 360;
     private JLabel iconLabel;
@@ -34,6 +35,7 @@ public class Bubble extends JPanel {
         this.description = description;
         this.filePath = filePath;
         this.icon = LanguageManager.getIconFromPath(filePath);
+        this.color = LanguageManager.getLanguageColorFromPath(filePath, false);
 
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
@@ -164,8 +166,12 @@ public class Bubble extends JPanel {
         Shape oval = new java.awt.geom.Ellipse2D.Double(0, 0, getWidth(), getHeight());
         g2.setClip(oval);
 
-        //TODO - I will eventually make this use the color tag in the language's JSON file, and folders or other randoms will be light blue
-        g2.setColor(ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
+        if (color != null && color != Color.BLACK){
+            g2.setColor(color);
+        } else {
+            g2.setColor(ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
+        }
+
         g2.fill(oval);
 
         // Draw outline
