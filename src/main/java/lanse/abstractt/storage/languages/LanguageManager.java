@@ -88,8 +88,7 @@ public class LanguageManager {
             String hexColor = obj.getString("color");
 
             return Color.decode(hexColor);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
             return Color.BLACK;
         }
     }

@@ -19,8 +19,6 @@ public class Main {
 
         Settings.load();
 
-        //hi
-
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Abstract IDE");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
