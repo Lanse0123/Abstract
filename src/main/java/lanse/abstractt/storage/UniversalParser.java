@@ -7,10 +7,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Optional;
 
 public class UniversalParser {
 
     public static void handleFile(String filePath, Container parent) {
+        // Check if the file is parseable via its language definition
         if (!LanguageManager.isFileParsable(filePath)) {
             System.out.println("Skipping file (not parseable): " + filePath);
             return;
@@ -56,11 +58,9 @@ public class UniversalParser {
             return;
         }
 
-        // Determine the language from extension
+        // Determine language from file extension
         String extension = LanguageManager.getExtension(filePath);
-        if (!extension.startsWith(".")) {
-            extension = "." + extension;
-        }
+        if (!extension.startsWith(".")) extension = "." + extension;
 
         // Print full prompts with template
         System.out.println("=== TEMPLATED PROMPTS FOR: " + file.getName() + " ===");
@@ -83,12 +83,20 @@ public class UniversalParser {
             - Do not add explanations or extra formatting.
             """.formatted(extension, prompt);
 
-            System.out.println(mergedPrompt);
+            //System.out.println(mergedPrompt);
+            Optional<String> response = LLMManager.runLLM(mergedPrompt);
+            if (response.isPresent()) {
+                System.out.println("[Response] " + response.get());
+                // TODO: parse this response later to build class/function bubbles
+            } else {
+                System.out.println("[Response] Failed to get result from LLM.");
+            }
+
             System.out.println("--------");
         }
 
-        //TODO - then, for each prompt, ask mobiLlama if it is containing anything important, like fields, classes, functions, imports, or something else.
-        // It should either respond with NO, or line number + what it is. Make sure it has context like the language type, and file name.
+        //TODO: Here is where you'd call your local LLM executable with mergedPrompt.
+        // For now, this is where MobiLlama input/output integration will go.
 
         //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
