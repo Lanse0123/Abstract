@@ -1,5 +1,6 @@
 package lanse.abstractt.storage.languages;
 
+import lanse.abstractt.core.ColorPalette;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -55,8 +56,7 @@ public class LanguageManager {
         }
     }
 
-    //TODO - this is still somehow wrong. Everything is returning red, or white
-    public static Color getLanguageColorFromPath(String path) {
+    public static Color getLanguageColorFromPath(String path, boolean isTopBar) {
         String extension;
 
         // Allow either a full path or just the extension
@@ -64,13 +64,18 @@ public class LanguageManager {
             extension = path.toLowerCase();
         } else {
             File file = new File(path);
-            extension = file.isDirectory() ? "folder" : "." + getExtension(path);
+            extension = file.isDirectory() ? "folder" : getExtension(path);
         }
+
+        if (extension.startsWith(".")) extension = extension.replaceFirst(".", "");
 
         String basePath = "/LanguageDefinitions/" + extension + ".json";
         try {
             InputStream stream = LanguageManager.class.getResourceAsStream(basePath);
-            if (stream == null) return Color.RED;
+            if (stream == null){
+                if (isTopBar) return Color.RED;
+                return ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
+            }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             StringBuilder json = new StringBuilder();
@@ -90,6 +95,7 @@ public class LanguageManager {
     }
 
     public static boolean isFileParsable(String path) {
+        //This parsable check works correctly
         String extension;
 
         // Support both full file paths and raw extensions
