@@ -2,8 +2,6 @@ Things that I want to add next:
 
 ---------------------------------------------------------------------------------
 
-*Finish working on making the TopBubble display the language bar correctly (currently broken)
-
 *Make a new button on each bubble that will let you edit it's description
 
 *Might make a new screen or window that shows up when you edit a description so its easier to see
@@ -18,7 +16,7 @@ Things that I want to add next:
 
 *Apply the theme randomizer / creator and add it to Settings (randomizer should be completed)
 
-*start working on the universal parser to split the code into functions and / or more digestible parts
+*start working on the universal parser to split the code into functions and / or more digestible parts (PROGRESS)
 
 *EVENTUALLY IN THE FUTURE learn how to incorporate AI to generate descriptions for each thing. the proompts folder in resources explains this more.
 
