@@ -1,79 +1,59 @@
 package lanse.abstractt.storage;
 
+import io.github.ollama4j.OllamaAPI;
+import io.github.ollama4j.exceptions.OllamaBaseException;
+import io.github.ollama4j.models.response.OllamaResult;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.*;
+import java.util.List;
 import java.util.Optional;
 
 public class LLMManager {
     private static Process llamaProcess;
 
-    public static Optional<String> runLLM(String prompt) {
-        try {
-            URL url = new URL("http://localhost:8080/completion");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            String json = """
-        {
-          "prompt": "%s",
-          "n_predict": 64,
-          "temperature": 0.2
+    public static boolean tryStartOllama() {
+        if (llamaProcess != null) {
+            return true;
         }
-        """.formatted(prompt.replace("\"", "\\\"").replace("\n", "\\n"));
+        try {
+            installOllama();
+            ProcessBuilder server = new ProcessBuilder(List.of("ollama", "serve"));
+            llamaProcess = server.start();
+        }
+        catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
 
-            try (OutputStream os = connection.getOutputStream()) {
-                os.write(json.getBytes());
-            }
+    public static void installOllama() throws IOException {
+        String osType = System.getProperty("os.name");
+        String script = (osType.toLowerCase().contains("windows")) ?
+                "./llama/headless-ollama/preload.ps1" : "./llama/headless-ollama/preload.sh"
+        ;
+        ProcessBuilder pb = new ProcessBuilder(List.of(script));
+        pb.start();
+    }
 
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            }
-
-            return Optional.of(response.toString());
-        } catch (IOException e) {
+    public static Optional<String> runLLM(String prompt) {
+        if (!tryStartOllama()) {
+            return Optional.empty();
+        }
+        try {
+            OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
+            OllamaResult result = ollamaAPI.generate("tinyllama:latest", prompt, null);
+            return Optional.of(result.getResponse());
+        }
+        catch (OllamaBaseException | IOException | InterruptedException e) {
+            System.err.println("Error generating result!");
             e.printStackTrace();
             return Optional.empty();
         }
     }
-
-    public static Process startLlamaServer() throws IOException {
-        // Don't start if already running
-        if (llamaProcess != null && llamaProcess.isAlive()) {
-            return llamaProcess;
-        }
-
-        // Paths to the executable and model
-        Path llamaServer = Paths.get("llama/bin/llama-server.exe");
-        Path modelFile = Paths.get("llama/models/ggml-model-q4_0.gguf");
-
-        // Check if both exist
-        if (!Files.exists(llamaServer) || !Files.exists(modelFile)) {
-            System.err.println("llama-server.exe or model file not found.");
-            return null;
-        }
-
-        // Build the process
-        ProcessBuilder pb = new ProcessBuilder(
-                llamaServer.toAbsolutePath().toString(),
-                "-m", modelFile.toAbsolutePath().toString(),
-                "--port", "8080"
-        );
-
-        pb.inheritIO(); // log output to console
-        llamaProcess = pb.start(); // Store the process for later shutdown
-
-        return llamaProcess;
-    }
-
+    
     public static void stopServer() {
         if (llamaProcess != null && llamaProcess.isAlive()) {
             llamaProcess.destroyForcibly();

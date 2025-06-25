@@ -18,6 +18,9 @@ dependencies {
     // Json for storage and stuff
     implementation("org.json:json:20240303")
     implementation("dev.dirs:directories:26")
+
+    // Ollama integration
+    implementation("io.github.ollama4j:ollama4j:1.0.100")
 }
 
 application {
