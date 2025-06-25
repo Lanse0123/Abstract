@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.json.JSONObject;
+
 public class UniversalParser {
 
     public static void handleFile(String filePath, Container parent) {
@@ -66,30 +68,38 @@ public class UniversalParser {
         System.out.println("=== TEMPLATED PROMPTS FOR: " + file.getName() + " ===");
         for (String prompt : prompts) {
             String mergedPrompt = """
-            #CONTEXT:
+            <s>[INST] 
             You are part of a universal coding IDE. Your job is to extract structural code information from a file written in %s.
             
-            #GOAL:
             Find all defining lines in the code: functions, classes, imports, fields, or other structural elements.
             
-            #INPUT:
+            INPUT:
             %s
             
-            #OUTPUT RULES:
+            OUTPUT RULES:
             - Only respond with line numbers and their type.
             - Use this format: 12: function, 24: class
             - If nothing is defining, respond with: no
             - Use only one line in your response.
             - Do not add explanations or extra formatting.
+            [/INST]
             """.formatted(extension, prompt);
 
             //System.out.println(mergedPrompt);
+
             Optional<String> response = LLMManager.runLLM(mergedPrompt);
             if (response.isPresent()) {
-                System.out.println("[Response] " + response.get());
-                // TODO: parse this response later to build class/function bubbles
+                try {
+                    String json = response.get();
+                    JSONObject obj = new JSONObject(json);
+                    String answer = obj.getString("content").trim();
+
+                    System.out.println("[Answer] " + answer);
+                } catch (Exception e) {
+                    System.out.println("[Error] Failed to parse JSON: " + e.getMessage());
+                }
             } else {
-                System.out.println("[Response] Failed to get result from LLM.");
+                System.out.println("[Error] No response from LLM.");
             }
 
             System.out.println("--------");
