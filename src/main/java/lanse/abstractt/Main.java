@@ -2,6 +2,7 @@ package lanse.abstractt;
 
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.screens.MainMenuScreen;
+import lanse.abstractt.storage.LLMManager;
 import lanse.abstractt.storage.Settings;
 
 import javax.swing.*;
@@ -34,6 +35,10 @@ public class Main {
 
         // Start server tick loop (10 times per second)
         scheduler.scheduleAtFixedRate(Main::serverTick, 0, 100, TimeUnit.MILLISECONDS);
+
+        if (!LLMManager.tryStartOllama()) {
+            System.err.println("Unable to start ollama, AI features will not work!");
+        }
     }
 
     public static void serverTick() {

@@ -38,9 +38,6 @@ public class LLMManager {
     }
 
     public static Optional<String> runLLM(String prompt) {
-        if (!tryStartOllama()) {
-            return Optional.empty();
-        }
         try {
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
             OllamaResult result = ollamaAPI.generate("tinyllama:latest", prompt, null);
