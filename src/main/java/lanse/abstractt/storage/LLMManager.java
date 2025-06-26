@@ -5,12 +5,7 @@ import io.github.ollama4j.exceptions.OllamaBaseException;
 import io.github.ollama4j.models.response.OllamaResult;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class LLMManager {
