@@ -1,5 +1,6 @@
 {
   "language": "matlab",
   "color": "#e16737",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

@@ -1,5 +1,6 @@
 {
   "language": "coffeescript",
   "color": "#244776",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

@@ -1,5 +1,6 @@
 {
   "language": "lua",
   "color": "#000080",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

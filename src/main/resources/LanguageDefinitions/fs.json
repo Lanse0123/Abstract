@@ -1,5 +1,6 @@
 {
   "language": "f#",
   "color": "#b845fc",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

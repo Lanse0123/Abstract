@@ -2,5 +2,6 @@
   "language": "groovy",
   "color": "#e69f56",
   "parse": true,
+  "lsp": "false",
   "shouldWeUpgradeThisFromAJsonToAClass": "this is very difficult I think, it probably needs more"
 }

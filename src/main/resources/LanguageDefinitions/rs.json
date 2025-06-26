@@ -1,5 +1,6 @@
 {
   "language": "rust",
   "color": "#dea584",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

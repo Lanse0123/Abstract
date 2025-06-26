@@ -2,6 +2,7 @@
   "language": "fortran",
   "color": "#4d41b1",
   "parse": true,
+  "lsp": "false",
   "extra": "this language is over 100 years old because its from 1950, so this might be hard",
   "shouldWeUpgradeThisFromAJsonToAClass": "probably, it uses a ton of extensions"
 }

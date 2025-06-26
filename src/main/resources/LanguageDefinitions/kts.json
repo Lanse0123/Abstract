@@ -1,5 +1,6 @@
 {
   "language": "kotlin",
   "color": "#f18e33",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

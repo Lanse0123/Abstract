@@ -2,5 +2,6 @@
   "language": "image",
   "color": "#0298c3",
   "parse": false,
+  "lsp": "false",
   "extra": "not a programming language, will have special cases"
 }

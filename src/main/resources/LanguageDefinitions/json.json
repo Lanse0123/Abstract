@@ -1,5 +1,7 @@
 {
   "language": "json",
   "color": "#C551E5",
-  "parse": false
+  "parse": false,
+  "lsp": "false"
+
 }

@@ -1,5 +1,6 @@
 {
   "language": "perl",
   "color": "#0298c3",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

@@ -2,5 +2,6 @@
   "language": "objectivec",
   "color": "#438eff",
   "parse": true,
+  "lsp": "false",
   "shouldWeUpgradeThisFromAJsonToAClass": "wtf is this"
 }

@@ -1,5 +1,6 @@
 {
   "language": "abap",
   "color": "#e8274b",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

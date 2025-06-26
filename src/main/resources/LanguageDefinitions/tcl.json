@@ -1,5 +1,6 @@
 {
   "language": "tcl",
   "color": "#e4cc98",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

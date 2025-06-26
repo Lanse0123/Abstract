@@ -1,5 +1,6 @@
 {
   "language": "c#",
   "color": "#178600",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

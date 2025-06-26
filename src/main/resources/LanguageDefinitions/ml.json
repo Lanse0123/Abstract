@@ -1,5 +1,6 @@
 {
   "language": "ocaml",
   "color": "#3be133",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

@@ -1,5 +1,6 @@
 {
   "language": "pascal",
   "color": "#e3f171",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

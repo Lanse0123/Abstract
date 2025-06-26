@@ -1,5 +1,6 @@
 {
   "language": "erlang",
   "color": "#b83998",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

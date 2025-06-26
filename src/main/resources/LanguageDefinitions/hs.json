@@ -1,5 +1,6 @@
 {
   "language": "haskell",
   "color": "#5e5086",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

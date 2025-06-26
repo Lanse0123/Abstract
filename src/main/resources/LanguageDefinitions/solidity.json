@@ -1,5 +1,6 @@
 {
   "language": "solidity",
   "color": "#aa6746",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

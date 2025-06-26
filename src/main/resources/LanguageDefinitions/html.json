@@ -6,5 +6,6 @@
   "defaultMain": "",
   "extra": "",
   "shouldWeUpgradeThisFromAJsonToAClass": "",
-  "parse": false
+  "parse": false,
+  "lsp": "false"
 }

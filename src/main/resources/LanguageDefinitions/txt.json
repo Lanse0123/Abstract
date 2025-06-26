@@ -1,4 +1,5 @@
 {
   "language": "text",
-  "parse": false
+  "parse": false,
+  "lsp": "false"
 }

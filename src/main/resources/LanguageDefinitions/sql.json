@@ -1,5 +1,6 @@
 {
   "language": "sql",
   "color": "#3f3f3f",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

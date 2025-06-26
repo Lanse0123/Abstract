@@ -1,5 +1,6 @@
 {
   "language": "clojure",
   "color": "#db5855",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

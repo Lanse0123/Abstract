@@ -1,5 +1,6 @@
 {
   "language": "ada",
   "color": "#02f88c",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

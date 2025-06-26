@@ -1,5 +1,6 @@
 {
   "language": "python",
   "color": "#3572a5",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

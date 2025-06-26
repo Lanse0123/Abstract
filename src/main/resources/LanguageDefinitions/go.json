@@ -1,5 +1,6 @@
 {
   "language": "go",
   "color": "#00add8",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

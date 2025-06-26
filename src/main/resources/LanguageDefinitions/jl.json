@@ -1,5 +1,6 @@
 {
   "language": "julia",
   "color": "#a270ba",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

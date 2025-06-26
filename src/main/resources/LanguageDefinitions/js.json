@@ -1,5 +1,6 @@
 {
   "language": ".javascript",
   "color": "#f1e05a",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

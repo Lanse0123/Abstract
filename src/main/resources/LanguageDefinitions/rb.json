@@ -1,5 +1,6 @@
 {
   "language": "ruby",
   "color": "#701516",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

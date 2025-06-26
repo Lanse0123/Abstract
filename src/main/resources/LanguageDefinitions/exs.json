@@ -1,5 +1,6 @@
 {
   "language": "elixer",
   "color": "#6e4a7e",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

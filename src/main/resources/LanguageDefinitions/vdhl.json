@@ -1,5 +1,6 @@
 {
   "language": "vdhl",
   "color": "#adb2cb",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

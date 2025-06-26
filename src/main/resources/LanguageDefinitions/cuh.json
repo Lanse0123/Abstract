@@ -1,5 +1,6 @@
 {
   "language": "cuda",
   "color": "#3a4e3a",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

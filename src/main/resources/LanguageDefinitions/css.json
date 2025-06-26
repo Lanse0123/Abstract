@@ -1,5 +1,6 @@
 {
   "language": "css",
   "color": "#563d7c",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

@@ -1,5 +1,6 @@
 {
   "language": "image",
   "color": "#0298c3",
-  "parse": false
+  "parse": false,
+  "lsp": "false"
 }

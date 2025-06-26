@@ -2,5 +2,6 @@
   "language": "verilog",
   "color": "#b2b7f8",
   "parse": true,
+  "lsp": "false",
   "extra": "nobody uses this language other than hardware creation. This might be removed"
 }

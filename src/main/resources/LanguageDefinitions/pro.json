@@ -1,5 +1,6 @@
 {
   "language": "prolog",
   "color": "#74283c",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }

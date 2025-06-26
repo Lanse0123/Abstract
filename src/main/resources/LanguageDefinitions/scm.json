@@ -1,5 +1,6 @@
 {
   "language": "scheme",
   "color": "#1e4aec",
-  "parse": true
+  "parse": true,
+  "lsp": "false"
 }
