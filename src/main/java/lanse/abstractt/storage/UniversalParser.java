@@ -90,11 +90,7 @@ public class UniversalParser {
             Optional<String> response = LLMManager.runLLM(mergedPrompt);
             if (response.isPresent()) {
                 try {
-                    String json = response.get();
-                    JSONObject obj = new JSONObject(json);
-                    String answer = obj.getString("content").trim();
-
-                    System.out.println("[Answer] " + answer);
+                    System.out.println("[Answer] " + response.get());
                 } catch (Exception e) {
                     System.out.println("[Error] Failed to parse JSON: " + e.getMessage());
                 }
