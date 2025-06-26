@@ -33,6 +33,7 @@ public class LLMManager {
                 List.of("powershell", "./llama/headless-ollama/preload.ps1") : List.of("bash", "./llama/headless-ollama/preload.sh")
         ;
         ProcessBuilder pb = new ProcessBuilder(script_path);
+        pb.inheritIO();
         Process installer = pb.start();
         installer.waitFor();
         //TODO: don't make any prompts until this is complete
