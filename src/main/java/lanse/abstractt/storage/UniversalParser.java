@@ -1,5 +1,6 @@
 package lanse.abstractt.storage;
 
+import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.storage.languages.LanguageManager;
 
 import java.awt.*;
@@ -117,15 +118,23 @@ public class UniversalParser {
 
         //TODO - for each in structuralList (change this to a map or something), do the TODOs from below
         structuralList = structuralList;
+        String functionName = "function"; // this should be changed for each function. Fields will be stored as "Fields". "Imports" for Imports, etc.
 
         //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
         // those class bubbles will contain the function bubbles. If there is only 1 class, make the bubbles split by functions.
         // There should also be an imports and fields bubble. Each function bubble should be able to see fields if the option is enabled by the user.
 
-        //TODO - LASTLY, make sure this is added to storage, so it never needs to do this again unless the code is edited, or
-        // if the user refreshes it. It can also do this smartly, by saving the code, and checking for parts that changed.
-        // then only call the AI for those parts, because going through each line each update might take a while.
+        //TODO - add a check to make sure if the flag from addStructure is already in the code, then it doesnt try
+        // to do LSP or AI unless the user overrides that or something.
+
+        for (int i = 0; i != 0; i++) { //Simulating a for each statement, obviously change this loop once its good.
+            Storage.addStructure(filePath, functionName);
+        }
+
+        Bubble newBubble = Storage.load(filePath); //might change this
+        parent.setLayout(null);
+        parent.add(newBubble);
     }
 
 }

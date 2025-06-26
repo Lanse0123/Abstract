@@ -136,6 +136,30 @@ public class Storage {
         }
     }
 
+    public static void addStructure(String filepath, String functionName) {
+        if (filepath.contains("AbstractionVisualizerStorage")) return;
+        try {
+            Files.createDirectories(Path.of(mapToAbstractionPath(filepath, false)).getParent());
+
+            JSONObject json = new JSONObject();
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //TODO - add a new json thing for each structural point the same way save does it.
+            // Like there should be imports, fields, classes, and functions.
+            // Make sure they are all named uniquely so theres no overlap.
+
+            //TODO - then make sure to add some json flag that tells it that its already compiled, so LSP and AI dont
+            // need to go over the same thing many times
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            try (FileWriter file = new FileWriter(mapToAbstractionPath(filepath, false))) {
+                file.write(json.toString(4));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String mapToAbstractionPath(String filePath, boolean wantDir){
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
         return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + (wantDir ? "" : ".json");
