@@ -100,7 +100,7 @@ public class Storage {
 
             String path = json.optString("path", "null");
             String name = json.optString("name", "null");
-            String description = json.optString("description", "null");
+            String description = json.optString("desc", "null");
 
             return new Bubble(name, description, path);
 
@@ -125,7 +125,7 @@ public class Storage {
 
             json.put("path", bubble.getFilePath());
             json.put("name", bubble.getTitle());
-            json.put("description", bubble.getDescription());
+            json.put("desc", bubble.getDescription());
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
             try (FileWriter file = new FileWriter(mapToAbstractionPath(bubble.getFilePath(), false))) {

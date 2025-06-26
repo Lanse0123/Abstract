@@ -28,7 +28,8 @@ public class UniversalParser {
         }
 
         String LSPLink = LanguageManager.languageHasLSP(filePath);
-        String[] structuralList; //this will be used to store the functions and other important structural things
+        String[] structuralList = new String[0]; //this will be used to store the functions and other important structural things
+        //TODO - this should probably be a map
 
         if (!Objects.equals(LSPLink, "false")){
             structuralList = LSPManager.doStuff(LSPLink);
@@ -113,6 +114,9 @@ public class UniversalParser {
             // For now, this is where MobiLlama input/output integration will go.
 
         } //end of call for LLM
+
+        //TODO - for each in structuralList (change this to a map or something), do the TODOs from below
+        structuralList = structuralList;
 
         //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
