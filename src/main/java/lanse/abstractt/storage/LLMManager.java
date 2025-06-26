@@ -20,20 +20,21 @@ public class LLMManager {
             ProcessBuilder server = new ProcessBuilder(List.of("ollama", "serve"));
             llamaProcess = server.start();
         }
-        catch (IOException e) {
+        catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
         return true;
     }
 
-    public static void installOllama() throws IOException {
+    public static void installOllama() throws IOException, InterruptedException {
         String osType = System.getProperty("os.name");
         List<String> script_path = (osType.toLowerCase().contains("windows")) ?
                 List.of("powershell", "./llama/headless-ollama/preload.ps1") : List.of("bash", "./llama/headless-ollama/preload.sh")
         ;
         ProcessBuilder pb = new ProcessBuilder(script_path);
         Process installer = pb.start();
+        installer.waitFor();
         //TODO: don't make any prompts until this is complete
     }
 
