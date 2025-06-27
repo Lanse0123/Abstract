@@ -54,7 +54,7 @@ public class WorkSpaceScreen extends JPanel {
                 StorageCompiler.waitForRoot();
             }
             catch (InterruptedException ignored) {}
-            Storage.load(Settings.selectedProjectPath);
+            Storage.load(Settings.selectedProjectPath, false);
             Storage.setCurrentDepth(1);
 
             bubble.setSize(bubble.getPreferredSize());

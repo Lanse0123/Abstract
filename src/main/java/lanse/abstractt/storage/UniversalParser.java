@@ -8,10 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.json.JSONObject;
+import java.util.*;
 
 public class UniversalParser {
 
@@ -29,8 +26,7 @@ public class UniversalParser {
         }
 
         String LSPLink = LanguageManager.languageHasLSP(filePath);
-        String[] structuralList = new String[0]; //this will be used to store the functions and other important structural things
-        //TODO - this should probably be a map
+        Map<String, Integer> structuralList = new HashMap<>(); //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")){
             structuralList = LSPManager.doStuff(LSPLink);
@@ -111,14 +107,13 @@ public class UniversalParser {
                 System.out.println("--------");
             }
 
-            //TODO: Here is where you'd call your local LLM executable with mergedPrompt.
-            // For now, this is where MobiLlama input/output integration will go.
+            //TODO: get the LLM's response(s), and add all of it to structuralList to make the function names and their starting index.
 
         } //end of call for LLM
 
-        //TODO - for each in structuralList (change this to a map or something), do the TODOs from below
-        structuralList = structuralList;
-        String functionName = "function"; // this should be changed for each function. Fields will be stored as "Fields". "Imports" for Imports, etc.
+        for (Map.Entry<String, Integer> entry : structuralList.entrySet()) {
+            Storage.addStructure(filePath, entry.getKey(), entry.getValue());
+        }
 
         //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
@@ -128,11 +123,7 @@ public class UniversalParser {
         //TODO - add a check to make sure if the flag from addStructure is already in the code, then it doesnt try
         // to do LSP or AI unless the user overrides that or something.
 
-        for (int i = 0; i != 0; i++) { //Simulating a for each statement, obviously change this loop once its good.
-            Storage.addStructure(filePath, functionName);
-        }
-
-        Bubble newBubble = Storage.load(filePath); //might change this
+        Bubble newBubble = Storage.load(filePath, true); //might change this
         parent.setLayout(null);
         parent.add(newBubble);
     }

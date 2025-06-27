@@ -23,14 +23,14 @@ public class Storage {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
         File dir = new File(selectedBubblePath.peek());
         if (!dir.isDirectory()) {
-            return List.of(load(dir.getPath()));
+            return List.of(load(dir.getPath(), false));
         }
         List<Bubble> bubbles = new ArrayList<>();
         for (File f : Objects.requireNonNull(dir.listFiles())){
             if (f.getName().equals("AbstractionVisualizerStorage")) {
                 continue;
             }
-            bubbles.add(load(f.getPath()));
+            bubbles.add(load(f.getPath(), false));
         }
         return bubbles;
     }
@@ -87,7 +87,7 @@ public class Storage {
 
     // Load settings from JSON
     //TODO: make this list into a class containing path, name and description
-    public static Bubble load(String filePath) {
+    public static Bubble load(String filePath, boolean loadFunctionBubbles) {
         try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath, false)))) {
             StringBuilder jsonContent = new StringBuilder();
             String line;
@@ -136,7 +136,7 @@ public class Storage {
         }
     }
 
-    public static void addStructure(String filepath, String functionName) {
+    public static void addStructure(String filepath, String functionName, Integer startIndex) {
         if (filepath.contains("AbstractionVisualizerStorage")) return;
         try {
             Files.createDirectories(Path.of(mapToAbstractionPath(filepath, false)).getParent());

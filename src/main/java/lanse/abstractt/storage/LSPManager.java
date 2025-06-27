@@ -1,9 +1,13 @@
 package lanse.abstractt.storage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LSPManager {
 
-    public static String[] doStuff(String LSPLink) {
+    public static Map<String, Integer> doStuff(String LSPLink) {
         //do stuff or something idk
-        return new String[0];
+        //(the string is the name of the function, or if its fields, or imports, or etc. int is the lineNumber it starts at. This might change
+        return new HashMap<>();
     }
 }
