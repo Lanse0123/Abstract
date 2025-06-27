@@ -3,10 +3,20 @@ package lanse.abstractt.storage;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
 import io.github.ollama4j.models.response.OllamaResult;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class LLMManager {
     private static Process llamaProcess;
@@ -18,7 +28,13 @@ public class LLMManager {
         try {
             installOllama();
             ProcessBuilder server = new ProcessBuilder(List.of("ollama", "serve"));
-            llamaProcess = server.start();
+            try {
+                llamaProcess = server.start();
+            }
+            catch (IOException e) {
+                server = new ProcessBuilder(List.of("./llama/bin/ollama", "serve"));
+                llamaProcess = server.start();
+            }
         }
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -28,15 +44,65 @@ public class LLMManager {
     }
 
     public static void installOllama() throws IOException, InterruptedException {
+        //Figure out what OS we're on, and set variables based on that.
         String osType = System.getProperty("os.name");
-        List<String> script_path = (osType.toLowerCase().contains("windows")) ?
-                List.of("powershell", "./llama/headless-ollama/preload.ps1") : List.of("bash", "./llama/headless-ollama/preload.sh")
-        ;
-        ProcessBuilder pb = new ProcessBuilder(script_path);
-        pb.inheritIO();
-        Process installer = pb.start();
-        installer.waitFor();
-        //TODO: don't make any prompts until this is complete
+        String osName = "unknown";
+        String extension = ".tgz";
+        String binary_extension = "";
+        if (osType.toLowerCase().contains("windows")) {
+            osName = "windows";
+            extension = ".zip";
+            binary_extension = ".exe";
+        }
+        else if (osType.toLowerCase().contains("darwin")) {
+            osName = "darwin";
+        }
+        else if (osType.toLowerCase().contains("linux")) {
+            osName = "linux";
+        }
+
+        // If it exists, we don't need to install it!
+        String exec = "ollama" + binary_extension;
+        boolean ollamaExists = Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
+                .map(Paths::get)
+                .anyMatch(path -> Files.exists(path.resolve(exec)));
+
+        if (ollamaExists) {
+            return;
+        }
+
+        // If we've already installed it, we don't need to install it again!
+        File executable =  new File("llama/bin/ollama" + binary_extension);
+        if (executable.exists() && executable.canExecute()) {
+            return;
+        }
+
+        URL url = new URL("https://github.com/ollama/ollama/releases/latest/download/ollama-" + osName + "-amd64" + extension);
+        Path compressed = Paths.get("llama/ollama-" + osName + "-amd64" + extension);
+        if (!compressed.toFile().exists()) {
+            System.out.println("Downloading " + url);
+            try (InputStream download = url.openStream()) {
+                Files.copy(download, compressed);
+            }
+        }
+
+        System.out.println("Extracting " + compressed);
+        File targetDir = new File("llama");
+        if (osName.equals("windows")) {
+            try (ArchiveInputStream i = new ZipArchiveInputStream(new BufferedInputStream(compressed.toUri().toURL().openStream()))) {
+                Extractor.extractFile(i, targetDir);
+            }
+        }
+        else {
+            try (InputStream fi = Files.newInputStream(compressed);
+                 InputStream bi = new BufferedInputStream(fi);
+                 InputStream gzi = new GzipCompressorInputStream(bi);
+                 ArchiveInputStream i = new TarArchiveInputStream(gzi)) {
+                Extractor.extractFile(i, targetDir);
+            }
+        }
+
+        System.out.println("Done installing ollama!");
     }
 
     public static Optional<String> runLLM(String prompt) {

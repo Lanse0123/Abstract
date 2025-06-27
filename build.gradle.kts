@@ -19,6 +19,9 @@ dependencies {
     implementation("org.json:json:20240303")
     implementation("dev.dirs:directories:26")
 
+    // Extracting files
+    implementation("org.apache.commons:commons-compress:1.27.1")
+
     // Ollama integration
     implementation("io.github.ollama4j:ollama4j:1.0.100")
 }
