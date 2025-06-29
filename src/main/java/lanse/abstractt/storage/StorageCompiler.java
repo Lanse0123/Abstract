@@ -120,7 +120,7 @@ public class StorageCompiler {
         JSONObject json = new JSONObject();
         json.put("name", originalFile.getName());
         json.put("path", originalFile.getAbsolutePath());
-        json.put("description", "");
+        json.put("desc", "");
 
         try (FileWriter writer = new FileWriter(jsonFile)) {
             writer.write(json.toString(4)); // pretty print with indent
