@@ -82,6 +82,7 @@ public class LLMManager {
         if (!compressed.toFile().exists()) {
             System.out.println("Downloading " + url);
             try (InputStream download = url.openStream()) {
+                Files.createDirectories(compressed.getParent());
                 Files.copy(download, compressed);
             }
         }
