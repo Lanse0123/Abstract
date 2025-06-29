@@ -28,15 +28,17 @@ public class LLMManager {
         try {
             installOllama();
             String binary_extension = "";
+            String bindir = "bin/";
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                 binary_extension = ".exe";
+                bindir = "";
             }
             ProcessBuilder server = new ProcessBuilder(List.of("ollama" + binary_extension, "serve"));
             try {
                 llamaProcess = server.start();
             }
             catch (IOException e) {
-                server = new ProcessBuilder(List.of("./llama/bin/ollama" + binary_extension, "serve"));
+                server = new ProcessBuilder(List.of("./llama/" + bindir + "ollama" + binary_extension, "serve"));
                 llamaProcess = server.start();
             }
         }
@@ -53,10 +55,12 @@ public class LLMManager {
         String osName = "unknown";
         String extension = ".tgz";
         String binary_extension = "";
+        String bindir = "bin/";
         if (osType.toLowerCase().contains("windows")) {
             osName = "windows";
             extension = ".zip";
             binary_extension = ".exe";
+            bindir = "";
         }
         else if (osType.toLowerCase().contains("darwin")) {
             osName = "darwin";
@@ -76,7 +80,7 @@ public class LLMManager {
         }
 
         // If we've already installed it, we don't need to install it again!
-        File executable =  new File("llama/bin/ollama" + binary_extension);
+        File executable =  new File("llama/" + bindir + "ollama" + binary_extension);
         if (executable.exists() && executable.canExecute()) {
             return;
         }
