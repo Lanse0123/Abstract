@@ -27,12 +27,16 @@ public class LLMManager {
         }
         try {
             installOllama();
-            ProcessBuilder server = new ProcessBuilder(List.of("ollama", "serve"));
+            String binary_extension = "";
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                binary_extension = ".exe";
+            }
+            ProcessBuilder server = new ProcessBuilder(List.of("ollama" + binary_extension, "serve"));
             try {
                 llamaProcess = server.start();
             }
             catch (IOException e) {
-                server = new ProcessBuilder(List.of("./llama/bin/ollama", "serve"));
+                server = new ProcessBuilder(List.of("./llama/bin/ollama" + binary_extension, "serve"));
                 llamaProcess = server.start();
             }
         }
