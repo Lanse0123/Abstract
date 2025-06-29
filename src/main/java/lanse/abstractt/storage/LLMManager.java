@@ -9,6 +9,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 
 public class LLMManager {
     private static Process llamaProcess;
+    private static final String model = "tinyllama:latest";
 
     public static boolean tryStartOllama() {
         if (llamaProcess != null) {
@@ -41,10 +43,17 @@ public class LLMManager {
                 server = new ProcessBuilder(List.of("./llama/" + bindir + "ollama" + binary_extension, "serve"));
                 llamaProcess = server.start();
             }
+            OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
+            ollamaAPI.pullModel(model);
         }
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return false;
+        } catch (OllamaBaseException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            System.err.println("Invalid model URI!");
+            throw new RuntimeException(e);
         }
         return true;
     }
@@ -116,7 +125,7 @@ public class LLMManager {
     public static Optional<String> runLLM(String prompt) {
         try {
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
-            OllamaResult result = ollamaAPI.generate("tinyllama:latest", prompt, null);
+            OllamaResult result = ollamaAPI.generate(model, prompt, null);
             return Optional.of(result.getResponse());
         }
         catch (OllamaBaseException | IOException | InterruptedException e) {
