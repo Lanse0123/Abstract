@@ -110,7 +110,6 @@ public class LLMManager {
                 Extractor.extractFile(i, targetDir);
             }
         }
-
         System.out.println("Done installing ollama!");
     }
 
