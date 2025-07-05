@@ -49,7 +49,7 @@ public class CreditScreen extends JPanel {
         JLabel logo4 = new JLabel(discordIcon);
         logo4.setAlignmentX(LEFT_ALIGNMENT);
 
-        // Save Button
+        // Main Menu Button
         JButton mainMenuButton = new JButton("Main Menu");
         mainMenuButton.addActionListener(this::mainMenu);
 

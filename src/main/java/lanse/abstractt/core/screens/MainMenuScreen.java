@@ -22,15 +22,18 @@ public class MainMenuScreen extends JPanel {
         JLabel title = new JLabel(logoIcon);
         title.setAlignmentX(CENTER_ALIGNMENT);
 
+        //TODO - this can be made better by adding these buttons to a list, so I dont need to do stylebutton like 6 times
         JButton openWorkspace = new JButton("Open Project");
         JButton openRecent = new JButton("Open Recent Project");
         JButton settings = new JButton("Settings");
+        JButton talkToA = new JButton("TalkToA");
         JButton credits = new JButton("Credits");
         JButton exit = new JButton("Exit");
 
         styleButton(openWorkspace);
         styleButton(openRecent);
         styleButton(settings);
+        styleButton(talkToA);
         styleButton(credits);
         styleButton(exit);
 
@@ -115,7 +118,17 @@ public class MainMenuScreen extends JPanel {
 
         });
 
-        //Open Settings Window
+        //Open Talk to Chatbot Window
+        talkToA.addActionListener((ActionEvent e) -> {
+
+            // Switch to settings screen
+            frame.getContentPane().removeAll();
+            frame.getContentPane().add(new TalkToChatbotScreen(frame, bgColor));
+            frame.revalidate();
+            frame.repaint();
+        });
+
+        //Open Credits Window
         credits.addActionListener((ActionEvent e) -> {
 
             // Switch to settings screen
@@ -137,6 +150,8 @@ public class MainMenuScreen extends JPanel {
         add(openRecent);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(settings);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(talkToA);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(credits);
         add(Box.createRigidArea(new Dimension(0, 10)));
