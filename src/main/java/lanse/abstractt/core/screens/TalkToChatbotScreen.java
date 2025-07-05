@@ -47,6 +47,7 @@ public class TalkToChatbotScreen extends JPanel {
 
             if (prompt.isEmpty()) continue;
 
+            System.out.println("Responding...");
             Optional<String> response = LLMManager.runLLM(prompt);
             if (response.isPresent()) {
                 System.out.println("[Answer] " + response.get());
