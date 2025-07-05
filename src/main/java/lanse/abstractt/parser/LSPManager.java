@@ -1,4 +1,4 @@
-package lanse.abstractt.storage;
+package lanse.abstractt.parser;
 
 import java.util.HashMap;
 import java.util.Map;

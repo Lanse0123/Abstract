@@ -2,7 +2,7 @@ package lanse.abstractt;
 
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.screens.MainMenuScreen;
-import lanse.abstractt.storage.LLMManager;
+import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.Settings;
 
 import javax.swing.*;
