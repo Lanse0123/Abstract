@@ -20,11 +20,9 @@ public class TalkToChatbotScreen extends JPanel {
         setBackground(bgColor);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        // Background text (in red, as requested)
+        // Background text
         JLabel infoLabel = new JLabel("<html><font color='red'>Use the Terminal to talk to the chatbot!<br>Click main menu to stop, or enter help for help.</font></html>");
         add(infoLabel);
-
-        System.out.println("Talk to ollama! Enter something below and it will respond. Enter help for help.");
 
         // Main Menu Button
         JButton mainMenuButton = new JButton("Main Menu");
@@ -38,16 +36,14 @@ public class TalkToChatbotScreen extends JPanel {
     }
 
     public static void responseLoop() {
+
+        System.out.println("Talk to ollama! Enter something below and it will respond. Enter help for help.");
+
         Scanner scanner = new Scanner(System.in);
         while (!mainMenu) {
             System.out.print("> ");
             if (!scanner.hasNextLine()) break;
             String prompt = scanner.nextLine().trim();
-
-            if (prompt.equalsIgnoreCase("main menu")) {
-                mainMenu = true;
-                break;
-            }
 
             if (prompt.isEmpty()) continue;
 
