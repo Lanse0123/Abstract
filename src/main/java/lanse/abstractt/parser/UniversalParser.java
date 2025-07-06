@@ -79,9 +79,9 @@ public class UniversalParser {
             for (String prompt : prompts) {
                 String mergedPrompt = """
                         <s>[INST] 
-                        You are part of a universal coding IDE. Your job is to extract structural code information from a file written in %s.
+                        You are part of a universal coding IDE. Your job is to define structural code information from a file written in %s.
                                     
-                        Find all defining lines in the code: functions, classes, imports, fields, or other structural elements.
+                        For all lines in INPUT, find all defining lines in the code: functions, classes, imports, fields, or other structural elements.
                                     
                         INPUT:
                         %s

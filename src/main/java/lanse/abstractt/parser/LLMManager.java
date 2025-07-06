@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public class LLMManager {
     private static Process llamaProcess;
-    private static final String model = "mistral:latest";
+    private static final String model = "codegemma:latest";
 
     public static boolean tryStartOllama() {
         if (llamaProcess != null) {
