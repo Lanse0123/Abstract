@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public class LLMManager {
     private static Process llamaProcess;
-    private static final String model = "tinyllama:latest";
+    private static final String model = "mistral:latest";
 
     public static boolean tryStartOllama() {
         if (llamaProcess != null) {
@@ -46,7 +46,9 @@ public class LLMManager {
                 llamaProcess = server.start();
             }
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
+            System.out.println("Pulling " + model);
             ollamaAPI.pullModel(model);
+            System.out.println("Pulled " + model);
         }
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -127,6 +129,7 @@ public class LLMManager {
     public static Optional<String> runLLM(String prompt) {
         try {
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
+
             OllamaResult result = ollamaAPI.generate(model, prompt, null);
             return Optional.of(result.getResponse());
         }
@@ -167,5 +170,4 @@ public class LLMManager {
             llamaProcess.destroyForcibly();
         }
     }
-
 }

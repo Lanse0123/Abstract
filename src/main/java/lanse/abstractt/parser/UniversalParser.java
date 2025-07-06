@@ -92,6 +92,7 @@ public class UniversalParser {
                         - If nothing is defining, respond with: no
                         - Use only one line in your response.
                         - Do not add explanations or extra formatting.
+                        - Do not say anything other than from these rules.
                         [/INST]
                         """.formatted(extension, prompt);
 
