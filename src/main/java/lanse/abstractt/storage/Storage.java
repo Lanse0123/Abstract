@@ -2,6 +2,7 @@ package lanse.abstractt.storage;
 
 import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.TopBubble;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -43,11 +44,11 @@ public class Storage {
         if (!dir.isDirectory()) {
             return 0;
         }
-        return Arrays.stream(dir.listFiles()).filter(f -> !f.getName().equals("AbstractionVisualizerStorage")).toArray().length;
+        return Arrays.stream(Objects.requireNonNull(dir.listFiles())).filter(f -> !f.getName().equals("AbstractionVisualizerStorage")).toArray().length;
     }
 
     public static int getNumBubblesAtCurrentDepth() {
-        return getNumBubblesAtDepth(currentDepth-1);
+        return getNumBubblesAtDepth(currentDepth - 1);
     }
 
     public static void setCurrentDepth(int depth) {
@@ -58,10 +59,6 @@ public class Storage {
     }
 
     public static int getCurrentDepth() {
-        return currentDepth;
-    }
-
-    public static int getDepth() {
         return currentDepth;
     }
 
@@ -136,29 +133,47 @@ public class Storage {
         }
     }
 
-    public static void addStructure(String filepath, String functionName, Integer startIndex) {
+    public static void addStructure(String filepath, String structure, String name, int lineNumber) {
         if (filepath.contains("AbstractionVisualizerStorage")) return;
+
         try {
-            Files.createDirectories(Path.of(mapToAbstractionPath(filepath, false)).getParent());
+            Path absPath = Path.of(mapToAbstractionPath(filepath, false));
+            Files.createDirectories(absPath.getParent());
 
-            JSONObject json = new JSONObject();
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            JSONObject json;
 
-            //TODO - add a new json thing for each structural point the same way save does it.
-            // Like there should be imports, fields, classes, and functions.
-            // Make sure they are all named uniquely so theres no overlap.
+            // Load existing JSON if it exists
+            if (Files.exists(absPath)) {
+                String content = Files.readString(absPath);
+                json = new JSONObject(content);
+            } else {
+                json = new JSONObject();
+            }
 
-            //TODO - then make sure to add some json flag that tells it that its already compiled, so LSP and AI dont
-            // need to go over the same thing many times
+            // Add compiled flag
+            json.put("compiled", true);
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            try (FileWriter file = new FileWriter(mapToAbstractionPath(filepath, false))) {
+            JSONArray array = json.optJSONArray(structure);
+            if (array == null) {
+                array = new JSONArray();
+                json.put(structure, array);
+            }
+
+            // Add this structure entry
+            JSONObject entry = new JSONObject();
+            entry.put("name", name);
+            entry.put("line", lineNumber);
+            array.put(entry);
+
+            // Save back to disk
+            try (FileWriter file = new FileWriter(absPath.toFile())) {
                 file.write(json.toString(4));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public static String mapToAbstractionPath(String filePath, boolean wantDir){
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());

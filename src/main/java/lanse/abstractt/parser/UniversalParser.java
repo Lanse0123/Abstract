@@ -34,6 +34,10 @@ public class UniversalParser {
 
         if (!Objects.equals(LSPLink, "false")){
             structuralList = LSPManager.doStuff(LSPLink);
+
+            for (Map.Entry<Integer, String> entry : structuralList.entrySet()) {
+                //Storage.addStructure(filePath, structure, name, lineNum);
+            }
         }
         else {
             java.util.List<String> prompts = new java.util.ArrayList<>();
@@ -88,7 +92,7 @@ public class UniversalParser {
                                     
                         OUTPUT RULES:
                         - Only respond with line numbers and their type.
-                        - Use this format: 12: function, 24: class
+                        - Use this format: 12: function: getName, 24: class: className
                         - If nothing is defining, respond with: no
                         - Use only one line in your response.
                         - Do not add explanations or extra formatting.
@@ -104,14 +108,15 @@ public class UniversalParser {
                     try {
                         System.out.println("[Answer] " + answer);
                         if (!answer.toLowerCase().contains("no")) {
-                            // Expected format: 24: function, 25: function, 26: field
+                            // Expected format: 12: function: getName, 24: class: MyClass
                             String[] entries = answer.split(",");
                             for (String entry : entries) {
                                 String[] parts = entry.trim().split(":");
-                                if (parts.length == 2) {
-                                    int lineNumber = Integer.parseInt(parts[0].trim());
+                                if (parts.length == 3) {
+                                    int lineNum = Integer.parseInt(parts[0].trim());
                                     String structure = parts[1].trim();
-                                    structuralList.put(lineNumber, structure); // assumes lineNumber is unique
+                                    String name = parts[2].trim();
+                                    Storage.addStructure(filePath, structure, name, lineNum);
                                 }
                             }
                         }
@@ -125,10 +130,6 @@ public class UniversalParser {
                 System.out.println("--------");
             }
         } //end of call for LLM
-
-        for (Map.Entry<Integer, String> entry : structuralList.entrySet()) {
-            Storage.addStructure(filePath, entry.getValue(), entry.getKey());
-        }
 
         //TODO - FINALLY, use it to create the bubbles like handleDirectory does here.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
