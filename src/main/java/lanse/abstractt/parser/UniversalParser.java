@@ -30,7 +30,7 @@ public class UniversalParser {
         }
 
         String LSPLink = LanguageManager.languageHasLSP(filePath);
-        Map<String, Integer> structuralList = new HashMap<>(); //this will be used to store the functions and other important structural things
+        Map<Integer, String> structuralList = new HashMap<>(); //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")){
             structuralList = LSPManager.doStuff(LSPLink);
@@ -81,7 +81,7 @@ public class UniversalParser {
                         <s>[INST] 
                         You are part of a universal coding IDE. Your job is to define structural code information from a file written in %s.
                                     
-                        For all lines in INPUT, find all defining lines in the code: functions, classes, imports, fields, or other structural elements.
+                        For all lines in INPUT, find all defining lines in the code: defining a function, classes, imports, fields, or other structural elements.
                                     
                         INPUT:
                         %s
@@ -100,8 +100,21 @@ public class UniversalParser {
 
                 Optional<String> response = LLMManager.runLLM(mergedPrompt);
                 if (response.isPresent()) {
+                    String answer = response.get();
                     try {
-                        System.out.println("[Answer] " + response.get());
+                        System.out.println("[Answer] " + answer);
+                        if (!answer.toLowerCase().contains("no")) {
+                            // Expected format: 24: function, 25: function, 26: field
+                            String[] entries = answer.split(",");
+                            for (String entry : entries) {
+                                String[] parts = entry.trim().split(":");
+                                if (parts.length == 2) {
+                                    int lineNumber = Integer.parseInt(parts[0].trim());
+                                    String structure = parts[1].trim();
+                                    structuralList.put(lineNumber, structure); // assumes lineNumber is unique
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                         System.out.println("[Error] Failed to parse JSON: " + e.getMessage());
                     }
@@ -111,22 +124,16 @@ public class UniversalParser {
 
                 System.out.println("--------");
             }
-
-            //TODO: get the LLM's response(s), and add all of it to structuralList to make the function names and their starting index.
-
         } //end of call for LLM
 
-        for (Map.Entry<String, Integer> entry : structuralList.entrySet()) {
-            Storage.addStructure(filePath, entry.getKey(), entry.getValue());
+        for (Map.Entry<Integer, String> entry : structuralList.entrySet()) {
+            Storage.addStructure(filePath, entry.getValue(), entry.getKey());
         }
 
-        //TODO - FINALLY, once it has done this for all the lines in that file, use it to create the bubbles like handleDirectory does.
+        //TODO - FINALLY, use it to create the bubbles like handleDirectory does here.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
         // those class bubbles will contain the function bubbles. If there is only 1 class, make the bubbles split by functions.
         // There should also be an imports and fields bubble. Each function bubble should be able to see fields if the option is enabled by the user.
-
-        //TODO - add a check to make sure if the flag from addStructure is already in the code, then it doesnt try
-        // to do LSP or AI unless the user overrides that or something.
 
         Bubble newBubble = Storage.load(filePath, true); //might change this
         parent.setLayout(null);
