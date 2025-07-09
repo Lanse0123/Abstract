@@ -5,9 +5,6 @@ import lanse.abstractt.core.bubble.MiniBubble;
 import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SideBar extends JPanel {
 

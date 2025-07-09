@@ -17,7 +17,7 @@ public class TopBubble extends Bubble {
     public static int totalFiles = 0;
 
     public TopBubble(String title, String description, String filePath) {
-        super(title, description, filePath);
+        super(title, description, filePath, true);
         addLanguageBarPlaceholder();
     }
 

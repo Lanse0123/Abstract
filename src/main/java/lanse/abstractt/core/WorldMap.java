@@ -54,7 +54,7 @@ public class WorldMap {
         //Zoomer
         component.addMouseWheelListener(e -> {
             double zoomFactor = 1.1;
-            double oldZoom = zoom;
+            //double oldZoom = zoom;
 
             int mouseX = e.getX();
             int mouseY = e.getY();
@@ -89,11 +89,11 @@ public class WorldMap {
         return zoom;
     }
 
-    public double getOffsetX() {
+    public double getX() {
         return offsetX;
     }
 
-    public double getOffsetY() {
+    public double getY() {
         return offsetY;
     }
 

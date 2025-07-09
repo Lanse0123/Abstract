@@ -99,7 +99,7 @@ public class Storage {
             String name = json.optString("name", "null");
             String description = json.optString("desc", "null");
 
-            return new Bubble(name, description, path);
+            return new Bubble(name, description, path, true);
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         } catch (IOException e) {
@@ -107,7 +107,7 @@ public class Storage {
             System.out.println("Unable to load info for file: " + filePath);
             System.out.println("Error reading: " + e);
             e.printStackTrace();
-            return new Bubble("", "", "");
+            return new Bubble("", "", "", false);
         }
     }
 
@@ -199,7 +199,7 @@ public class Storage {
                     String name = obj.optString("name", key + " " + i);
 
                     //TODO - a description needs to be stored with each function bubble.
-                    Bubble b = new Bubble(name, "", filePath);
+                    Bubble b = new Bubble(name, "", filePath, false);
                     functionBubbles.add(b);
                 }
             }

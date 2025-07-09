@@ -15,7 +15,7 @@ public class MiniBubble extends JPanel {
     private final boolean isCurrent;
     private final Color fillColor;
     private final int depth;
-    private String bubblePath;
+    private String bubblePath; //TODO - make use of this if you want, idk if I will
 
     public MiniBubble(int depth, int count, String path, boolean isCurrent) {
         this.isCurrent = isCurrent;

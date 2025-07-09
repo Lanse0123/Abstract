@@ -65,8 +65,7 @@ public class ProgressBarPanel {
     }
 
     public static void setProgress(double progress) {
-        int percent = (int) (progress * 100);
-        ProgressBarPanel.progress = percent;
+        ProgressBarPanel.progress = (int) (progress * 100);
     }
 
     public static void show() {

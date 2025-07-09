@@ -30,7 +30,7 @@ public class UniversalParser {
         }
 
         String LSPLink = LanguageManager.languageHasLSP(filePath);
-        Map<Integer, String> structuralList = new HashMap<>(); //this will be used to store the functions and other important structural things
+        Map<Integer, String> structuralList; //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")) {
             structuralList = LSPManager.doStuff(LSPLink);
@@ -81,7 +81,7 @@ public class UniversalParser {
             System.out.println("=== TEMPLATED PROMPTS FOR: " + file.getName() + " ===");
             for (String prompt : prompts) {
                 String mergedPrompt = """
-                        <s>[INST] 
+                        <s>[INST]
                         You are part of a universal coding IDE. Your job is to define structural code information from a file written in %s.
                                     
                         For all lines in INPUT, find all defining lines in the code: defining a function, classes, imports, fields, or other structural elements.

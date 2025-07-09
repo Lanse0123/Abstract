@@ -27,10 +27,7 @@ public class Bubble extends JPanel {
     private JLabel iconLabel;
     private double lastZoom = -40404;
 
-    //TODO - make use of isClickable. Some bubbles like Description bubbles should not clear other bubbles when clicked
-    private boolean isClickable = true;
-
-    public Bubble(String title, String description, String filePath) {
+    public Bubble(String title, String description, String filePath, boolean isClickable) {
         this.title = title;
         this.description = description;
         this.filePath = filePath;
@@ -47,7 +44,7 @@ public class Bubble extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                if (ProgressBarPanel.isLoading()) return;
+                if (ProgressBarPanel.isLoading() || !isClickable) return;
 
                 //TODO - this is where isClickable might come in handy. I might need a better name for it.
                 Storage.increaseDepth(filePath);

@@ -120,7 +120,6 @@ public class LanguageManager {
             JSONObject obj = new JSONObject(json.toString());
             return obj.optBoolean("parse", false); // returns false if key is missing
         } catch (Exception e) {
-            e.printStackTrace(); // for debugging
             return false;
         }
     }
@@ -153,7 +152,6 @@ public class LanguageManager {
             JSONObject obj = new JSONObject(json.toString());
             return obj.optString("lsp", "false"); // returns false if key is missing
         } catch (Exception e) {
-            e.printStackTrace(); // for debugging
             return "false";
         }
     }

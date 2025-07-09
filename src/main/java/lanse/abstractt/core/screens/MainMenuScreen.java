@@ -139,9 +139,7 @@ public class MainMenuScreen extends JPanel {
 
         });
 
-        exit.addActionListener((ActionEvent e) -> {
-            System.exit(0);
-        });
+        exit.addActionListener((ActionEvent e) -> System.exit(0));
 
         add(title);
         add(Box.createRigidArea(new Dimension(0, 30)));

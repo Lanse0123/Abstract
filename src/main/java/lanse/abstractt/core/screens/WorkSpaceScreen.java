@@ -20,7 +20,6 @@ public class WorkSpaceScreen extends JPanel {
     private final WorldMap worldMap = new WorldMap();
     private final SideBar sidebar = new SideBar();
     private final JMenuBar topBar;
-    private final int SIDEBAR_WIDTH = 200;
 
     public WorkSpaceScreen(Color bgColor) {
         setBackground(bgColor);
@@ -75,6 +74,7 @@ public class WorkSpaceScreen extends JPanel {
 
         topBar.setBounds(0, 0, getWidth(), topBar.getHeight());
 
+        int SIDEBAR_WIDTH = 200;
         sidebar.setBounds(0, topBar.getHeight(), SIDEBAR_WIDTH, getHeight() - topBar.getHeight());
 
         JPanel progressBar = ProgressBarPanel.getPanel();

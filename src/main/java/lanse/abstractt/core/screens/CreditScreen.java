@@ -11,6 +11,8 @@ public class CreditScreen extends JPanel {
 
     //TODO - THANK YOU JAMES!!!
 
+    //TODO - redo this entire thing. Also link stuff like the github page and discord and stuff here.
+
     // might put things like link to my discord here and stuff
     // also might add liscence here that says like dont steal this to make profit, and if any suggestions or want to help, join my discord
     // also also might put patreon / donation link here eventually
