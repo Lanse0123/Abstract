@@ -32,14 +32,13 @@ public class UniversalParser {
         String LSPLink = LanguageManager.languageHasLSP(filePath);
         Map<Integer, String> structuralList = new HashMap<>(); //this will be used to store the functions and other important structural things
 
-        if (!Objects.equals(LSPLink, "false")){
+        if (!Objects.equals(LSPLink, "false")) {
             structuralList = LSPManager.doStuff(LSPLink);
 
             for (Map.Entry<Integer, String> entry : structuralList.entrySet()) {
                 //Storage.addStructure(filePath, structure, name, lineNum);
             }
-        }
-        else {
+        } else {
             java.util.List<String> prompts = new java.util.ArrayList<>();
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 StringBuilder currentBlock = new StringBuilder();
@@ -131,14 +130,13 @@ public class UniversalParser {
             }
         } //end of call for LLM
 
-        //TODO - FINALLY, use it to create the bubbles like handleDirectory does here.
+        //TODO - FINALLY, use it to create the new function bubbles.
         // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
         // those class bubbles will contain the function bubbles. If there is only 1 class, make the bubbles split by functions.
         // There should also be an imports and fields bubble. Each function bubble should be able to see fields if the option is enabled by the user.
 
-        Bubble newBubble = Storage.load(filePath, true); //might change this
+        Bubble[] newBubbles = Storage.loadFunctionBubbles(filePath);
         parent.setLayout(null);
-        parent.add(newBubble);
+        for (Bubble bubble : newBubbles) parent.add(bubble);
     }
-
 }

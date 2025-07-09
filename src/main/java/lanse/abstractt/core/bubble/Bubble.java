@@ -95,7 +95,7 @@ public class Bubble extends JPanel {
 
                 if (childTitle.equals("AbstractionVisualizerStorage")) continue;
 
-                Bubble newBubble = Storage.load(child.getPath(), false);
+                Bubble newBubble = Storage.load(child.getPath());
 
                 parent.setLayout(null);
                 parent.add(newBubble);

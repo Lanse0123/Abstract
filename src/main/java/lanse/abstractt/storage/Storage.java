@@ -24,14 +24,14 @@ public class Storage {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
         File dir = new File(selectedBubblePath.peek());
         if (!dir.isDirectory()) {
-            return List.of(load(dir.getPath(), false));
+            return List.of(load(dir.getPath()));
         }
         List<Bubble> bubbles = new ArrayList<>();
         for (File f : Objects.requireNonNull(dir.listFiles())){
             if (f.getName().equals("AbstractionVisualizerStorage")) {
                 continue;
             }
-            bubbles.add(load(f.getPath(), false));
+            bubbles.add(load(f.getPath()));
         }
         return bubbles;
     }
@@ -84,7 +84,7 @@ public class Storage {
 
     // Load settings from JSON
     //TODO: make this list into a class containing path, name and description
-    public static Bubble load(String filePath, boolean loadFunctionBubbles) {
+    public static Bubble load(String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath, false)))) {
             StringBuilder jsonContent = new StringBuilder();
             String line;
@@ -153,6 +153,7 @@ public class Storage {
             // Add compiled flag
             json.put("compiled", true);
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
             JSONArray array = json.optJSONArray(structure);
             if (array == null) {
                 array = new JSONArray();
@@ -164,7 +165,7 @@ public class Storage {
             entry.put("name", name);
             entry.put("line", lineNumber);
             array.put(entry);
-
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Save back to disk
             try (FileWriter file = new FileWriter(absPath.toFile())) {
                 file.write(json.toString(4));
@@ -174,6 +175,40 @@ public class Storage {
         }
     }
 
+    public static Bubble[] loadFunctionBubbles(String filePath) {
+        List<Bubble> functionBubbles = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath, false)))) {
+            StringBuilder jsonContent = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonContent.append(line);
+            }
+
+            JSONObject json = new JSONObject(jsonContent.toString());
+
+            for (String key : json.keySet()) {
+                // Skip metadata fields
+                if (key.equals("path") || key.equals("name") || key.equals("desc") || key.equals("compiled")) continue;
+
+                JSONArray array = json.optJSONArray(key);
+                if (array == null) continue;
+
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject obj = array.getJSONObject(i);
+                    String name = obj.optString("name", key + " " + i);
+
+                    //TODO - a description needs to be stored with each function bubble.
+                    Bubble b = new Bubble(name, "", filePath);
+                    functionBubbles.add(b);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to load structural info: " + filePath);
+            e.printStackTrace();
+        }
+        return functionBubbles.toArray(new Bubble[0]);
+    }
 
     public static String mapToAbstractionPath(String filePath, boolean wantDir){
         String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
