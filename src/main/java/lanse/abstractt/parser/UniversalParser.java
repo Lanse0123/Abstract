@@ -1,6 +1,7 @@
 package lanse.abstractt.parser;
 
 import lanse.abstractt.core.bubble.Bubble;
+import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
 
@@ -115,7 +116,7 @@ public class UniversalParser {
                                     int lineNum = Integer.parseInt(parts[0].trim());
                                     String structure = parts[1].trim();
                                     String name = parts[2].trim();
-                                    Storage.addStructure(filePath, structure, name, lineNum);
+                                    Storage.addStructure(filePath, structure, name, "", lineNum);
                                 }
                             }
                         }
@@ -130,12 +131,7 @@ public class UniversalParser {
             }
         } //end of call for LLM
 
-        //TODO - FINALLY, use it to create the new function bubbles.
-        // each of these bubbles should have the class / file name. If there is more than 1 class, create class bubbles, and
-        // those class bubbles will contain the function bubbles. If there is only 1 class, make the bubbles split by functions.
-        // There should also be an imports and fields bubble. Each function bubble should be able to see fields if the option is enabled by the user.
-
-        Bubble[] newBubbles = Storage.loadFunctionBubbles(filePath);
+        FunctionBubble[] newBubbles = Storage.loadFunctionBubbles(filePath);
         parent.setLayout(null);
         for (Bubble bubble : newBubbles) parent.add(bubble);
     }

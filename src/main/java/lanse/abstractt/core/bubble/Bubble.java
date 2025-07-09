@@ -55,7 +55,11 @@ public class Bubble extends JPanel {
 
                 for (Component comp : parent.getComponents()) {
                     if (comp instanceof Bubble) {
-                        Storage.save((Bubble) comp);
+                        if (comp instanceof FunctionBubble functionBubble){
+                            Storage.saveFunctionBubble(functionBubble);
+                        } else {
+                            Storage.save((Bubble) comp);
+                        }
                         parent.remove(comp);
                     }
                 }

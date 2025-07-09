@@ -1,6 +1,7 @@
 package lanse.abstractt.storage;
 
 import lanse.abstractt.core.bubble.Bubble;
+import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.bubble.TopBubble;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,6 +9,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Storage {
@@ -82,136 +84,109 @@ public class Storage {
         TopBubble.languageColors.clear();
     }
 
-    // Load settings from JSON
-    //TODO: make this list into a class containing path, name and description
     public static Bubble load(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath, false)))) {
-            StringBuilder jsonContent = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonContent.append(line);
-            }
+        JSONObject json = loadJson(filePath);
+        if (json == null) return new Bubble("", "", "", false);
 
-            JSONObject json = new JSONObject(jsonContent.toString());
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            String path = json.optString("path", "null");
-            String name = json.optString("name", "null");
-            String description = json.optString("desc", "null");
-
-            return new Bubble(name, description, path, true);
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        } catch (IOException e) {
-            // TODO: throw an exception or just create defaults?
-            System.out.println("Unable to load info for file: " + filePath);
-            System.out.println("Error reading: " + e);
-            e.printStackTrace();
-            return new Bubble("", "", "", false);
-        }
+        String path = json.optString("path", "");
+        String name = json.optString("name", "");
+        String description = json.optString("desc", "");
+        return new Bubble(name, description, path, true);
     }
 
-    // Save settings to disk
     public static void save(Bubble bubble) {
-        if (bubble.getFilePath().contains("AbstractionVisualizerStorage")) return;
+        if (isAbstractionFile(bubble.getFilePath())) return;
+        JSONObject json = loadOrCreateJson(bubble.getFilePath());
+        json.put("path", bubble.getFilePath());
+        json.put("name", bubble.getTitle());
+        json.put("desc", bubble.getDescription());
+        writeJson(bubble.getFilePath(), json);
+    }
+
+    public static void addStructure(String filePath, String structure, String name, String desc, int line) {
+        if (isAbstractionFile(filePath)) return;
+        JSONObject json = loadOrCreateJson(filePath);
+        json.put("compiled", true);
+        JSONArray arr = json.optJSONArray(structure);
+        if (arr == null) json.put(structure, arr = new JSONArray());
+
+        JSONObject entry = new JSONObject();
+        entry.put("name", name);
+        entry.put("desc", desc);
+        entry.put("line", line);
+        arr.put(entry);
+
+        writeJson(filePath, json);
+    }
+
+    public static FunctionBubble[] loadFunctionBubbles(String filePath) {
+        JSONObject json = loadJson(filePath);
+        if (json == null) return new FunctionBubble[0];
+
+        List<FunctionBubble> list = new ArrayList<>();
+        for (String structure : json.keySet()) {
+            if (isMetaKey(structure)) continue;
+            JSONArray arr = json.optJSONArray(structure);
+            if (arr == null) continue;
+
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                String name  = obj.optString("name", structure + i);
+                String desc  = obj.optString("desc", "");
+                int line  = obj.optInt("line", -1);
+                list.add(new FunctionBubble(name, desc, filePath, line, structure,false));
+            }
+        }
+        return list.toArray(new FunctionBubble[0]);
+    }
+
+    public static void saveFunctionBubble(FunctionBubble fb) {
+        addStructure(fb.getFilePath(), fb.getStructureType(), fb.getTitle(), fb.getDescription(), fb.getLineNumber());
+    }
+
+
+    // helper functions below
+
+
+    private static boolean isAbstractionFile(String filePath) {
+        return filePath.contains("AbstractionVisualizerStorage");
+    }
+
+    private static boolean isMetaKey(String key) {
+        return Set.of("path","name","desc","compiled").contains(key);
+    }
+
+    private static JSONObject loadJson(String filePath) {
+        Path p = abstractionPath(filePath);
+        if (!Files.exists(p)) return null;
         try {
-            Files.createDirectories(Path.of(mapToAbstractionPath(bubble.getFilePath(), false)).getParent());
-
-            JSONObject json = new JSONObject();
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            json.put("path", bubble.getFilePath());
-            json.put("name", bubble.getTitle());
-            json.put("desc", bubble.getDescription());
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            try (FileWriter file = new FileWriter(mapToAbstractionPath(bubble.getFilePath(), false))) {
-                file.write(json.toString(4));
-            }
+            String txt = Files.readString(p);
+            return new JSONObject(txt);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    public static void addStructure(String filepath, String structure, String name, int lineNumber) {
-        if (filepath.contains("AbstractionVisualizerStorage")) return;
+    private static JSONObject loadOrCreateJson(String filePath) {
+        JSONObject json = loadJson(filePath);
+        return (json != null) ? json : new JSONObject();
+    }
 
+    private static void writeJson(String filePath, JSONObject json) {
+        Path path = abstractionPath(filePath);
         try {
-            Path absPath = Path.of(mapToAbstractionPath(filepath, false));
-            Files.createDirectories(absPath.getParent());
-
-            JSONObject json;
-
-            // Load existing JSON if it exists
-            if (Files.exists(absPath)) {
-                String content = Files.readString(absPath);
-                json = new JSONObject(content);
-            } else {
-                json = new JSONObject();
-            }
-
-            // Add compiled flag
-            json.put("compiled", true);
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            JSONArray array = json.optJSONArray(structure);
-            if (array == null) {
-                array = new JSONArray();
-                json.put(structure, array);
-            }
-
-            // Add this structure entry
-            JSONObject entry = new JSONObject();
-            entry.put("name", name);
-            entry.put("line", lineNumber);
-            array.put(entry);
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Save back to disk
-            try (FileWriter file = new FileWriter(absPath.toFile())) {
-                file.write(json.toString(4));
+            Files.createDirectories(path.getParent());
+            try (FileWriter w = new FileWriter(path.toFile())) {
+                w.write(json.toString(4));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static Bubble[] loadFunctionBubbles(String filePath) {
-        List<Bubble> functionBubbles = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(mapToAbstractionPath(filePath, false)))) {
-            StringBuilder jsonContent = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonContent.append(line);
-            }
-
-            JSONObject json = new JSONObject(jsonContent.toString());
-
-            for (String key : json.keySet()) {
-                // Skip metadata fields
-                if (key.equals("path") || key.equals("name") || key.equals("desc") || key.equals("compiled")) continue;
-
-                JSONArray array = json.optJSONArray(key);
-                if (array == null) continue;
-
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject obj = array.getJSONObject(i);
-                    String name = obj.optString("name", key + " " + i);
-
-                    //TODO - a description needs to be stored with each function bubble.
-                    Bubble b = new Bubble(name, "", filePath, false);
-                    functionBubbles.add(b);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Failed to load structural info: " + filePath);
-            e.printStackTrace();
-        }
-        return functionBubbles.toArray(new Bubble[0]);
-    }
-
-    public static String mapToAbstractionPath(String filePath, boolean wantDir){
-        String localPath = (String) filePath.subSequence(selectedBubblePath.firstElement().length(), filePath.length());
-        return selectedBubblePath.firstElement() + "/AbstractionVisualizerStorage/" + localPath + (wantDir ? "" : ".json");
+    private static Path abstractionPath(String filePath) {
+        String local = filePath.substring(selectedBubblePath.firstElement().length());
+        return Paths.get(selectedBubblePath.firstElement(), "AbstractionVisualizerStorage", local + ".json");
     }
 }
