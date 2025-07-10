@@ -14,6 +14,8 @@ import java.util.*;
 
 public class UniversalParser {
 
+    public static boolean aiCompiled = false;
+
     //TODO - this might be useful eventually for adding more languages:
     // https://gist.github.com/ppisarczyk/43962d06686722d26d176fad46879d41
 
@@ -40,6 +42,10 @@ public class UniversalParser {
                 //Storage.addStructure(filePath, structure, name, lineNum);
             }
         } else {
+            if (!aiCompiled){
+                System.out.println("Ai is not ready.");
+                return;
+            }
             java.util.List<String> prompts = new java.util.ArrayList<>();
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 StringBuilder currentBlock = new StringBuilder();

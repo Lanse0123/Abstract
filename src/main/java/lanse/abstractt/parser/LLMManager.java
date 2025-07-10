@@ -90,12 +90,14 @@ public class LLMManager {
                 .anyMatch(path -> Files.exists(path.resolve(exec)));
 
         if (ollamaExists) {
+            UniversalParser.aiCompiled = true;
             return;
         }
 
         // If we've already installed it, we don't need to install it again!
         File executable =  new File("llama/" + bindir + "ollama" + binary_extension);
         if (executable.exists() && executable.canExecute()) {
+            UniversalParser.aiCompiled = true;
             return;
         }
 
@@ -125,6 +127,7 @@ public class LLMManager {
             }
         }
         System.out.println("Done installing ollama!");
+        UniversalParser.aiCompiled = true;
     }
 
     public static Optional<String> runLLM(String prompt) {
