@@ -1,6 +1,7 @@
 package lanse.abstractt.parser;
 
 import lanse.abstractt.core.bubble.Bubble;
+import lanse.abstractt.core.bubble.CodeBubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
@@ -20,6 +21,9 @@ public class UniversalParser {
     // https://gist.github.com/ppisarczyk/43962d06686722d26d176fad46879d41
 
     public static void handleFile(String filePath, Container parent) {
+
+        CodeBubble.createCodeBubble(filePath, parent);
+
         // Check if the file is parseable via its language definition
         if (!LanguageManager.isFileParsable(filePath)) {
             System.out.println("Skipping file (not parseable): " + filePath);

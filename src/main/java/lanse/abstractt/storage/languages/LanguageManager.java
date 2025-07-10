@@ -155,5 +155,4 @@ public class LanguageManager {
             return "false";
         }
     }
-
 }
