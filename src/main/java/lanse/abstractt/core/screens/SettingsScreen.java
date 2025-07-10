@@ -1,5 +1,6 @@
 package lanse.abstractt.core.screens;
 
+import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.storage.Settings;
 
@@ -15,12 +16,16 @@ public class SettingsScreen extends JPanel {
 //    private final JCheckBox showDeathMarkersBox;
 //    private final JCheckBox playIllegalMoveSoundBox;
     private final JComboBox<DisplayModeSelector.DisplayMode> displayModeSelector;
+    private final JComboBox<BubbleSorter.Sorter> bubbleSorterModeSelector;
+    private final JComboBox<BubbleSorter.FunctionSorter> functionBubbleSorterModeSelector;
 
     public SettingsScreen(JFrame frame, Color bgColor) {
         this.frame = frame;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(bgColor);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Volume Slider
 //        volumeSlider = new JSlider(0, 100, Settings.getVolume());
@@ -49,6 +54,16 @@ public class SettingsScreen extends JPanel {
         displayModeSelector.setSelectedItem(DisplayModeSelector.displayMode);
         addLabeled("Display Mode:", displayModeSelector);
 
+        // Bubble Sorter Mode
+        bubbleSorterModeSelector = new JComboBox<>(BubbleSorter.Sorter.values());
+        bubbleSorterModeSelector.setSelectedItem(BubbleSorter.sorter);
+        addLabeled("Bubble Sorter Mode:", bubbleSorterModeSelector);
+
+        // Function Bubble Sorter Mode
+        functionBubbleSorterModeSelector = new JComboBox<>(BubbleSorter.FunctionSorter.values());
+        functionBubbleSorterModeSelector.setSelectedItem(BubbleSorter.functionSorter);
+        addLabeled("Function Bubble Sorter Mode:", functionBubbleSorterModeSelector);
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Save Button
@@ -63,24 +78,8 @@ public class SettingsScreen extends JPanel {
         add(returnToDefaultButton);
     }
 
-    private void addLabeled(String label, JComponent comp) {
-        JLabel jLabel = new JLabel(label);
-        jLabel.setForeground(Color.WHITE);
-        jLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        comp.setAlignmentX(Component.LEFT_ALIGNMENT);
-        add(jLabel);
-        add(comp);
-        add(Box.createVerticalStrut(10));
-    }
-
-    private void styleCheckBox(JCheckBox box) {
-        box.setForeground(Color.WHITE);
-        box.setBackground(Color.DARK_GRAY);
-        box.setFocusPainted(false);
-        box.setAlignmentX(Component.LEFT_ALIGNMENT);
-    }
-
     private void saveSettings(ActionEvent e) {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //        Settings.setVolume(volumeSlider.getValue());
 //        Settings.setBackground((String) backgroundSelector.getSelectedItem());
 //        Settings.setShowDeathMarkers(showDeathMarkersBox.isSelected());
@@ -88,7 +87,11 @@ public class SettingsScreen extends JPanel {
 
         DisplayModeSelector.displayMode = (DisplayModeSelector.DisplayMode) displayModeSelector.getSelectedItem();
 
-        if(Settings.save()) // Attempt save to file
+        BubbleSorter.sorter = (BubbleSorter.Sorter) bubbleSorterModeSelector.getSelectedItem();
+        BubbleSorter.functionSorter = (BubbleSorter.FunctionSorter) functionBubbleSorterModeSelector.getSelectedItem();
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (Settings.save()) // Attempt save to file
             JOptionPane.showMessageDialog(this, "Settings saved!", "Success", JOptionPane.INFORMATION_MESSAGE);
         else
             JOptionPane.showMessageDialog(this, "Settings unable to be saved.", "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -107,6 +110,24 @@ public class SettingsScreen extends JPanel {
         JOptionPane.showMessageDialog(this, "Returned to Default Settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
         returnToMainMenu();
     }
+
+    private void addLabeled(String label, JComponent comp) {
+        JLabel jLabel = new JLabel(label);
+        jLabel.setForeground(Color.WHITE);
+        jLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        comp.setAlignmentX(Component.LEFT_ALIGNMENT);
+        add(jLabel);
+        add(comp);
+        add(Box.createVerticalStrut(10));
+    }
+
+    //TODO - this will be used for boolean values. example at line 44 or something
+//    private void styleCheckBox(JCheckBox box) {
+//        box.setForeground(Color.WHITE);
+//        box.setBackground(Color.DARK_GRAY);
+//        box.setFocusPainted(false);
+//        box.setAlignmentX(Component.LEFT_ALIGNMENT);
+//    }
 
     private void returnToMainMenu() {
         frame.getContentPane().removeAll();

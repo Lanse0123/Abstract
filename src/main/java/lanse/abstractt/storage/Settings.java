@@ -1,6 +1,7 @@
 package lanse.abstractt.storage;
 
 import dev.dirs.ProjectDirectories;
+import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.bubble.TopBubble;
 import org.json.JSONObject;
@@ -24,7 +25,7 @@ public class Settings {
     public static void load() {
         try (BufferedReader reader = new BufferedReader(new FileReader(SETTINGS_PATH))) {
 
-            //added this line to show where to find settings file
+            // added this line to show where to find settings file
             System.out.println("Settings file found at " + SETTINGS_PATH + " .");
 
             StringBuilder jsonContent = new StringBuilder();
@@ -34,6 +35,7 @@ public class Settings {
             }
 
             JSONObject json = new JSONObject(jsonContent.toString());
+            //TODO - remember to also add new things to SettingsScreen class when adding them here.
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //            volume = json.optInt("volume", 100);
@@ -43,6 +45,11 @@ public class Settings {
 
             DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.valueOf(
                     json.optString("displayMode", DisplayModeSelector.DisplayMode.FILE_LIST.toString()));
+
+            BubbleSorter.sorter = BubbleSorter.Sorter.valueOf(
+                    json.optString("sortMode", BubbleSorter.Sorter.FILE_LIST_SORT.toString()));
+            BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.valueOf(
+                    json.optString("functionSortMode", BubbleSorter.FunctionSorter.FILE_LIST_SORT.toString()));
 
             if (json.has("recentProjects")) {
                 recentProjects.clear();
@@ -88,6 +95,9 @@ public class Settings {
 
             json.put("displayMode", DisplayModeSelector.displayMode.name());
 
+            json.put("sortMode", BubbleSorter.sorter.name());
+            json.put("functionSortMode", BubbleSorter.functionSorter.name());
+
             json.put("recentProjects", recentProjects);
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,23 +137,16 @@ public class Settings {
 
         DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.FILE_LIST;
 
+        BubbleSorter.sorter = BubbleSorter.Sorter.FILE_LIST_SORT;
+        BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.FILE_LIST_SORT;
+
         // recentProjects not cleared
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         save();
     }
 
     public static List<String> getRecentProjects() { return new ArrayList<>(recentProjects); }
-//    public static int getVolume() { return volume; }
-//    public static void setVolume(int v) { volume = v; }
-//
-//    public static String getBackground() { return background; }
-//    public static void setBackground(String bg) { background = bg; }
-//
-//    public static boolean isShowDeathMarkers() { return showDeathMarkers; }
-//    public static void setShowDeathMarkers(boolean show) { showDeathMarkers = show; }
-//
-//    public static boolean isPlayIllegalMoveSound() { return playIllegalMoveSound; }
-//    public static void setPlayIllegalMoveSound(boolean play) { playIllegalMoveSound = play; }
+
     public static void addRecentProject(String path) {
         recentProjects.remove(path);
         recentProjects.add(0, path);
