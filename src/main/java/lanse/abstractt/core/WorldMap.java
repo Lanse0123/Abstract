@@ -5,12 +5,12 @@ import java.awt.event.*;
 
 public class WorldMap {
 
+    //TODO - i dont like how half of this is static and half of it isn't...
     private static double offsetX = 0;
     private static double offsetY = 0;
     private double zoom = 1.0;
     private boolean dragging = false;
     private int lastMouseX, lastMouseY;
-
     private static WorldMap instance;
 
     public WorldMap() {
@@ -55,6 +55,8 @@ public class WorldMap {
         component.addMouseWheelListener(e -> {
             double zoomFactor = 1.1;
             //double oldZoom = zoom;
+            //TODO - i might want to make use of oldZoom to add a limit to how far in and out you can zoom.
+            // Max is 100, Min is 0.001
 
             int mouseX = e.getX();
             int mouseY = e.getY();
@@ -84,11 +86,6 @@ public class WorldMap {
         return new Point(screenX, screenY);
     }
 
-    //TODO - I somehow ended up with 2 getZooms, which is kinda annoying
-    public double getZoom() {
-        return zoom;
-    }
-
     public double getX() {
         return offsetX;
     }
@@ -101,5 +98,9 @@ public class WorldMap {
         offsetX = x;
         offsetY = y;
     }
-    public static double getZoomStatic() { return instance != null ? instance.getZoom() : 1.0; }
+
+    //TODO - I somehow ended up with 2 getZooms, which is kinda annoying
+    public double getZoom() { return zoom; }
+    public static double getZoomStatic() { return instance != null ? instance.zoom : 1.0; }
+    public static void setZoom(double zoom) { instance.zoom = zoom; }
 }

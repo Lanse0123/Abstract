@@ -131,6 +131,8 @@ public class UniversalParser {
             }
         } //end of call for LLM
 
+        System.out.println("Finished Parsing");
+
         FunctionBubble[] newBubbles = Storage.loadFunctionBubbles(filePath);
         parent.setLayout(null);
         for (Bubble bubble : newBubbles) parent.add(bubble);

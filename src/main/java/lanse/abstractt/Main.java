@@ -47,7 +47,7 @@ public class Main {
         tickCount++;
         if (tickCount > 1000000000) tickCount = 0;
 
-        //TODO - its already somehow laggy. Fix it. This might help, though I am not sure what I need this for yet.
+        //TODO - make more use of this in the future.
 
     }
 }
