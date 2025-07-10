@@ -47,6 +47,7 @@ public class LLMManager {
             }
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
             System.out.println("Pulling " + model);
+            //TODO: add some progress bar
             ollamaAPI.pullModel(model);
             System.out.println("Pulled " + model);
         }
