@@ -11,6 +11,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import javax.swing.text.Document;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,16 +26,33 @@ public class LSPManager implements LanguageClient {
         System.out.println("LSPLink: " + LSPLink + " for file " + file);
         try {
             System.out.println("Starting LSP");
-            Process lsp = new ProcessBuilder(LSPLink).start();
+            ProcessBuilder pb = new ProcessBuilder(List.of(LSPLink, "-v"));
+            pb.directory(file.getParentFile());
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+            Process lsp = pb.start();
             Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(new LSPManager(), lsp.getInputStream(), lsp.getOutputStream());
             System.out.println("About to listen");
             launcher.startListening();
             System.out.println("About to initialize");
-            CompletableFuture<InitializeResult> initializeResponse = launcher.getRemoteProxy().initialize(new InitializeParams());
+            InitializeParams init_params = new InitializeParams();
+
+            TextDocumentClientCapabilities text_caps = new TextDocumentClientCapabilities();
+            DocumentSymbolCapabilities doc_caps = new DocumentSymbolCapabilities();
+            doc_caps.setLabelSupport(true);
+            doc_caps.setSymbolKind(new SymbolKindCapabilities());
+            doc_caps.setHierarchicalDocumentSymbolSupport(true);
+            text_caps.setDocumentSymbol(doc_caps);
+
+            init_params.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), text_caps, new Object()));
+            CompletableFuture<InitializeResult> initializeResponse = launcher.getRemoteProxy().initialize(init_params);
             System.out.println("About to wait for initialization response");
-            initializeResponse.get();
+            initializeResponse.join();
+            launcher.getRemoteProxy().initialized(new InitializedParams());
             System.out.println("Requesting document symbols");
-            CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(new DocumentSymbolParams());
+
+            DocumentSymbolParams doc_params = new DocumentSymbolParams();
+            doc_params.setTextDocument(new TextDocumentIdentifier(file.toURI().toURL().toString()));
+            CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params);
             System.out.println("About to wait for document symbols");
             return symbols.get().stream().map(Either::getRight).toList();
         }
@@ -75,10 +93,5 @@ public class LSPManager implements LanguageClient {
     @Override
     public void logMessage(MessageParams messageParams) {
         System.out.println("Log message: " + messageParams);
-    }
-
-    @JsonRequest("textDocument/documentSymbol")
-    public CompletableFuture<Void> documentSymbol() {
-        return new CompletableFuture<>();
     }
 }
