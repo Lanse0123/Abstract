@@ -54,7 +54,7 @@ public class MiniBubble extends JPanel {
         g2.setClip(oval);
 
         // Fill with light blue
-        //TODO - I might eventually make the color based on the average pixel colors of an Icon, with unknowns being light gray or light blue (dont do this yet)
+        //TODO - I might eventually make the color dynamic using the same color that languages use
         g2.setColor(fillColor);
         g2.fill(oval);
 

@@ -1,5 +1,9 @@
 package lanse.abstractt.core;
 
+import lanse.abstractt.core.bubble.Bubble;
+import lanse.abstractt.core.bubble.FunctionBubble;
+import lanse.abstractt.storage.Storage;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -79,6 +83,23 @@ public class WorldMap {
             component.repaint();
         });
     }
+
+    //TODO - this would be nice to have in some way but it doesnt work yet. Or just having a way to get all components in use from anywhere.
+//    public static void updateScreen(){
+//        Container parent = getParent();
+//        if (parent == null) return;
+//
+//        for (Component comp : parent.getComponents()) {
+//            if (comp instanceof Bubble) {
+//                if (comp instanceof FunctionBubble functionBubble){
+//                    Storage.saveFunctionBubble(functionBubble);
+//                } else {
+//                    Storage.save((Bubble) comp);
+//                }
+//                parent.remove(comp);
+//            }
+//        }
+//    }
 
     public Point transform(double x, double y) {
         int screenX = (int) ((x + offsetX) * zoom);

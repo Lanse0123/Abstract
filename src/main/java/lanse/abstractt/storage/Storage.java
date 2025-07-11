@@ -44,13 +44,13 @@ public class Storage {
         }
         File dir = new File(selectedBubblePath.elementAt(depth));
         if (!dir.isDirectory()) {
-            return 0;
+            if (dir.isFile()){
+                return 1;
+            } else {
+                return 0;
+            }
         }
         return Arrays.stream(Objects.requireNonNull(dir.listFiles())).filter(f -> !f.getName().equals("AbstractionVisualizerStorage")).toArray().length;
-    }
-
-    public static int getNumBubblesAtCurrentDepth() {
-        return getNumBubblesAtDepth(currentDepth - 1);
     }
 
     public static void setCurrentDepth(int depth) {

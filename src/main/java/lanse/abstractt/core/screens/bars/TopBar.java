@@ -1,6 +1,7 @@
 package lanse.abstractt.core.screens.bars;
 
 import lanse.abstractt.core.ColorPalette;
+import lanse.abstractt.core.WorldMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,21 @@ public class TopBar {
         }
     }
 
+    private static class Returner extends AbstractAction {
+        public Returner() {
+            super("Reset Camera", UIManager.getIcon("quit"));
+            //putValue(MNEMONIC_KEY, KeyEvent.VK_E); Keybind?
+            //putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Q")); Keybind?
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //TODO - i need this to also update the screen because currently you need to move your mouse to see the changes.
+            WorldMap.setCameraCoordinates(0, 0);
+            WorldMap.setZoom(1.0);
+        }
+    }
+
     public static JMenuBar createMenuBar(Color bgColor, Color fgColor) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setSize(new Dimension(100, 25));
@@ -33,11 +49,14 @@ public class TopBar {
         file.setMnemonic('F');
         file.setOpaque(true);
 
+        Returner r = new Returner();
         Exit e = new Exit();
+
+        file.add(r);
         file.add(e);
+
         styleMenu(file, fgColor, bgColor);
         menuBar.add(file);
-
         return menuBar;
     }
 

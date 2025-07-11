@@ -108,9 +108,10 @@ public class WorkSpaceScreen extends JPanel {
 
     public void removeBubbles() {
         Component[] componentList = getComponents();
-        for (Component component : componentList) {
-            if (component instanceof Bubble || component instanceof CodeBubble) {
-                remove(component);
+        for (Component comp : componentList) {
+            //TODO - for each new bubble type, add it here as well
+            if (comp instanceof Bubble || comp instanceof CodeBubble) {
+                remove(comp);
             }
         }
     }

@@ -1,6 +1,7 @@
 package lanse.abstractt.core.bubble;
 
 import lanse.abstractt.core.ColorPalette;
+import lanse.abstractt.core.WorldMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,8 @@ public class CodeBubble extends JPanel {
     protected Color color;
     protected int width;
     protected int height;
+    private double lastZoom = -40404;
+    private JLabel codeLabel;
 
     public CodeBubble(String fileContents, int width, int height) {
         this.fileContents = fileContents;
@@ -62,10 +65,6 @@ public class CodeBubble extends JPanel {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    lineNumber++;
-                    continue;
-                }
 
                 if (widestLine <= line.length()) widestLine = line.length();
 
@@ -76,9 +75,9 @@ public class CodeBubble extends JPanel {
                 lineNumber++;
             }
 
-            //TODO - this sizing needs to be multiplied by the pixel size of a character, not this random 100 value.
-            width = widestLine * 100;
-            height = lineNumber * 100;
+            //TODO - might need more testing, but these magical numbers somehow work, as well as base font being 16??
+            width = widestLine * 12 + 20;
+            height = lineNumber * 22 + 40;
 
         } catch (IOException e) {
             System.err.println("Failed to read file: " + filePath);
@@ -101,7 +100,9 @@ public class CodeBubble extends JPanel {
         centerPanel.setOpaque(false);
 
         // RENDERS THE CODE
-        JLabel codeLabel = new JLabel("<html><body style='width: 220px'><pre>" + fileContents + "</pre></body></html>");
+        codeLabel = new JLabel();
+        updateCodeLabelFont();
+
         codeLabel.setForeground(Color.WHITE);
         codeLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
         codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -127,6 +128,8 @@ public class CodeBubble extends JPanel {
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        updateCodeLabelFont();
 
         // Define rectangle shape and clip to it
         Shape rectangle = new Rectangle2D.Double(0, 0, getWidth(), getHeight());
@@ -157,4 +160,21 @@ public class CodeBubble extends JPanel {
             setPreferredSize(new Dimension(width, height));
         }
     }
+
+    private void updateCodeLabelFont() {
+        double zoom = WorldMap.getZoomStatic();
+        if (zoom == lastZoom) return;
+        lastZoom = zoom;
+
+        int baseFontSize = 16;
+        int scaledFontSize = (int) (baseFontSize * zoom);
+
+        Font newFont = new Font("Monospaced", Font.PLAIN, scaledFontSize);
+        codeLabel.setFont(newFont);
+
+        // You may need to adjust width hints here too
+        String html = "<html><body style='width: " + (int)(width * zoom * 0.9) + "px'><pre>" + fileContents + "</pre></body></html>";
+        codeLabel.setText(html);
+    }
+
 }
