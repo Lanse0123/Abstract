@@ -23,7 +23,7 @@ public class CodeBubble extends JPanel {
 
     public CodeBubble(String fileContents) {
         this.fileContents = fileContents;
-        this.color = new Color(30, 30, 30);
+        this.color = new Color(127, 0, 127);
 
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
@@ -56,9 +56,8 @@ public class CodeBubble extends JPanel {
         //TODO - get the widest line, and get how many lines tall it is. This will be used later in the constructor.
         // also copy everything into fileContents
 
-        String fileContents = "";
+        StringBuilder fileContents = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            StringBuilder currentBlock = new StringBuilder();
             int lineNumber = 1;
             String line;
 
@@ -68,17 +67,11 @@ public class CodeBubble extends JPanel {
                     continue;
                 }
 
-                String lineWithNumber = lineNumber + ".     " + line + "\n";
+                String lineWithNumber = lineNumber + "." + " ".repeat(6 - Integer.valueOf(lineNumber).toString().length()) + line + "\n";
 
-                //fileContents.add(currentBlock.toString());
-                currentBlock.setLength(0);
+                fileContents.append(lineWithNumber);
 
-                currentBlock.append(lineWithNumber);
                 lineNumber++;
-            }
-
-            if (!currentBlock.isEmpty()) {
-                //fileContents.add(currentBlock.toString());
             }
 
         } catch (IOException e) {
@@ -87,8 +80,9 @@ public class CodeBubble extends JPanel {
             return;
         }
 
-        CodeBubble codeBubble = new CodeBubble(fileContents);
+        CodeBubble codeBubble = new CodeBubble(fileContents.toString());
         parent.add(codeBubble);
+        System.out.println(fileContents.toString());
     }
 
     protected void initUI() {
