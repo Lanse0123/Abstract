@@ -5,6 +5,7 @@ import lanse.abstractt.core.bubble.CodeBubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
+import org.eclipse.lsp4j.DocumentSymbol;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class UniversalParser {
 
@@ -37,13 +39,13 @@ public class UniversalParser {
         }
 
         String LSPLink = LanguageManager.languageHasLSP(filePath);
-        Map<Integer, String> structuralList; //this will be used to store the functions and other important structural things
+        List<DocumentSymbol> structuralList; //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")) {
-            structuralList = LSPManager.doStuff(LSPLink);
+            structuralList = LSPManager.doStuff(LSPLink, file);
 
-            for (Map.Entry<Integer, String> entry : structuralList.entrySet()) {
-                //Storage.addStructure(filePath, structure, name, lineNum);
+            for (DocumentSymbol entry : structuralList) {
+                Storage.addStructure(filePath, entry.getDetail(), entry.getName(), "", entry.getRange().getStart().getLine());
             }
         } else {
             if (!aiCompiled){

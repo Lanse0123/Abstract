@@ -24,6 +24,9 @@ dependencies {
 
     // Ollama integration
     implementation("io.github.ollama4j:ollama4j:1.0.100")
+
+    // LSP
+    implementation("org.eclipse.lsp4j:org.eclipse.lsp4j:0.24.0")
 }
 
 application {

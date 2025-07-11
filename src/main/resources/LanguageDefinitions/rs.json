@@ -2,5 +2,5 @@
   "language": "rust",
   "color": "#dea584",
   "parse": true,
-  "lsp": "false"
+  "lsp": "rust-analyzer"
 }
