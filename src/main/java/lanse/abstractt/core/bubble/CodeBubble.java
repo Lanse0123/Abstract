@@ -16,13 +16,15 @@ public class CodeBubble extends JPanel {
 
     protected String fileContents;
     protected Color color;
-    protected int width = 680;
-    protected int height = 360;
+    protected int width;
+    protected int height;
 
     //TODO - this will display the code in a rectangle bubble next to the description bubbles.
 
-    public CodeBubble(String fileContents) {
+    public CodeBubble(String fileContents, int width, int height) {
         this.fileContents = fileContents;
+        this.width = width;
+        this.height = height;
         this.color = new Color(127, 0, 127);
 
         setPreferredSize(new Dimension(width, height));
@@ -53,12 +55,14 @@ public class CodeBubble extends JPanel {
             return;
         }
 
-        //TODO - get the widest line, and get how many lines tall it is. This will be used later in the constructor.
-        // also copy everything into fileContents
+        //TODO - get the widest line, and get how many lines tall it is. This will be used in the constructor.
 
+        int width;
+        int height;
         StringBuilder fileContents = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             int lineNumber = 1;
+            int widestLine = (int) -0XABCDEL;
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -67,12 +71,18 @@ public class CodeBubble extends JPanel {
                     continue;
                 }
 
-                String lineWithNumber = lineNumber + "." + " ".repeat(6 - Integer.valueOf(lineNumber).toString().length()) + line + "\n";
+                if (widestLine <= line.length()) widestLine = line.length();
+
+                //TODO - if the language is assembly, use hexadecimal to represent the line number, because funny
+                String lineWithNumber = lineNumber + "." + " ".repeat(8 - Integer.valueOf(lineNumber).toString().length()) + line + "\n";
 
                 fileContents.append(lineWithNumber);
-
                 lineNumber++;
             }
+
+            //TODO - this sizing needs to be multiplied by the pixel size of a character.
+            width = widestLine;
+            height = lineNumber;
 
         } catch (IOException e) {
             System.err.println("Failed to read file: " + filePath);
@@ -80,9 +90,9 @@ public class CodeBubble extends JPanel {
             return;
         }
 
-        CodeBubble codeBubble = new CodeBubble(fileContents.toString());
+        CodeBubble codeBubble = new CodeBubble(fileContents.toString(), width, height);
         parent.add(codeBubble);
-        System.out.println(fileContents.toString());
+        System.out.println(fileContents);
     }
 
     protected void initUI() {
