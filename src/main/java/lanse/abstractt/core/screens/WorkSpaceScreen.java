@@ -84,15 +84,16 @@ public class WorkSpaceScreen extends JPanel {
 
         DisplayModeSelector.clearBubbles();
         for (Component comp : getComponents()) {
-            if (comp instanceof Bubble bubble) {
+            //TODO - for each new bubble type, add it to this if statement
+            if (comp instanceof Bubble || comp instanceof CodeBubble) {
                 Point pos = DisplayModeSelector.getNewBubblePosition();
                 double worldX = pos.x;
                 double worldY = pos.y;
                 Point screenPos = worldMap.transform(worldX, worldY);
 
                 double zoom = worldMap.getZoom();
-                int scaledWidth = (int) (bubble.getPreferredSize().width * zoom);
-                int scaledHeight = (int) (bubble.getPreferredSize().height * zoom);
+                int scaledWidth = (int) (comp.getPreferredSize().width * zoom);
+                int scaledHeight = (int) (comp.getPreferredSize().height * zoom);
 
                 // Offset bubbles by sidebar width so they don’t appear under it
                 comp.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, scaledWidth, scaledHeight);

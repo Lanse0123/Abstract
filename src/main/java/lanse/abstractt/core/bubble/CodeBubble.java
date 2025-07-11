@@ -19,13 +19,11 @@ public class CodeBubble extends JPanel {
     protected int width;
     protected int height;
 
-    //TODO - this will display the code in a rectangle bubble next to the description bubbles.
-
     public CodeBubble(String fileContents, int width, int height) {
         this.fileContents = fileContents;
         this.width = width;
         this.height = height;
-        this.color = new Color(127, 0, 127);
+        this.color = new Color(15, 15, 15);
 
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
@@ -55,8 +53,6 @@ public class CodeBubble extends JPanel {
             return;
         }
 
-        //TODO - get the widest line, and get how many lines tall it is. This will be used in the constructor.
-
         int width;
         int height;
         StringBuilder fileContents = new StringBuilder();
@@ -74,15 +70,15 @@ public class CodeBubble extends JPanel {
                 if (widestLine <= line.length()) widestLine = line.length();
 
                 //TODO - if the language is assembly, use hexadecimal to represent the line number, because funny
-                String lineWithNumber = lineNumber + "." + " ".repeat(8 - Integer.valueOf(lineNumber).toString().length()) + line + "\n";
+                String lineWithNumber = "  " + lineNumber + "." + " ".repeat(8 - Integer.valueOf(lineNumber).toString().length()) + line + "<br>";
 
                 fileContents.append(lineWithNumber);
                 lineNumber++;
             }
 
-            //TODO - this sizing needs to be multiplied by the pixel size of a character.
-            width = widestLine;
-            height = lineNumber;
+            //TODO - this sizing needs to be multiplied by the pixel size of a character, not this random 100 value.
+            width = widestLine * 100;
+            height = lineNumber * 100;
 
         } catch (IOException e) {
             System.err.println("Failed to read file: " + filePath);
@@ -104,8 +100,15 @@ public class CodeBubble extends JPanel {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
 
+        // RENDERS THE CODE
+        JLabel codeLabel = new JLabel("<html><body style='width: 220px'><pre>" + fileContents + "</pre></body></html>");
+        codeLabel.setForeground(Color.WHITE);
+        codeLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         centerPanel.add(Box.createVerticalStrut(10));
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        centerPanel.add(codeLabel);
 
         // RIGHT placeholder
         JPanel rightPanel = new JPanel();
@@ -126,7 +129,6 @@ public class CodeBubble extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Define rectangle shape and clip to it
-        //TODO - make sure this is the size / shape that we define it as based on the line counter thingy
         Shape rectangle = new Rectangle2D.Double(0, 0, getWidth(), getHeight());
         g2.setClip(rectangle);
 
