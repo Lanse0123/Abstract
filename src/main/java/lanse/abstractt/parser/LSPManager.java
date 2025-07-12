@@ -20,17 +20,13 @@ public class LSPManager implements LanguageClient {
 
     public static List<DocumentSymbol> doStuff(String LSPLink, String languageId, File file) {
         //TODO: re-use same connection for new files
-        System.out.println("LSPLink: " + LSPLink + " for file " + file);
         try {
-            System.out.println("Starting LSP");
             ProcessBuilder pb = new ProcessBuilder(List.of(LSPLink, "-v"));
             pb.directory(new File(Settings.selectedProjectPath));
             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
             Process lsp = pb.start();
             Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(new LSPManager(), lsp.getInputStream(), lsp.getOutputStream());
-            System.out.println("About to listen");
             launcher.startListening();
-            System.out.println("About to initialize");
             InitializeParams init_params = new InitializeParams();
 
             TextDocumentClientCapabilities text_caps = new TextDocumentClientCapabilities();
@@ -53,9 +49,7 @@ public class LSPManager implements LanguageClient {
 
             DocumentSymbolParams doc_params = new DocumentSymbolParams();
             TextDocumentIdentifier textDocument = new TextDocumentIdentifier("file://" + file);
-            System.out.println(textDocument);
             doc_params.setTextDocument(textDocument);
-            System.out.println(doc_params);
             CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params);
             return symbols.get().stream().map(Either::getRight).toList();
         }

@@ -43,10 +43,9 @@ public class UniversalParser {
 
         if (!Objects.equals(LSPLink, "false")) {
             structuralList = LSPManager.doStuff(LSPLink, LanguageManager.languageID(filePath), file);
-            System.out.println(structuralList);
 
             for (DocumentSymbol entry : structuralList) {
-                Storage.addStructure(filePath, entry.getDetail(), entry.getName(), "", entry.getRange().getStart().getLine());
+                Storage.addStructure(filePath, Optional.ofNullable(entry.getDetail()).orElse("No details available."), entry.getName(), "", entry.getRange().getStart().getLine());
             }
         } else {
             if (!aiCompiled){

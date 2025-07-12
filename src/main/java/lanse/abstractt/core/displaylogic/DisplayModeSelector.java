@@ -25,7 +25,7 @@ public class DisplayModeSelector {
                 case TODO_VIEW -> TodoView.getNewBubblePosition(bubbleCount);
             };
         } else {
-            return new Point(10000, 0);
+            return new Point(1500, 480);
         }
     }
 
