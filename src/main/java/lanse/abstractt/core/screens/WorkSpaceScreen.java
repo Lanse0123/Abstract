@@ -18,7 +18,7 @@ import java.util.Stack;
 public class WorkSpaceScreen extends JPanel {
 
     private final WorldMap worldMap = new WorldMap();
-    private final SideBar sidebar = new SideBar();
+    private final SideBar sidebar = new SideBar(worldMap);
     private final JMenuBar topBar;
 
     public WorkSpaceScreen(Color bgColor) {

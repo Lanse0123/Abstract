@@ -1,9 +1,5 @@
 package lanse.abstractt.core;
 
-import lanse.abstractt.core.bubble.Bubble;
-import lanse.abstractt.core.bubble.FunctionBubble;
-import lanse.abstractt.storage.Storage;
-
 import java.awt.*;
 import java.awt.event.*;
 
@@ -21,37 +17,53 @@ public class WorldMap {
         instance = this;
     }
 
+    public void mousePressed(MouseEvent e) {
+        dragging = true;
+        lastMouseX = e.getX();
+        lastMouseY = e.getY();
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        dragging = false;
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        if (dragging) {
+            int dx = e.getX() - lastMouseX;
+            int dy = e.getY() - lastMouseY;
+
+            offsetX += dx / zoom;
+            offsetY += dy / zoom;
+
+            lastMouseX = e.getX();
+            lastMouseY = e.getY();
+        }
+    }
+
     public void initializeListeners(Component component) {
+        WorldMap m = this;
         component.addMouseListener(new MouseAdapter() {
+            WorldMap map = m;
+
             @Override
             public void mousePressed(MouseEvent e) {
-                dragging = true;
-                lastMouseX = e.getX();
-                lastMouseY = e.getY();
+                map.mousePressed(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                dragging = false;
+                map.mouseReleased(e);
             }
         });
 
         component.addMouseMotionListener(new MouseMotionAdapter() {
+            WorldMap map = m;
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (dragging) {
-                    int dx = e.getX() - lastMouseX;
-                    int dy = e.getY() - lastMouseY;
+                map.mouseDragged(e);
 
-                    offsetX += dx / zoom;
-                    offsetY += dy / zoom;
-
-                    lastMouseX = e.getX();
-                    lastMouseY = e.getY();
-
-                    component.revalidate();
-                    component.repaint();
-                }
+                component.revalidate();
+                component.repaint();
             }
         });
 

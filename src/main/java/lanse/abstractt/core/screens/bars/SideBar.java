@@ -1,17 +1,23 @@
 package lanse.abstractt.core.screens.bars;
 
 import lanse.abstractt.core.ColorPalette;
+import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.MiniBubble;
 import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SideBar extends JPanel {
+    WorldMap map;
 
-    public SideBar() {
+    public SideBar(WorldMap map) {
+        this.map = map;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(ColorPalette.ColorCategory.BARS.getColor());
         refresh();
+        map.initializeListeners(this);
     }
 
     // Call this whenever the depth changes or bubbles are added
