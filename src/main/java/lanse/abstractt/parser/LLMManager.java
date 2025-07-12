@@ -2,6 +2,7 @@ package lanse.abstractt.parser;
 
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
+import io.github.ollama4j.models.response.Model;
 import io.github.ollama4j.models.response.OllamaResult;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -46,13 +47,20 @@ public class LLMManager {
                 llamaProcess = server.start();
             }
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
-            System.out.println("Pulling " + model);
-            //TODO: add some progress bar
-            ollamaAPI.pullModel(model);
-            System.out.println("Pulled " + model);
+            if (!ollamaAPI.listModels().stream().map(Model::toString).toList().contains(model)) {
+                try {
+                    System.out.println("Pulling " + model);
+                    //TODO: add some progress bar
+                    ollamaAPI.pullModel(model);
+                    System.out.println("Pulled " + model);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
         }
         catch (IOException | InterruptedException e) {
-            e.printStackTrace();
             return false;
         } catch (OllamaBaseException e) {
             throw new RuntimeException(e);

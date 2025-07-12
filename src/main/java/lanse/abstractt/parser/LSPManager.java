@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 public class LSPManager implements LanguageClient {
 
@@ -51,10 +52,9 @@ public class LSPManager implements LanguageClient {
             launcher.getRemoteProxy().getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem("file://" + file, languageId, 0, contents)));
 
             DocumentSymbolParams doc_params = new DocumentSymbolParams();
-            TextDocumentIdentifier textDocument = new TextDocumentIdentifier("file://" + file);
-            doc_params.setTextDocument(textDocument);
+            doc_params.setTextDocument(new TextDocumentIdentifier("file://" + file));
             CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params);
-            return symbols.get().stream().map(Either::getRight).toList();
+            return flattenSymbols(symbols.get().stream().map(Either::getRight)).toList();
         }
         catch (IOException e) {
             System.err.println("Error running LSP: " + e);
@@ -67,6 +67,20 @@ public class LSPManager implements LanguageClient {
         //do stuff or something idk
         //(the string is the name of the function, or if its fields, or imports, or etc. int is the lineNumber it starts at. This might change
         return new ArrayList<>();
+    }
+
+    public static Stream<DocumentSymbol> flattenSymbols(Stream<DocumentSymbol> symbolStream) {
+        return symbolStream.flatMap(symbol ->
+                {
+                    try {
+                        Stream<DocumentSymbol> children = flattenSymbols(symbol.getChildren().stream());
+                        return Stream.concat(Stream.of(symbol), children);
+                    }
+                    catch (NullPointerException e) {
+                        return Stream.of(symbol);
+                    }
+                }
+        );
     }
 
     @Override
