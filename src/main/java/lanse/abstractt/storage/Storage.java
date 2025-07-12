@@ -4,6 +4,7 @@ import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.bubble.TopBubble;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -103,19 +104,41 @@ public class Storage {
         writeJson(bubble.getFilePath(), json);
     }
 
-    public static void addStructure(String filePath, String structure, String name, String desc, int line) {
+    public static void addStructure(String filePath, String structure, String name, String desc, int start, Optional<Integer> end) {
         if (isAbstractionFile(filePath)) return;
         JSONObject json = loadOrCreateJson(filePath);
         json.put("compiled", true);
-        JSONArray arr = json.optJSONArray(structure);
-        if (arr == null) json.put(structure, arr = new JSONArray());
+        JSONObject arr = json.optJSONObject(structure);
+        if (arr == null) json.put(structure, arr = new JSONObject());
 
         JSONObject entry = new JSONObject();
-        entry.put("name", name);
         entry.put("desc", desc);
-        entry.put("line", line);
-        arr.put(entry);
+        entry.put("start", start);
+        if (end.isPresent()) {
+            entry.put("end", end.get());
+        }
+        arr.put(name, entry);
 
+        writeJson(filePath, json);
+    }
+
+    public static void updateStructure(String filePath, String structure, String name, Optional<String> desc, Optional<Integer> start, Optional<Integer> end) {
+        if (isAbstractionFile(filePath)) return;
+        JSONObject json = loadOrCreateJson(filePath);
+        JSONObject arr = json.optJSONObject(structure);
+        if (arr == null) json.put(structure, arr = new JSONObject());
+
+        JSONObject entry = arr.optJSONObject(name);
+        if (entry == null) arr.put(name, entry = new JSONObject());
+        if (start.isPresent()) {
+            entry.put("start", start.get());
+        }
+        if (end.isPresent()) {
+            entry.put("end", end.get());
+        }
+        if (desc.isPresent()) {
+            entry.put("desc", desc.get());
+        }
         writeJson(filePath, json);
     }
 
@@ -133,15 +156,21 @@ public class Storage {
                 JSONObject obj = arr.getJSONObject(i);
                 String name  = obj.optString("name", structure + i);
                 String desc  = obj.optString("desc", "");
-                int line  = obj.optInt("line", -1);
-                list.add(new FunctionBubble(name, desc, filePath, line, structure,false));
+                int startLine  = obj.optInt("start", -1);
+                Optional<Integer> endLine;
+                try {
+                    endLine = Optional.of(obj.getInt("end"));
+                } catch (JSONException e) {
+                    endLine = Optional.empty();
+                }
+                list.add(new FunctionBubble(name, desc, filePath, startLine, endLine, structure,false));
             }
         }
         return list.toArray(new FunctionBubble[0]);
     }
 
     public static void saveFunctionBubble(FunctionBubble fb) {
-        addStructure(fb.getFilePath(), fb.getStructureType(), fb.getTitle(), fb.getDescription(), fb.getLineNumber());
+        updateStructure(fb.getFilePath(), fb.getStructureType(), fb.getTitle(), Optional.ofNullable(fb.getDescription()), Optional.of(fb.getStartLineNumber()), fb.getEndLineNumber());
     }
 
 
