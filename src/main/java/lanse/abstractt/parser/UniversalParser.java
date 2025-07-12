@@ -148,5 +148,8 @@ public class UniversalParser {
         FunctionBubble[] newBubbles = Storage.loadFunctionBubbles(filePath);
         parent.setLayout(null);
         for (Bubble bubble : newBubbles) parent.add(bubble);
+
+        parent.revalidate();
+        parent.repaint();
     }
 }

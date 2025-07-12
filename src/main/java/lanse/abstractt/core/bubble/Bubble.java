@@ -14,8 +14,19 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class Bubble extends JPanel {
+
+    //for multithreading pain (DAEMON stops memory leaks from unused eternal threads)
+    private static final ThreadFactory DAEMON_THREAD_FACTORY = runnable -> {
+        Thread t = new Thread(runnable);
+        t.setDaemon(true);
+        return t;
+    };
+    private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
 
     protected String title;
     protected String description;
@@ -74,7 +85,7 @@ public class Bubble extends JPanel {
                 if (file.isDirectory()) {
                     handleDirectory(file, parent);
                 } else {
-                    UniversalParser.handleFile(filePath, parent);
+                    executor.submit(() -> UniversalParser.handleFile(filePath, parent));
                 }
 
                 WorldMap.setCameraCoordinates(0, 0);
