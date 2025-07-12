@@ -1,33 +1,30 @@
 package lanse.abstractt.parser;
 
+import lanse.abstractt.storage.Settings;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 
-import javax.swing.text.Document;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class LSPManager implements LanguageClient {
 
-    public static List<DocumentSymbol> doStuff(String LSPLink, File file) {
+    public static List<DocumentSymbol> doStuff(String LSPLink, String languageId, File file) {
+        //TODO: re-use same connection for new files
         System.out.println("LSPLink: " + LSPLink + " for file " + file);
         try {
             System.out.println("Starting LSP");
             ProcessBuilder pb = new ProcessBuilder(List.of(LSPLink, "-v"));
-            pb.directory(file.getParentFile());
+            pb.directory(new File(Settings.selectedProjectPath));
             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
             Process lsp = pb.start();
             Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(new LSPManager(), lsp.getInputStream(), lsp.getOutputStream());
@@ -43,17 +40,23 @@ public class LSPManager implements LanguageClient {
             doc_caps.setHierarchicalDocumentSymbolSupport(true);
             text_caps.setDocumentSymbol(doc_caps);
 
+            List<WorkspaceFolder> workspace_folders = List.of(new WorkspaceFolder("file://" + Settings.selectedProjectPath, Settings.selectedProjectPath));
+            init_params.setWorkspaceFolders(workspace_folders);
+
             init_params.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), text_caps, new Object()));
             CompletableFuture<InitializeResult> initializeResponse = launcher.getRemoteProxy().initialize(init_params);
-            System.out.println("About to wait for initialization response");
             initializeResponse.join();
             launcher.getRemoteProxy().initialized(new InitializedParams());
-            System.out.println("Requesting document symbols");
+
+            String contents = Files.readString(file.toPath());
+            launcher.getRemoteProxy().getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem("file://" + file, languageId, 0, contents)));
 
             DocumentSymbolParams doc_params = new DocumentSymbolParams();
-            doc_params.setTextDocument(new TextDocumentIdentifier(file.toURI().toURL().toString()));
+            TextDocumentIdentifier textDocument = new TextDocumentIdentifier("file://" + file);
+            System.out.println(textDocument);
+            doc_params.setTextDocument(textDocument);
+            System.out.println(doc_params);
             CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params);
-            System.out.println("About to wait for document symbols");
             return symbols.get().stream().map(Either::getRight).toList();
         }
         catch (IOException e) {

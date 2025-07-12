@@ -42,7 +42,8 @@ public class UniversalParser {
         List<DocumentSymbol> structuralList; //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")) {
-            structuralList = LSPManager.doStuff(LSPLink, file);
+            structuralList = LSPManager.doStuff(LSPLink, LanguageManager.languageID(filePath), file);
+            System.out.println(structuralList);
 
             for (DocumentSymbol entry : structuralList) {
                 Storage.addStructure(filePath, entry.getDetail(), entry.getName(), "", entry.getRange().getStart().getLine());
@@ -96,12 +97,12 @@ public class UniversalParser {
                 String mergedPrompt = """
                         <s>[INST]
                         You are part of a universal coding IDE. Your job is to define structural code information from a file written in %s.
-                                    
+                        
                         For all lines in INPUT, find all defining lines in the code: defining a function, classes, imports, fields, or other structural elements.
-                                    
+                        
                         INPUT:
                         %s
-                                    
+                        
                         OUTPUT RULES:
                         - Only respond with line numbers and their type.
                         - Use this format: 12: function: getName, 24: class: className
