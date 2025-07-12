@@ -9,11 +9,11 @@ public class CreditScreen extends JPanel {
 
     private final JFrame frame;
 
-    //TODO - THANK YOU JAMES!!!
-
     //TODO - redo this entire thing. Also link stuff like the github page and discord and stuff here.
 
-    // might put things like link to my discord here and stuff
+    //https://github.com/Lanse0123/Abstract
+
+    // might put things like link to my discord here and stuff (https://discord.gg/qsbJrBdw5V)
     // also might add liscence here that says like dont steal this to make profit, and if any suggestions or want to help, join my discord
     // also also might put patreon / donation link here eventually
 
