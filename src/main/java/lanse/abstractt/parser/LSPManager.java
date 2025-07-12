@@ -25,7 +25,7 @@ public class LSPManager implements LanguageClient {
     public static List<DocumentSymbol> doStuff(String LSPLink, String languageId, File file) {
         //TODO: re-use same connection for new files
         try {
-            ProcessBuilder pb = new ProcessBuilder(List.of(LSPLink, "-v"));
+            ProcessBuilder pb = new ProcessBuilder(LSPLink);
             pb.directory(new File(Settings.selectedProjectPath));
             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
             Process lsp = pb.start();
