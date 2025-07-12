@@ -3,6 +3,7 @@ package lanse.abstractt.parser;
 import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.CodeBubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
+import lanse.abstractt.core.bubble.PictureBubble;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
 import org.eclipse.lsp4j.DocumentSymbol;
@@ -24,7 +25,12 @@ public class UniversalParser {
 
     public static void handleFile(String filePath, Container parent) {
 
-        CodeBubble.createCodeBubble(filePath, parent);
+        if (LanguageManager.languageID(filePath).equals("image")){
+            PictureBubble.createPictureBubble(filePath, parent);
+            return;
+        } else {
+            CodeBubble.createCodeBubble(filePath, parent);
+        }
 
         // Check if the file is parseable via its language definition
         if (!LanguageManager.isFileParsable(filePath)) {

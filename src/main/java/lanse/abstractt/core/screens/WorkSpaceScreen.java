@@ -97,7 +97,7 @@ public class WorkSpaceScreen extends JPanel {
 
                 // Offset bubbles by sidebar width so they don’t appear under it
                 comp.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, scaledWidth, scaledHeight);
-            } else if (comp instanceof CodeBubble){
+            } else if (comp instanceof CodeBubble || comp instanceof PictureBubble){
                 Point pos = DisplayModeSelector.getNewBubblePosition(true);
                 double worldX = pos.x;
                 double worldY = pos.y;
@@ -122,7 +122,7 @@ public class WorkSpaceScreen extends JPanel {
         Component[] componentList = getComponents();
         for (Component comp : componentList) {
             //TODO - for each new bubble type, add it here as well
-            if (comp instanceof Bubble || comp instanceof CodeBubble) {
+            if (comp instanceof Bubble || comp instanceof CodeBubble || comp instanceof PictureBubble) {
                 remove(comp);
             }
         }
