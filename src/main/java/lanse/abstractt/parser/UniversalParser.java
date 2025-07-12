@@ -45,7 +45,7 @@ public class UniversalParser {
             structuralList = LSPManager.doStuff(LSPLink, LanguageManager.languageID(filePath), file);
 
             for (DocumentSymbol entry : structuralList) {
-                Storage.updateStructure(filePath, entry.getKind().toString(), entry.getName(), Optional.empty(), Optional.of(entry.getRange().getStart().getLine()), Optional.of(entry.getRange().getStart().getLine()));
+                Storage.updateStructure(filePath, entry.getKind().toString(), entry.getName(), Optional.empty(), Optional.of(entry.getRange().getStart().getLine()), Optional.of(entry.getRange().getEnd().getLine()));
             }
         } else {
             if (!aiCompiled){

@@ -149,14 +149,13 @@ public class Storage {
         List<FunctionBubble> list = new ArrayList<>();
         for (String structure : json.keySet()) {
             if (isMetaKey(structure)) continue;
-            JSONArray arr = json.optJSONArray(structure);
+            JSONObject arr = json.optJSONObject(structure);
             if (arr == null) continue;
 
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject obj = arr.getJSONObject(i);
-                String name  = obj.optString("name", structure + i);
+            for (String name : arr.keySet()) {
+                JSONObject obj = arr.getJSONObject(name);
                 String desc  = obj.optString("desc", "");
-                int startLine  = obj.optInt("start", -1);
+                int startLine  = obj.getInt("start");
                 Optional<Integer> endLine;
                 try {
                     endLine = Optional.of(obj.getInt("end"));
