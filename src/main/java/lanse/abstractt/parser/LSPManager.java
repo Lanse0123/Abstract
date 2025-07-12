@@ -18,6 +18,9 @@ import java.util.concurrent.ExecutionException;
 
 public class LSPManager implements LanguageClient {
 
+    //TODO - the link to LSP stuff
+    // https://microsoft.github.io/language-server-protocol/implementors/servers/
+
     public static List<DocumentSymbol> doStuff(String LSPLink, String languageId, File file) {
         //TODO: re-use same connection for new files
         try {
