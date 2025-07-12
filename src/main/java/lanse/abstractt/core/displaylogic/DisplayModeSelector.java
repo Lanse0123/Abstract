@@ -1,8 +1,5 @@
 package lanse.abstractt.core.displaylogic;
 
-import lanse.abstractt.core.displaylogic.*;
-import lanse.abstractt.storage.Storage;
-
 import java.awt.*;
 
 public class DisplayModeSelector {
@@ -15,17 +12,21 @@ public class DisplayModeSelector {
 
     public static int bubbleCount = 0;
 
-    public static Point getNewBubblePosition(){
+    public static Point getNewBubblePosition(boolean isCodeBubble){
 
-        bubbleCount += 1;
+        if (!isCodeBubble) {
+            bubbleCount += 1;
 
-        return switch (displayMode) {
-            case FILE_LIST -> FileList.getNewBubblePosition(bubbleCount);
-            case MAIN_LIST_DOWN -> MainListDown.getNewBubblePosition(bubbleCount);
-            case PROXIMITY_SIMULATOR -> ProximitySimulator.getNewBubblePosition(bubbleCount);
-            case ANTI_COLLIDER -> AntiCollider.getNewBubblePosition(bubbleCount);
-            case TODO_VIEW -> TodoView.getNewBubblePosition(bubbleCount);
-        };
+            return switch (displayMode) {
+                case FILE_LIST -> FileList.getNewBubblePosition(bubbleCount);
+                case MAIN_LIST_DOWN -> MainListDown.getNewBubblePosition(bubbleCount);
+                case PROXIMITY_SIMULATOR -> ProximitySimulator.getNewBubblePosition(bubbleCount);
+                case ANTI_COLLIDER -> AntiCollider.getNewBubblePosition(bubbleCount);
+                case TODO_VIEW -> TodoView.getNewBubblePosition(bubbleCount);
+            };
+        } else {
+            return new Point(10000, 0);
+        }
     }
 
     public static void clearBubbles() {
