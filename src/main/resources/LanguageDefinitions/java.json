@@ -1,5 +1,5 @@
 {
-  "language": ".java",
+  "language": "java",
   "color": "#b07219",
   "parse": true,
   "lsp": "jdtls"

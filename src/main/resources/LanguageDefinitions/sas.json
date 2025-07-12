@@ -2,6 +2,5 @@
   "language": "sas",
   "color": "#b34936",
   "parse": true,
-  "lsp": "false",
-  "extra": "cards;"
+  "lsp": "false"
 }

@@ -1,10 +1,7 @@
 {
   "language": "there are multiple types of assembly. Dont worry about this json rn.",
   "color": "#6e4c13",
-  "comment": "",
-  "function": "",
-  "defaultMain": "",
-  "extra": "Idk if i am going to make this work with assembly",
+  "extra": "Idk if i am going to make this work with assembly yet",
   "shouldWeUpgradeThisFromAJsonToAClass": "this is the lowest level language that I might add, this will need a class",
   "parse": false,
   "lsp": "false"

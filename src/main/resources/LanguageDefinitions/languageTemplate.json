@@ -1,5 +1,5 @@
 {
-  "language": "What does it's file end in? for example, if this was python.json, it would be .py",
+  "language": "What is the full language name of the extension? for example, .py is python, .js is javascript, etc.",
   "color": "RGB value of the color of the language, and parse is for Universal Parser. Should the AI try parsing that language, or treat it like a txt file.",
   "parse": false,
   "lsp": "false, or use a link to the language server protocol it uses. For example, rust uses rust-analyzer"
