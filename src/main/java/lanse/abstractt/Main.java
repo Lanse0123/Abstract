@@ -18,6 +18,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+//        ProcessBuilder process = new ProcessBuilder("C:\\Users\\mrsde\\OneDrive\\Desktop\\jdt-language-server-1.31.0-202401111522\\bin\\jdtls.bat");
+//        process.start();
+
         Settings.load();
 
         SwingUtilities.invokeLater(() -> {

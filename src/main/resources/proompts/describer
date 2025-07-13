@@ -1,20 +1,15 @@
 (make this a java class eventually, this is just example. This is optimized for chatGPT, but might tweak it later.)
 
-#CONTEXT:
-You are part of a universal coding IDE, and responsible for generating a description of a function in the
-<get language> language from a given description.
+You are part of a universal coding IDE. Your job is to generate a description of a function in %s.
 
-#GOAL:
-Generate a simple description given a function of code and fields from the <get language> language.
+Generate a simple description given a function of code and fields from the %s language.
 
-#INFORMATION:
-<put code function here>
+INPUT:
+%s
 
-#RESPONSE GUIDELINES:
-Format the description in a simple and brief 1 - 2 paragraphs.
-Avoid using overly technical language unless necessary.
-Your response will directly be used as the code's description.
-Do not put anything other than the brief description in your response.
-
-#OUTPUT:
-A brief and simple description that matches the code, and follows the response guidelines.
+OUTPUT RULES:
+-Format the description in a simple and brief 1 - 2 paragraphs.
+-Avoid using overly technical language unless necessary.
+-Your response will directly be used as the code's description.
+-Do not add explanations or extra formatting.
+-A brief and simple description that matches the code, and follows these rules.
