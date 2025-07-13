@@ -49,7 +49,7 @@ public class UniversalParser {
         List<DocumentSymbol> structuralList; //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")) {
-            ProgressBarPanel.setLoading(true, "LSP");
+            ProgressBarPanel.setLoading(true, "Generating Function Bubbles");
             ProgressBarPanel.show();
 
             structuralList = LSPManager.doStuff(LSPLink, LanguageManager.languageID(filePath), file);
@@ -170,11 +170,21 @@ public class UniversalParser {
         parent.revalidate();
         parent.repaint();
 
+        //TODO - make sure this part works
+        ProgressBarPanel.setLoading(true, "Generating Function Bubble Descriptions");
+        ProgressBarPanel.show();
+        int maxLen = newBubbles.length;
+        int count = 1;
+
         for (FunctionBubble bubble : newBubbles) {
             bubble.generateDescription();
+
+            ProgressBarPanel.setProgress((double) maxLen / count);
 
             parent.revalidate();
             parent.repaint();
         }
+
+        ProgressBarPanel.hide();
     }
 }
