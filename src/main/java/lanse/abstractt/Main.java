@@ -33,17 +33,24 @@ public class Main {
     }
 
     public static void createMainMenuScreen(){
-        frame = new JFrame("Abstract IDE");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1200, 800);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout());
+        if (frame == null) {
+            frame = new JFrame("Abstract IDE");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1200, 800);
+            frame.setLocationRelativeTo(null);
+            frame.setLayout(new BorderLayout());
+        }
+        else {
+            frame.getContentPane().removeAll();
+        }
 
         Storage.setCurrentDepth(0);
 
         // Pass frame to the screen
         frame.add(new MainMenuScreen(frame, ColorPalette.ColorCategory.PRIMARY_BACKGROUND.getColor()), BorderLayout.CENTER);
 
+        frame.revalidate();
+        frame.repaint();
         frame.setVisible(true);
     }
 

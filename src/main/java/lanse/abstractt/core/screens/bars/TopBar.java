@@ -89,9 +89,6 @@ public class TopBar {
         public void actionPerformed(ActionEvent e) {
             Storage.saveAllBubbles(Main.frame, true);
 
-            Main.frame.removeAll();
-            Main.frame.dispose();
-
             Main.createMainMenuScreen();
         }
     }
