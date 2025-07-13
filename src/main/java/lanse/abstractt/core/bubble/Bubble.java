@@ -28,6 +28,9 @@ public class Bubble extends JPanel {
     };
     private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
 
+    protected JLabel editIconLabel;
+    protected Icon editIcon;
+
     protected String title;
     protected String description;
     protected Icon icon;
@@ -43,6 +46,7 @@ public class Bubble extends JPanel {
         this.description = description;
         this.filePath = filePath;
         this.icon = LanguageManager.getIconFromPath(filePath);
+        this.editIcon = LanguageManager.getEditIcon();
         this.color = LanguageManager.getLanguageColorFromPath(filePath, false);
 
         setPreferredSize(new Dimension(width, height));
@@ -113,8 +117,12 @@ public class Bubble extends JPanel {
 
         // scale icon
         iconLabel = new JLabel();
-        updateIconSize(); // set icon at init
         iconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        editIconLabel = new JLabel();
+        editIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        updateIconSize(); //set icons at init
 
         // VERTICAL DIVIDER
         JPanel divider = new JPanel() {
@@ -149,15 +157,14 @@ public class Bubble extends JPanel {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         centerPanel.add(descriptionLabel);
 
-        // RIGHT placeholder
-        JPanel rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(30, 30));
-        rightPanel.setOpaque(false);
-
         JPanel leftWrapper = new JPanel(new BorderLayout());
         leftWrapper.setOpaque(false);
         leftWrapper.add(iconLabel, BorderLayout.WEST);
         leftWrapper.add(divider, BorderLayout.EAST);
+
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setOpaque(false);
+        rightPanel.add(editIconLabel, BorderLayout.EAST);
 
         add(leftWrapper, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
@@ -212,6 +219,10 @@ public class Bubble extends JPanel {
         if (icon instanceof ImageIcon imgIcon) {
             Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
             iconLabel.setIcon(new ImageIcon(scaledImage));
+        }
+        if (editIcon instanceof ImageIcon imgIcon) {
+            Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
+            editIconLabel.setIcon(new ImageIcon(scaledImage));
         }
     }
 

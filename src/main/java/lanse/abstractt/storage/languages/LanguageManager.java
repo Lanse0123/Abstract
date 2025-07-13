@@ -20,6 +20,10 @@ public class LanguageManager {
         return loadIcon(ext).or(() -> loadIcon("DefaultFile")).orElse(null);
     }
 
+    public static ImageIcon getEditIcon() {
+        return new ImageIcon(Objects.requireNonNull(LanguageManager.class.getResource("/images/Green Edit Button.png")));
+    }
+
     public static Color getLanguageColorFromPath(String path, boolean isTopBar) {
         String ext = resolveExtension(path);
         JSONObject def = loadLanguageDefinition(ext);
