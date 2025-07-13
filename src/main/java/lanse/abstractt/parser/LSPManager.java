@@ -1,5 +1,6 @@
 package lanse.abstractt.parser;
 
+import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.storage.Settings;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -25,12 +26,14 @@ public class LSPManager implements LanguageClient {
     public static List<DocumentSymbol> doStuff(String LSPLink, String languageId, File file) {
         //TODO: re-use same connection for new files
         try {
-            List<String> command = new ArrayList<String>();
+            List<String> command = new ArrayList<>();
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                 command.add("cmd.exe");
                 command.add("/c");
             }
             command.add(LSPLink);
+
+            ProgressBarPanel.setProgress(0.1);
 
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.directory(new File(Settings.selectedProjectPath));
@@ -40,6 +43,8 @@ public class LSPManager implements LanguageClient {
             Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(new LSPManager(), lsp.getInputStream(), lsp.getOutputStream());
             launcher.startListening();
             InitializeParams init_params = new InitializeParams();
+
+            ProgressBarPanel.setProgress(0.2);
 
             TextDocumentClientCapabilities text_caps = new TextDocumentClientCapabilities();
             DocumentSymbolCapabilities doc_caps = new DocumentSymbolCapabilities();
@@ -51,18 +56,26 @@ public class LSPManager implements LanguageClient {
             List<WorkspaceFolder> workspace_folders = List.of(new WorkspaceFolder(new File(Settings.selectedProjectPath).toURI().toString(), Settings.selectedProjectPath));
             init_params.setWorkspaceFolders(workspace_folders);
 
+            ProgressBarPanel.setProgress(0.3);
+
             init_params.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), text_caps, new Object()));
             CompletableFuture<InitializeResult> initializeResponse = launcher.getRemoteProxy().initialize(init_params);
             initializeResponse.join();
             launcher.getRemoteProxy().initialized(new InitializedParams());
 
+            ProgressBarPanel.setProgress(0.5);
+
             String contents = Files.readString(file.toPath());
             launcher.getRemoteProxy().getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(file.toURI().toString(), languageId, 0, contents)));
+
+            ProgressBarPanel.setProgress(0.8);
 
             DocumentSymbolParams doc_params = new DocumentSymbolParams();
             doc_params.setTextDocument(new TextDocumentIdentifier(file.toURI().toString()));
             List<Either<SymbolInformation, DocumentSymbol>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params).get();
             lsp.destroy();
+
+            ProgressBarPanel.setProgress(1);
             return flattenSymbols(symbols.stream().map(Either::getRight)).toList();
         }
         catch (IOException e) {
@@ -73,8 +86,8 @@ public class LSPManager implements LanguageClient {
             System.err.println("Unexpected completion of future: " + e);
             throw new RuntimeException(e);
         }
-        //do stuff or something idk
-        //(the string is the name of the function, or if its fields, or imports, or etc. int is the lineNumber it starts at. This might change
+
+        //it shouldn't make it here
         return new ArrayList<>();
     }
 

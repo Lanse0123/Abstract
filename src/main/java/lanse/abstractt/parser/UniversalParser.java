@@ -4,6 +4,7 @@ import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.CodeBubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.bubble.PictureBubble;
+import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
 import org.eclipse.lsp4j.DocumentSymbol;
@@ -48,7 +49,12 @@ public class UniversalParser {
         List<DocumentSymbol> structuralList; //this will be used to store the functions and other important structural things
 
         if (!Objects.equals(LSPLink, "false")) {
+            ProgressBarPanel.setLoading(true, "LSP");
+            ProgressBarPanel.show();
+
             structuralList = LSPManager.doStuff(LSPLink, LanguageManager.languageID(filePath), file);
+
+            ProgressBarPanel.hide();
 
             for (DocumentSymbol entry : structuralList) {
                 Storage.updateStructure(filePath, entry.getKind().toString(), entry.getName(), Optional.empty(), Optional.of(entry.getRange().getStart().getLine()), Optional.of(entry.getRange().getEnd().getLine()));
@@ -95,6 +101,11 @@ public class UniversalParser {
             // Determine language from file extension
             String extension = LanguageManager.getExtension(filePath);
             if (!extension.startsWith(".")) extension = "." + extension;
+
+            ProgressBarPanel.setLoading(true, "Generating Function Bubbles");
+            ProgressBarPanel.show();
+            int maxLen = prompts.size();
+            int count = 1;
 
             // Print full prompts with template
             System.out.println("=== TEMPLATED PROMPTS FOR: " + file.getName() + " ===");
@@ -144,8 +155,11 @@ public class UniversalParser {
                 }
 
                 System.out.println("--------");
+                ProgressBarPanel.setProgress((double) maxLen / count);
             }
         } //end of call for LLM
+
+        ProgressBarPanel.hide();
 
         System.out.println("Finished Parsing");
 

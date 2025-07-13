@@ -13,10 +13,6 @@ import java.util.concurrent.Semaphore;
 
 public class StorageCompiler {
 
-    //TODO - this will be the green arrow that generates the entire description of abstract from a project using AI (dont do this part yet)
-
-    //TODO - this also creates the default project, which is mostly done by now.
-
     private static int totalItems = 0;
     private static int processedItems = 0;
     private static final Semaphore rootWritten = new Semaphore(0);
@@ -61,7 +57,6 @@ public class StorageCompiler {
 
             @Override
             protected void done() {
-                ProgressBarPanel.setLoading(false, "Waiting...");
                 ProgressBarPanel.hide();
                 TopBubble.calculateLanguageBar();
             }

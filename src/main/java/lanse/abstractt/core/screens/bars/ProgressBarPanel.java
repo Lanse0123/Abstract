@@ -69,13 +69,15 @@ public class ProgressBarPanel {
     }
 
     public static void show() {
+        setProgress(0.0);
         loading = true;
         panel.setVisible(true);
         if (parent != null) parent.revalidate();
     }
 
     public static void hide() {
-        loading = false;
+        setLoading(false, "Waiting...");
+        setProgress(0.0);
         panel.setVisible(false);
         if (parent != null) parent.revalidate();
     }
