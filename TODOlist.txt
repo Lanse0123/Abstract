@@ -14,11 +14,21 @@ Things that I want to add next:
 
 *Add more languages to the JSON list
 
+*Add more LSP alternatives for languages to offload work from the AI
+
 *Apply the theme randomizer / creator and add it to Settings (randomizer should be completed)
 
 *Use AI to do the other 3 Proompt file ideas
 
+*Auto LSP link downloader for languages you dont have it for
+
+*Sort Function bubbles and have them point to their respective Line numbers. They can be alternating colors or something.
+
+*Make Bubbles and FunctionBubbles have an option to edit their description
+
+*Make Code Bubbles have an option to edit their code (might be dangerous or unsafe for now)
+
 ---------------------------------------------------------------------------------
 
-I want this project to stay free and easy to use forever, which means I dont want this to cost me much or anything at all for people to run. This means
-I am not paying for an AI server, so either I need to learn more about local lightweight AI that fits on a PC, or API calls to one of thats even possible.
+I want this project to stay free and easy to use forever, which means I dont want this to cost me much or anything at
+all for other people to run.
