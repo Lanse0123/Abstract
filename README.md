@@ -33,6 +33,9 @@ make build
 make run
 ```
 
+## Notes for Releasing
+``./gradlew assembleShadowDist`` creates .tar and .zip files in build/distributions. These files have a bin directory, with ``Abstract`` and ``Abstract.bat`` launchers for the jar files that are also included in the compressed file. For testing, there is a ``build/install/Abstract`` folder which contains the uncompressed contents of these files.
+
 ## Troubleshooting
 
 If you are using linux with a non-reparenting wm and the output from running Abstract is a completely blank screen, run the following:
