@@ -155,7 +155,8 @@ public class UniversalParser {
                 }
 
                 System.out.println("--------");
-                ProgressBarPanel.setProgress((double) maxLen / count);
+                ProgressBarPanel.setProgress((double) count / maxLen);
+                count++;
             }
         } //end of call for LLM
 
@@ -182,6 +183,7 @@ public class UniversalParser {
 
             parent.revalidate();
             parent.repaint();
+            count++;
         }
 
         ProgressBarPanel.hide();
