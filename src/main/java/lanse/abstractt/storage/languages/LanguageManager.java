@@ -5,176 +5,86 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.Objects;
+import java.util.Optional;
 
 public class LanguageManager {
 
+    private static final String ICON_BASE_PATH = "/images/LanguageIcons/";
+    private static final String DEFINITION_BASE_PATH = "/LanguageDefinitions/";
+
     public static Icon getIconFromPath(String path) {
-        File file = new File(path);
-        String extension;
-
-        if (file.isDirectory()) {
-            extension = "folder";
-        } else {
-            extension = getExtension(path);
-        }
-
-        String basePath = "/images/LanguageIcons/";
-
-        if (extension.equals("folder")) {
-            try {
-                return new ImageIcon(LanguageManager.class.getResource(basePath + "DefaultDirectory.png"));
-            } catch (Exception e) {
-                try {
-                    return new ImageIcon(LanguageManager.class.getResource(basePath + "DefaultFile.png"));
-                } catch (Exception ignored) {}
-            }
-        }
-        try {
-            return new ImageIcon(LanguageManager.class.getResource(basePath + extension + ".png"));
-        } catch (Exception e) {
-            try {
-                return new ImageIcon(LanguageManager.class.getResource(basePath + "DefaultFile.png"));
-            } catch (Exception ignored) {}
-        }
-        return null;
-    }
-
-    //TODO - this should also work if the path is already an extension.
-    public static String getExtension(String path) {
-        String fileName = path.replace('\\', '/'); //idk if this works outside of windows
-        fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
-        int dotIndex = fileName.lastIndexOf('.');
-
-        if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
-            return fileName.substring(dotIndex + 1).toLowerCase();
-        } else {
-            return ""; // No extension found
-        }
+        String ext = resolveExtension(path);
+        if (ext.equals("folder")) ext = "DefaultDirectory";
+        return loadIcon(ext).or(() -> loadIcon("DefaultFile")).orElse(null);
     }
 
     public static Color getLanguageColorFromPath(String path, boolean isTopBar) {
-        String extension;
-
-        // Allow either a full path or just the extension
-        if (path.startsWith(".")) {
-            extension = path.toLowerCase();
-        } else {
-            File file = new File(path);
-            extension = file.isDirectory() ? "folder" : getExtension(path);
+        String ext = resolveExtension(path);
+        JSONObject def = loadLanguageDefinition(ext);
+        if (def != null && def.has("color")) {
+            try {
+                return Color.decode(def.getString("color"));
+            } catch (Exception ignored) {}
         }
-
-        if (extension.startsWith(".")) extension = extension.replaceFirst(".", "");
-
-        String basePath = "/LanguageDefinitions/" + extension + ".json";
-        try {
-            InputStream stream = LanguageManager.class.getResourceAsStream(basePath);
-            if (stream == null){
-                if (isTopBar) return Color.RED;
-                return ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
-            }
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder json = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                json.append(line);
-            }
-
-            JSONObject obj = new JSONObject(json.toString());
-            String hexColor = obj.getString("color");
-
-            return Color.decode(hexColor);
-        } catch (Exception ignored) {
-            return Color.BLACK;
-        }
+        return isTopBar ? Color.RED : ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
     }
 
     public static boolean isFileParsable(String path) {
-        //This parsable check works correctly
-        String extension;
-
-        // Support both full file paths and raw extensions
-        if (path.startsWith(".")) {
-            extension = path.toLowerCase();
-        } else {
-            File file = new File(path);
-            extension = file.isDirectory() ? "folder" : getExtension(path);
-        }
-
-        String jsonPath = "/LanguageDefinitions/" + extension + ".json";
-
-        try (InputStream stream = LanguageManager.class.getResourceAsStream(jsonPath)) {
-            if (stream == null) return false;
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder json = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                json.append(line);
-            }
-
-            JSONObject obj = new JSONObject(json.toString());
-            return obj.optBoolean("parse", false); // returns false if key is missing
-        } catch (Exception e) {
-            return false;
-        }
+        JSONObject def = loadLanguageDefinition(resolveExtension(path));
+        return def != null && def.optBoolean("parse", false);
     }
 
     public static String languageID(String path) {
-        String extension = getExtension(path);
-
-        String jsonPath = "/LanguageDefinitions/" + extension + ".json";
-
-        try (InputStream stream = LanguageManager.class.getResourceAsStream(jsonPath)) {
-            if (stream == null) return "false";
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder json = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                json.append(line);
-            }
-
-            JSONObject obj = new JSONObject(json.toString());
-            return obj.getString("language"); // returns false if key is missing
-        } catch (Exception e) {
-            return "false";
-        }
+        JSONObject def = loadLanguageDefinition(resolveExtension(path));
+        return def != null ? def.optString("language", "false") : "false";
     }
 
     public static String languageHasLSP(String path) {
-        //This parsable check works correctly
-        String extension;
+        JSONObject def = loadLanguageDefinition(resolveExtension(path));
+        return def != null ? def.optString("lsp", "false") : "false";
+    }
 
-        // Support both full file paths and raw extensions
-        if (path.startsWith(".")) {
-            extension = path.toLowerCase();
-        } else {
-            File file = new File(path);
-            if (file.isDirectory()) return "false";
-            extension = getExtension(path);
-        }
+    public static String getExtension(String path) {
+        String fileName = path.replace('\\', '/');
+        fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex > 0 && dotIndex < fileName.length() - 1) ? fileName.substring(dotIndex + 1).toLowerCase() : "";
+    }
 
-        String jsonPath = "/LanguageDefinitions/" + extension + ".json";
 
-        try (InputStream stream = LanguageManager.class.getResourceAsStream(jsonPath)) {
-            if (stream == null) return "false";
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder json = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                json.append(line);
-            }
 
-            JSONObject obj = new JSONObject(json.toString());
-            return obj.optString("lsp", "false"); // returns false if key is missing
+
+    private static String resolveExtension(String path) {
+        if (path.startsWith(".")) return path.substring(1).toLowerCase();
+        File file = new File(path);
+        return file.isDirectory() ? "folder" : getExtension(path);
+    }
+
+    private static Optional<Icon> loadIcon(String name) {
+        try {
+            return Optional.of(new ImageIcon(Objects.requireNonNull(LanguageManager.class.getResource(ICON_BASE_PATH + name + ".png"))));
         } catch (Exception e) {
-            return "false";
+            return Optional.empty();
+        }
+    }
+
+    private static JSONObject loadLanguageDefinition(String ext) {
+        try (InputStream stream = LanguageManager.class.getResourceAsStream(DEFINITION_BASE_PATH + ext + ".json")) {
+            if (stream == null) return null;
+
+            StringBuilder json = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    json.append(line);
+                }
+            }
+            return new JSONObject(json.toString());
+        } catch (Exception e) {
+            return null;
         }
     }
 }
