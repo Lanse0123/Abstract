@@ -16,9 +16,7 @@ Things that I want to add next:
 
 *Apply the theme randomizer / creator and add it to Settings (randomizer should be completed)
 
-*finish working on the universal parser to split the code into functions and / or more digestible parts (PROGRESS)
-
-*incorporate AI to generate descriptions for each thing. the proompts folder in resources explains this more.
+*Use AI to do the other 3 Proompt file ideas
 
 ---------------------------------------------------------------------------------
 
