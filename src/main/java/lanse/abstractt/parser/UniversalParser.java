@@ -170,7 +170,6 @@ public class UniversalParser {
         parent.revalidate();
         parent.repaint();
 
-        //TODO - make sure this part works
         ProgressBarPanel.setLoading(true, "Generating Function Bubble Descriptions");
         ProgressBarPanel.show();
         int maxLen = newBubbles.length;
@@ -179,7 +178,7 @@ public class UniversalParser {
         for (FunctionBubble bubble : newBubbles) {
             bubble.generateDescription();
 
-            ProgressBarPanel.setProgress((double) maxLen / count);
+            ProgressBarPanel.setProgress((double) count / maxLen);
 
             parent.revalidate();
             parent.repaint();
