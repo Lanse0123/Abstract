@@ -54,12 +54,22 @@ public class Bubble extends JPanel {
         setLayout(new BorderLayout());
         initUI();
 
-        //Click handler
+        //click handler for editing the bubble
+        editIconLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                e.consume(); // Prevent bubble click event from firing
+                handleEditClick();
+            }
+        });
+
+        //Click handler for the bubble
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 if (ProgressBarPanel.isLoading() || !isClickable) return;
+                if (e.getSource() == editIconLabel) return; // skip if click came from edit icon
 
                 //TODO - this is where isClickable might come in handy. I might need a better name for it.
                 Storage.increaseDepth(filePath);
@@ -224,6 +234,10 @@ public class Bubble extends JPanel {
             Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
             editIconLabel.setIcon(new ImageIcon(scaledImage));
         }
+    }
+
+    private void handleEditClick() {
+        System.out.println("About to edit: " + title);
     }
 
     public String getFilePath() {
