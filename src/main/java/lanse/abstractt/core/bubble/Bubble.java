@@ -5,6 +5,7 @@ import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
+import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.parser.UniversalParser;
 import lanse.abstractt.storage.languages.LanguageManager;
@@ -116,6 +117,10 @@ public class Bubble extends JPanel {
     }
 
     protected void initUI() {
+        // clear everything
+        this.removeAll();
+        lastZoom = -40404;
+
         // scale icon
         iconLabel = new JLabel();
         updateIconSize(); // set icon at init

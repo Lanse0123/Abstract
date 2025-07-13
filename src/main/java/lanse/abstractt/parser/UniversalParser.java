@@ -100,7 +100,6 @@ public class UniversalParser {
             System.out.println("=== TEMPLATED PROMPTS FOR: " + file.getName() + " ===");
             for (String prompt : prompts) {
                 String mergedPrompt = """
-                        <s>[INST]
                         You are part of a universal coding IDE. Your job is to define structural code information from a file written in %s.
                         
                         For all lines in INPUT, find all defining lines in the code: defining a function, classes, imports, fields, or other structural elements.
@@ -115,7 +114,6 @@ public class UniversalParser {
                         - Use only one line in your response.
                         - Do not add explanations or extra formatting.
                         - Do not say anything other than from these rules.
-                        [/INST]
                         """.formatted(extension, prompt);
 
                 System.out.println(mergedPrompt);
@@ -157,5 +155,12 @@ public class UniversalParser {
 
         parent.revalidate();
         parent.repaint();
+
+        for (FunctionBubble bubble : newBubbles) {
+            bubble.generateDescription();
+
+            parent.revalidate();
+            parent.repaint();
+        }
     }
 }

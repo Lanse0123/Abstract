@@ -1,5 +1,10 @@
 package lanse.abstractt.core.bubble;
 
+import lanse.abstractt.parser.LLMManager;
+import lanse.abstractt.storage.Storage;
+import lanse.abstractt.storage.languages.LanguageManager;
+
+import java.io.*;
 import java.util.Optional;
 
 public class FunctionBubble extends Bubble {
@@ -11,6 +16,19 @@ public class FunctionBubble extends Bubble {
     protected int startLine;
     protected Optional<Integer> endLine;
     protected String structure;
+
+    static final String prompt = """
+            You are part of a universal coding IDE. Your job is to generate a simple description of a function in %s.
+            
+            INPUT:
+            %s
+            
+            OUTPUT RULES:
+            -Format the description in a simple and brief 1 - 2 sentences.
+            -Avoid using overly technical language unless necessary.
+            -Your response will directly be used as the code's description.
+            -Do not add explanations or extra formatting.
+            -A brief and simple description that matches the code, and follows these rules.""";
 
     public FunctionBubble(String title, String description, String filePath, int startLine, Optional<Integer> endLine, String structure, boolean isClickable) {
         super(title, description, filePath, isClickable);
@@ -30,5 +48,39 @@ public class FunctionBubble extends Bubble {
 
     public Optional<Integer> getEndLineNumber() {
         return this.endLine;
+    }
+
+    public void generateDescription() {
+        if (description == null || description.isEmpty()) {
+            doGenerateDescription();
+        }
+    }
+
+    protected void doGenerateDescription() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(filePath)))) {
+            int i;
+            for (i = 0; i < startLine; ++i) {
+                reader.readLine();
+            }
+            StringBuilder context = new StringBuilder();
+            if (endLine.isEmpty()) {
+                context.append(reader.readLine());
+            }
+            else {
+                for (; i <= endLine.get(); ++i) {
+                    context.append(reader.readLine());
+                }
+            }
+            System.out.println(prompt.formatted(LanguageManager.languageID(filePath), context));
+            Optional<String> response = LLMManager.runLLM(prompt.formatted(LanguageManager.languageID(filePath), context));
+            if (response.isPresent()) {
+                description = response.get();
+                System.out.println(description);
+                Storage.updateStructure(filePath, structure, title, Optional.of(description), Optional.empty(), Optional.empty());
+                initUI();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

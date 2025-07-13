@@ -128,8 +128,11 @@ public class Storage {
         JSONObject arr = json.optJSONObject(structure);
         if (arr == null) json.put(structure, arr = new JSONObject());
 
+        System.out.println("Name: " + name);
+
         JSONObject entry = arr.optJSONObject(name);
         if (entry == null) arr.put(name, entry = new JSONObject());
+        System.out.println("Entry: " + entry);
         if (start.isPresent()) {
             entry.put("start", start.get());
         }
@@ -139,6 +142,7 @@ public class Storage {
         if (desc.isPresent()) {
             entry.put("desc", desc.get());
         }
+        System.out.println("About to write " + json);
         writeJson(filePath, json);
     }
 
@@ -202,6 +206,7 @@ public class Storage {
     }
 
     private static void writeJson(String filePath, JSONObject json) {
+        System.out.println("Starting to write JSON to " + filePath);
         Path path = abstractionPath(filePath);
         try {
             Files.createDirectories(path.getParent());
