@@ -34,18 +34,18 @@ public class CodeBubble extends JPanel {
         initUI();
 
         //Click handler
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                //TODO - logic for clicking and editing the text can go here.
-
-                Container parent = getParent();
-
-                parent.revalidate();
-                parent.repaint();
-            }
-        });
+//        addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//
+//                //TODO - logic for clicking and editing the text can go here.
+//
+//                Container parent = getParent();
+//
+//                parent.revalidate();
+//                parent.repaint();
+//            }
+//        });
     }
 
     public static void createCodeBubble(String filePath, Container parent){

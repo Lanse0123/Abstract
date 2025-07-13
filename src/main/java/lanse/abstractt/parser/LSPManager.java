@@ -25,10 +25,18 @@ public class LSPManager implements LanguageClient {
     public static List<DocumentSymbol> doStuff(String LSPLink, String languageId, File file) {
         //TODO: re-use same connection for new files
         try {
-            ProcessBuilder pb = new ProcessBuilder(LSPLink);
+            List<String> command = new ArrayList<String>();
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                command.add("cmd.exe");
+                command.add("/c");
+            }
+            command.add(LSPLink);
+
+            ProcessBuilder pb = new ProcessBuilder(command);
             pb.directory(new File(Settings.selectedProjectPath));
             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
             Process lsp = pb.start();
+
             Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(new LSPManager(), lsp.getInputStream(), lsp.getOutputStream());
             launcher.startListening();
             InitializeParams init_params = new InitializeParams();
@@ -53,8 +61,9 @@ public class LSPManager implements LanguageClient {
 
             DocumentSymbolParams doc_params = new DocumentSymbolParams();
             doc_params.setTextDocument(new TextDocumentIdentifier(file.toURI().toString()));
-            CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params);
-            return flattenSymbols(symbols.get().stream().map(Either::getRight)).toList();
+            List<Either<SymbolInformation, DocumentSymbol>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params).get();
+            lsp.destroy();
+            return flattenSymbols(symbols.stream().map(Either::getRight)).toList();
         }
         catch (IOException e) {
             System.err.println("Error running LSP: " + e);

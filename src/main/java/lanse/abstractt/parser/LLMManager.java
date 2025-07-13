@@ -46,6 +46,7 @@ public class LLMManager {
                 server = new ProcessBuilder(List.of("./llama/" + bindir + "ollama" + binary_extension, "serve"));
                 llamaProcess = server.start();
             }
+            Runtime.getRuntime().addShutdownHook(new Thread(LLMManager::stopServer));
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
             if (!ollamaAPI.listModels().stream().map(Model::toString).toList().contains(model)) {
                 try {
@@ -179,7 +180,7 @@ public class LLMManager {
 
     public static void stopServer() {
         if (llamaProcess != null && llamaProcess.isAlive()) {
-            llamaProcess.destroyForcibly();
+            llamaProcess.destroy();
         }
     }
 }
