@@ -5,7 +5,6 @@ import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
-import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.parser.UniversalParser;
 import lanse.abstractt.storage.languages.LanguageManager;
@@ -65,16 +64,7 @@ public class Bubble extends JPanel {
                 Container parent = getParent();
                 if (parent == null) return;
 
-                for (Component comp : parent.getComponents()) {
-                    if (comp instanceof Bubble) {
-                        if (comp instanceof FunctionBubble functionBubble){
-                            Storage.saveFunctionBubble(functionBubble);
-                        } else {
-                            Storage.save((Bubble) comp);
-                        }
-                        parent.remove(comp);
-                    }
-                }
+                Storage.saveAllBubbles(parent, true);
 
                 File file = new File(filePath);
                 if (!file.exists()) {

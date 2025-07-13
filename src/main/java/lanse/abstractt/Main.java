@@ -4,6 +4,7 @@ import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.screens.MainMenuScreen;
 import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.Settings;
+import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,23 +16,13 @@ public class Main {
 
     public static int tickCount;
     public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    public static JFrame frame;
 
     public static void main(String[] args) {
 
         Settings.load();
 
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Abstract IDE");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1200, 800);
-            frame.setLocationRelativeTo(null);
-            frame.setLayout(new BorderLayout());
-
-            // Pass frame to the screen
-            frame.add(new MainMenuScreen(frame, ColorPalette.ColorCategory.PRIMARY_BACKGROUND.getColor()), BorderLayout.CENTER);
-
-            frame.setVisible(true);
-        });
+        SwingUtilities.invokeLater(Main::createMainMenuScreen);
 
         // Start server tick loop (10 times per second)
         scheduler.scheduleAtFixedRate(Main::serverTick, 0, 100, TimeUnit.MILLISECONDS);
@@ -39,6 +30,21 @@ public class Main {
         if (!LLMManager.tryStartOllama()) {
             System.err.println("Unable to start ollama, AI features will not work!");
         }
+    }
+
+    public static void createMainMenuScreen(){
+        frame = new JFrame("Abstract IDE");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1200, 800);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
+
+        Storage.setCurrentDepth(0);
+
+        // Pass frame to the screen
+        frame.add(new MainMenuScreen(frame, ColorPalette.ColorCategory.PRIMARY_BACKGROUND.getColor()), BorderLayout.CENTER);
+
+        frame.setVisible(true);
     }
 
     public static void serverTick() {

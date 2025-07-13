@@ -3,15 +3,16 @@ package lanse.abstractt.storage;
 import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.bubble.TopBubble;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 public class Storage {
 
@@ -55,8 +56,8 @@ public class Storage {
     }
 
     public static void setCurrentDepth(int depth) {
-        assert (currentDepth > depth+1);
-        while (currentDepth > depth+1) {
+        assert (currentDepth > depth + 1);
+        while (currentDepth > depth + 1) {
             decreaseDepth();
         }
     }
@@ -102,6 +103,21 @@ public class Storage {
         json.put("name", bubble.getTitle());
         json.put("desc", bubble.getDescription());
         writeJson(bubble.getFilePath(), json);
+    }
+
+    public static void saveAllBubbles(Container parent, boolean clearBubbles){
+        for (Component comp : parent.getComponents()) {
+            if (comp instanceof Bubble) {
+                if (comp instanceof FunctionBubble functionBubble){
+                    Storage.saveFunctionBubble(functionBubble);
+                } else {
+                    Storage.save((Bubble) comp);
+                }
+                if (clearBubbles){
+                    parent.remove(comp);
+                }
+            }
+        }
     }
 
     public static void addStructure(String filePath, String structure, String name, String desc, int start, Optional<Integer> end) {

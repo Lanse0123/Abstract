@@ -11,8 +11,8 @@ public class PictureBubble extends JPanel {
     private double lastZoom = -40404;
     protected Icon icon;
     private JLabel iconLabel;
-    protected int width = 680;
-    protected int height = 360;
+    protected int width;
+    protected int height;
 
     public PictureBubble(String filePath){
         this.icon = new ImageIcon(filePath);
