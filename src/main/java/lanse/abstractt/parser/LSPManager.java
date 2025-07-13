@@ -40,7 +40,7 @@ public class LSPManager implements LanguageClient {
             doc_caps.setHierarchicalDocumentSymbolSupport(true);
             text_caps.setDocumentSymbol(doc_caps);
 
-            List<WorkspaceFolder> workspace_folders = List.of(new WorkspaceFolder("file://" + Settings.selectedProjectPath, Settings.selectedProjectPath));
+            List<WorkspaceFolder> workspace_folders = List.of(new WorkspaceFolder(new File(Settings.selectedProjectPath).toURI().toString(), Settings.selectedProjectPath));
             init_params.setWorkspaceFolders(workspace_folders);
 
             init_params.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), text_caps, new Object()));
@@ -49,10 +49,10 @@ public class LSPManager implements LanguageClient {
             launcher.getRemoteProxy().initialized(new InitializedParams());
 
             String contents = Files.readString(file.toPath());
-            launcher.getRemoteProxy().getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem("file://" + file, languageId, 0, contents)));
+            launcher.getRemoteProxy().getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(file.toURI().toString(), languageId, 0, contents)));
 
             DocumentSymbolParams doc_params = new DocumentSymbolParams();
-            doc_params.setTextDocument(new TextDocumentIdentifier("file://" + file));
+            doc_params.setTextDocument(new TextDocumentIdentifier(file.toURI().toString()));
             CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> symbols = launcher.getRemoteProxy().getTextDocumentService().documentSymbol(doc_params);
             return flattenSymbols(symbols.get().stream().map(Either::getRight)).toList();
         }
