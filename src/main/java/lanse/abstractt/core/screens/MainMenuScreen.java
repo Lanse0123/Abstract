@@ -1,7 +1,7 @@
 package lanse.abstractt.core.screens;
 
 import lanse.abstractt.core.ColorPalette;
-import lanse.abstractt.storage.AbstractStaticImageManager;
+import lanse.abstractt.storage.AbstractImageManager;
 import lanse.abstractt.storage.Settings;
 import lanse.abstractt.storage.Storage;
 
@@ -13,12 +13,12 @@ import java.util.Stack;
 
 public class MainMenuScreen extends BackgroundPanel {
     public MainMenuScreen(JFrame frame, Color bgColor) {
-        super(AbstractStaticImageManager.getMainMenuBackground().getScaledInstance(2800, 928, Image.SCALE_SMOOTH));
+        super(AbstractImageManager.getMainMenuBackground().getScaledInstance(2800, 928, Image.SCALE_SMOOTH));
 
         setBackground(bgColor);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        ImageIcon logoIcon = AbstractStaticImageManager.getMainTitleIcon();
+        ImageIcon logoIcon = AbstractImageManager.getMainTitleIcon();
         Image logoImage = logoIcon.getImage().getScaledInstance(692, 360, Image.SCALE_SMOOTH);
         logoIcon = new ImageIcon(logoImage);
         JLabel title = new JLabel(logoIcon);

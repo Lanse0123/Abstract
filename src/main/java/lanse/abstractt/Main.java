@@ -3,6 +3,7 @@ package lanse.abstractt;
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.screens.MainMenuScreen;
 import lanse.abstractt.parser.LLMManager;
+import lanse.abstractt.storage.AbstractImageManager;
 import lanse.abstractt.storage.Settings;
 import lanse.abstractt.storage.Storage;
 
@@ -39,6 +40,7 @@ public class Main {
             frame.setSize(1200, 800);
             frame.setLocationRelativeTo(null);
             frame.setLayout(new BorderLayout());
+            frame.setIconImage(AbstractImageManager.getLogoIcon().getImage());
         }
         else {
             frame.getContentPane().removeAll();
