@@ -32,6 +32,8 @@ public class Bubble extends JPanel {
     };
     private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
 
+    public static boolean isABubbleBeingEdited = false;
+
     protected JLabel editIconLabel;
     protected JLabel iconLabel;
 
@@ -78,6 +80,7 @@ public class Bubble extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (!isClickable || ProgressBarPanel.isLoading()) return;
                 if (e.getSource() == editIconLabel) return;
+                if (isABubbleBeingEdited) return;
 
                 File file = new File(filePath);
                 if (!file.exists()) {
@@ -229,7 +232,21 @@ public class Bubble extends JPanel {
     }
 
     private void handleEditClick() {
+        if (isABubbleBeingEdited){
+            //logic to stop the bubble from being edited
+            isABubbleBeingEdited = false;
+            this.editIcon = AbstractImageManager.getEditIcon();
+
+            System.out.println("Stopping editing " + title);
+            return;
+        }
+
+        //logic for starting to edit a description
+        isABubbleBeingEdited = true;
+        this.editIcon = AbstractImageManager.getCheckMarkIcon();
         System.out.println("About to edit: " + title);
+
+
     }
 
     public String getFilePath() { return filePath; }

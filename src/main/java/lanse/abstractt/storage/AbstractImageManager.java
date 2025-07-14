@@ -12,6 +12,10 @@ public class AbstractImageManager {
         return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Green Edit Button.png")));
     }
 
+    public static ImageIcon getCheckMarkIcon() {
+        return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Check Mark Button.png")));
+    }
+
     public static Image getMainMenuBackground() {
         try {
             return ImageIO.read(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Abstract MainMenu Background.png")));
