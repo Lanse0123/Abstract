@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -44,6 +45,8 @@ public class Bubble extends JPanel {
     protected String description;
     protected final String filePath;
     protected Color color;
+
+    protected JComponent descriptionLabel;
 
     protected int width = DEFAULT_WIDTH;
     protected int height = DEFAULT_HEIGHT;
@@ -155,7 +158,7 @@ public class Bubble extends JPanel {
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel descriptionLabel = new JLabel("<html><body style='width: 220px'>" + description + "</body></html>");
+        descriptionLabel = new JLabel("<html><body style='width: 220px'>" + description + "</body></html>");
         descriptionLabel.setForeground(Color.DARK_GRAY);
         descriptionLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
         descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -167,6 +170,7 @@ public class Bubble extends JPanel {
         centerPanel.add(titleLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         centerPanel.add(descriptionLabel);
+        centerPanel.setName("centerPanel");
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setOpaque(false);
@@ -232,21 +236,40 @@ public class Bubble extends JPanel {
     }
 
     private void handleEditClick() {
+        JPanel centerPanel = (JPanel) Arrays.stream(this.getComponents()).filter(comp ->
+                comp instanceof JPanel && comp.getName() != null && comp.getName().contains("centerPanel")).findFirst().get();
+
+        centerPanel.remove(descriptionLabel);
+
         if (isABubbleBeingEdited){
             //logic to stop the bubble from being edited
             isABubbleBeingEdited = false;
             this.editIcon = AbstractImageManager.getEditIcon();
+            description = ((JTextArea) descriptionLabel).getText();
+
+            descriptionLabel = new JLabel("<html><body style='width: 220px'>" + description + "</body></html>");
 
             System.out.println("Stopping editing " + title);
-            return;
+        }
+        else {
+            //logic for starting to edit a description
+            isABubbleBeingEdited = true;
+            this.editIcon = AbstractImageManager.getCheckMarkIcon();
+            System.out.println("About to edit: " + title);
+
+            JTextArea textArea = new JTextArea(this.description);
+            textArea.setEditable(true);
+            this.descriptionLabel = textArea;
         }
 
-        //logic for starting to edit a description
-        isABubbleBeingEdited = true;
-        this.editIcon = AbstractImageManager.getCheckMarkIcon();
-        System.out.println("About to edit: " + title);
+        descriptionLabel.setForeground(Color.DARK_GRAY);
+        descriptionLabel.setBackground(new Color(0, 0, 0, 0));
+        descriptionLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
+        centerPanel.add(descriptionLabel);
+        this.revalidate();
+        this.repaint();
     }
 
     public String getFilePath() { return filePath; }
