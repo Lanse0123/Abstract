@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public class LanguageManager {
 
-    private static final String ICON_BASE_PATH = "/images/LanguageIcons/";
-    private static final String DEFINITION_BASE_PATH = "/LanguageDefinitions/";
+    private static final String ICON_BASE_PATH = "/images/languageicons/";
+    private static final String DEFINITION_BASE_PATH = "/languagedefinitions/";
 
     public static Icon getIconFromPath(String path) {
         String ext = resolveExtension(path);

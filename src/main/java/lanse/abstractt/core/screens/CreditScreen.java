@@ -4,82 +4,107 @@ import lanse.abstractt.storage.AbstractImageManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 import java.util.Objects;
 
 public class CreditScreen extends BackgroundPanel {
 
     private final JFrame frame;
 
-    //TODO - redo this entire thing. Also link stuff like the github page and discord and stuff here.
+    //TODO - I need to unsquish some of the icons
+    private static final int ICON_SIZE = 100;
 
-    //https://github.com/Lanse0123/Abstract
+    private static final String[] URLS = {
+            "https://www.youtube.com/@lanse012",
+            "https://github.com/jamesMFelder",
+            "https://www.youtube.com/watch?v=byYseUyndIw&list=PLLRPIrDElQHdqIyZXCS2L0IQfGZRpvqqp",
+            "https://discord.gg/qsbJrBdw5V",
+            "https://github.com/Lanse0123/Abstract"
+    };
 
-    // might put things like link to my discord here and stuff (https://discord.gg/qsbJrBdw5V)
-    // also might add liscence here that says like dont steal this to make profit, and if any suggestions or want to help, join my discord
-    // also also might put patreon / donation link here eventually
+    private static final String[] ICON_PATHS = {
+            "/images/credits/LanseIcon.png",
+            "/images/credits/JamesIcon.png",
+            "/images/credits/ytIcon.png",
+            "/images/credits/discordIcon.png",
+            "/images/abstract/Abstract Logo Icon.png"
+    };
+
+    private String getLabelForUrl(String url) {
+        if (url.contains("youtube.com/@lanse012")) return "Lanse";
+        if (url.contains("github.com/jamesMFelder")) return "James";
+        if (url.contains("youtube.com/watch")) return "Abstract Devlog";
+        if (url.contains("discord.gg")) return "Join our Discord Server!";
+        if (url.contains("github.com/Lanse0123")) return "Abstract Source Code";
+        return url;
+    }
 
     public CreditScreen(JFrame frame, Color bgColor) {
-        super(AbstractImageManager.getCreditsBackground().getScaledInstance(1980, 1080, Image.SCALE_SMOOTH));
+        super(AbstractImageManager.getCreditsBackground());
 
         this.frame = frame;
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(bgColor);
-        setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
-
-        //TODO - add text next to icon
-        // Clicking the icon should send them here: https://www.youtube.com/@lanse012
-        ImageIcon lanseLogoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/LanseIcon.png")));
-        Image image = lanseLogoIcon.getImage().getScaledInstance(161, 151, Image.SCALE_SMOOTH);
-        lanseLogoIcon = new ImageIcon(image);
-        JLabel logo = new JLabel(lanseLogoIcon);
-        logo.setAlignmentX(LEFT_ALIGNMENT);
-
-        //TODO - add text next to icon
-        // Clicking the icon should send them here: https://github.com/jamesMFelder
-        ImageIcon jamesLogoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/JamesIcon.png")));
-        Image image2 = jamesLogoIcon.getImage().getScaledInstance(146, 146, Image.SCALE_SMOOTH);
-        jamesLogoIcon = new ImageIcon(image2);
-        JLabel logo2 = new JLabel(jamesLogoIcon);
-        logo2.setAlignmentX(LEFT_ALIGNMENT);
-
-        //TODO - add text next to icon
-        // Clicking the icon should send them here: https://www.youtube.com/watch?v=byYseUyndIw&list=PLLRPIrDElQHdqIyZXCS2L0IQfGZRpvqqp
-        ImageIcon ytIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/ytIcon.png")));
-        Image image3 = ytIcon.getImage().getScaledInstance(168, 116, Image.SCALE_SMOOTH);
-        ytIcon = new ImageIcon(image3);
-        JLabel logo3 = new JLabel(ytIcon);
-        logo3.setAlignmentX(LEFT_ALIGNMENT);
-
-        //TODO - add text next to icon
-        // Clicking the icon should send them here: https://discord.gg/qsbJrBdw5V
-        ImageIcon discordIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/discordIcon.png")));
-        Image image4 = discordIcon.getImage().getScaledInstance(170, 111, Image.SCALE_SMOOTH);
-        discordIcon = new ImageIcon(image4);
-        JLabel logo4 = new JLabel(discordIcon);
-        logo4.setAlignmentX(LEFT_ALIGNMENT);
+        setLayout(null);
+        setPreferredSize(new Dimension(1280, 720));
 
         // Main Menu Button
         JButton mainMenuButton = new JButton("Main Menu");
-        mainMenuButton.addActionListener(this::mainMenu);
-
+        mainMenuButton.setBounds(20, 20, 120, 30);
+        mainMenuButton.addActionListener(e -> switchToMainMenu());
         add(mainMenuButton);
-        add(Box.createRigidArea(new Dimension(0, 70)));
-        add(logo);
-        add(Box.createRigidArea(new Dimension(0, 0)));
-        add(logo2);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(logo3);
-        add(Box.createRigidArea(new Dimension(0, 15)));
-        add(logo4);
-        add(Box.createRigidArea(new Dimension(0, 5)));
+
+        // Create and place icons around a pentagon
+        int n = ICON_PATHS.length;
+        int w = getPreferredSize().width;
+        int h = getPreferredSize().height;
+        int cx = w / 2;
+        int cy = h / 2;
+        int radius = Math.min(w, h) / 3;
+
+        //Math hell to make a pentagon
+        for (int i = 0; i < n; i++) {
+            double angle = -Math.PI / 2 + i * 2 * Math.PI / n;
+            int x = cx + (int) (Math.cos(angle) * radius) - ICON_SIZE / 2 + 100;
+            int y = cy + (int) (Math.sin(angle) * radius) - ICON_SIZE / 2 + 50;
+
+            ImageIcon icon = loadScaledIcon(ICON_PATHS[i], ICON_SIZE, ICON_SIZE);
+            JLabel iconLabel = new JLabel(icon);
+            iconLabel.setBounds(x, y, ICON_SIZE, ICON_SIZE);
+            final String url = URLS[i];
+            iconLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            iconLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Desktop.getDesktop().browse(new URI(url));
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            add(iconLabel);
+
+            // Text next to icon
+            JLabel textLabel = new JLabel(getLabelForUrl(url));
+            textLabel.setForeground(Color.WHITE);
+            textLabel.setBounds(x + ICON_SIZE + 10, y + ICON_SIZE / 4, 200, 20);
+            add(textLabel);
+        }
     }
 
-    private void mainMenu(ActionEvent e){
+    private ImageIcon loadScaledIcon(String path, int w, int h) {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource(path)));
+        Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        return new ImageIcon(img);
+    }
+
+    private void switchToMainMenu() {
         frame.getContentPane().removeAll();
         frame.getContentPane().add(new MainMenuScreen(frame, getBackground()));
         frame.revalidate();
         frame.repaint();
     }
-
 }
