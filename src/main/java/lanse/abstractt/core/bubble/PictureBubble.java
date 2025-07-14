@@ -14,6 +14,7 @@ public class PictureBubble extends JPanel {
     protected int width;
     protected int height;
 
+    //TODO - these need to be a few times bigger than what they start at on default...
     public PictureBubble(String filePath){
         this.icon = new ImageIcon(filePath);
         this.width = icon.getIconWidth();
