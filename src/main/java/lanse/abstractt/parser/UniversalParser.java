@@ -177,6 +177,11 @@ public class UniversalParser {
         int count = 1;
 
         for (FunctionBubble bubble : newBubbles) {
+
+            //TODO - sort the bubbles so it does the smallest ones first, and largest ones last. This way, the model can
+            // "Warm itself up", since some ai become faster after they start talking a bit. This would also be more
+            // appealing as the progress bar would appear to go faster.
+
             bubble.generateDescription();
 
             ProgressBarPanel.setProgress((double) count / maxLen);

@@ -66,6 +66,8 @@ public class StorageCompiler {
         worker.execute();
     }
 
+    //TODO - if DisplayModeSelector.displayMode = DisplayMode.GOURCE_MAP (or any other static map)
+    // once this is all done, do pretty much the same thing to load ALL bubbles, and make use of GourceMap.getGourceMap
     private static void processDirectory(File originalDir, File mirroredDir) {
         File[] entries = originalDir.listFiles();
         if (entries == null) return;
