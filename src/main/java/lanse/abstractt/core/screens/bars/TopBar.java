@@ -3,9 +3,6 @@ package lanse.abstractt.core.screens.bars;
 import lanse.abstractt.Main;
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.WorldMap;
-import lanse.abstractt.core.bubble.Bubble;
-import lanse.abstractt.core.bubble.FunctionBubble;
-import lanse.abstractt.core.screens.MainMenuScreen;
 import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;

@@ -154,7 +154,7 @@ public class LLMManager {
     }
 
     public static void extractFile(ArchiveInputStream i, File targetDir) throws IOException {
-        ArchiveEntry entry = null;
+        ArchiveEntry entry;
         while ((entry = i.getNextEntry()) != null) {
             if (!i.canReadEntryData(entry)) {
                 // log something?

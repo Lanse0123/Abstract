@@ -1,51 +1,57 @@
 package lanse.abstractt.core.bubble;
 
 import lanse.abstractt.core.ColorPalette;
-import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
-import lanse.abstractt.core.screens.bars.ProgressBarPanel;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
+import lanse.abstractt.core.screens.bars.ProgressBarPanel;
+import lanse.abstractt.parser.UniversalParser;
 import lanse.abstractt.storage.AbstractImageManager;
 import lanse.abstractt.storage.Storage;
-import lanse.abstractt.parser.UniversalParser;
 import lanse.abstractt.storage.languages.LanguageManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 public class Bubble extends JPanel {
 
-    //for multithreading pain (DAEMON stops memory leaks from unused eternal threads)
-    private static final ThreadFactory DAEMON_THREAD_FACTORY = runnable -> {
-        Thread t = new Thread(runnable);
+    private static final int DEFAULT_WIDTH = 680;
+    private static final int DEFAULT_HEIGHT = 360;
+    private static final int ICON_BASE_SIZE = 80;
+
+    private static final ThreadFactory DAEMON_THREAD_FACTORY = r -> {
+        Thread t = new Thread(r);
         t.setDaemon(true);
         return t;
     };
     private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
 
     protected JLabel editIconLabel;
+    protected JLabel iconLabel;
+
     protected Icon editIcon;
+    protected Icon icon;
 
     protected String title;
     protected String description;
-    protected Icon icon;
     protected final String filePath;
     protected Color color;
-    protected int width = 680;
-    protected int height = 360;
-    private JLabel iconLabel;
+
+    protected int width = DEFAULT_WIDTH;
+    protected int height = DEFAULT_HEIGHT;
     private double lastZoom = -40404;
 
     public Bubble(String title, String description, String filePath, boolean isClickable) {
         this.title = title;
         this.description = description;
         this.filePath = filePath;
+
         this.icon = LanguageManager.getIconFromPath(filePath);
         this.editIcon = AbstractImageManager.getEditIcon();
         this.color = LanguageManager.getLanguageColorFromPath(filePath, false);
@@ -53,26 +59,35 @@ public class Bubble extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setOpaque(false);
         setLayout(new BorderLayout());
-        initUI();
 
-        //click handler for editing the bubble
+        initUI();
+        registerMouseListeners(isClickable);
+    }
+
+    private void registerMouseListeners(boolean isClickable) {
         editIconLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                e.consume(); // Prevent bubble click event from firing
+                e.consume();
                 handleEditClick();
             }
         });
 
-        //Click handler for the bubble
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (!isClickable || ProgressBarPanel.isLoading()) return;
+                if (e.getSource() == editIconLabel) return;
 
-                if (ProgressBarPanel.isLoading() || !isClickable) return;
-                if (e.getSource() == editIconLabel) return; // skip if click came from edit icon
+                File file = new File(filePath);
+                if (!file.exists()) {
+                    JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
+                    error.setForeground(Color.RED);
+                    Container parent = getParent();
+                    if (parent != null) parent.add(error);
+                    return;
+                }
 
-                //TODO - this is where isClickable might come in handy. I might need a better name for it.
                 Storage.increaseDepth(filePath);
                 DisplayModeSelector.clearBubbles();
 
@@ -81,13 +96,6 @@ public class Bubble extends JPanel {
 
                 Storage.saveAllBubbles(parent, true);
 
-                File file = new File(filePath);
-                if (!file.exists()) {
-                    JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
-                    error.setForeground(Color.RED);
-                    parent.add(error);
-                }
-
                 if (file.isDirectory()) {
                     handleDirectory(file, parent);
                 } else {
@@ -95,47 +103,38 @@ public class Bubble extends JPanel {
                 }
 
                 WorldMap.setCameraCoordinates(0, 0);
-
                 if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
-
                 parent.revalidate();
                 parent.repaint();
             }
         });
     }
 
-    public static void handleDirectory(File file, Container parent){
+    public static void handleDirectory(File file, Container parent) {
         File[] children = file.listFiles();
-        if (children != null) {
-            for (File child : children) {
+        if (children == null) return;
 
-                String childTitle = child.getName();
+        for (File child : children) {
+            if (child.getName().equals("AbstractionVisualizerStorage")) continue;
 
-                if (childTitle.equals("AbstractionVisualizerStorage")) continue;
-
-                Bubble newBubble = Storage.load(child.getPath());
-
-                parent.setLayout(null);
-                parent.add(newBubble);
-            }
+            Bubble newBubble = Storage.load(child.getPath());
+            parent.setLayout(null);
+            parent.add(newBubble);
         }
     }
 
     protected void initUI() {
-        // clear everything
-        this.removeAll();
+        removeAll();
         lastZoom = -40404;
 
-        // scale icon
         iconLabel = new JLabel();
-        iconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
         editIconLabel = new JLabel();
+
+        iconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         editIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        updateIconSize(); //set icons at init
+        updateIconSize();
 
-        // VERTICAL DIVIDER
         JPanel divider = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -148,11 +147,6 @@ public class Bubble extends JPanel {
         divider.setPreferredSize(new Dimension(10, height));
         divider.setOpaque(false);
 
-        // CENTER: title + description
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setOpaque(false);
-
         JLabel titleLabel = new JLabel(title);
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -163,21 +157,24 @@ public class Bubble extends JPanel {
         descriptionLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
         descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setOpaque(false);
         centerPanel.add(Box.createVerticalStrut(10));
         centerPanel.add(titleLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         centerPanel.add(descriptionLabel);
 
-        JPanel leftWrapper = new JPanel(new BorderLayout());
-        leftWrapper.setOpaque(false);
-        leftWrapper.add(iconLabel, BorderLayout.WEST);
-        leftWrapper.add(divider, BorderLayout.EAST);
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setOpaque(false);
+        leftPanel.add(iconLabel, BorderLayout.WEST);
+        leftPanel.add(divider, BorderLayout.EAST);
 
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setOpaque(false);
         rightPanel.add(editIconLabel, BorderLayout.EAST);
 
-        add(leftWrapper, BorderLayout.WEST);
+        add(leftPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
     }
@@ -187,24 +184,17 @@ public class Bubble extends JPanel {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Define oval shape and clip to it
         Shape oval = new java.awt.geom.Ellipse2D.Double(0, 0, getWidth(), getHeight());
         g2.setClip(oval);
 
-        if (color != null && color != Color.BLACK){
-            g2.setColor(color);
-        } else {
-            g2.setColor(ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
-        }
+        g2.setColor((color != null && color != Color.BLACK) ? color : ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor());
 
         g2.fill(oval);
 
-        // Draw outline
         g2.setColor(ColorPalette.ColorCategory.OUTLINE.getColor());
         g2.setStroke(new BasicStroke(8));
         g2.draw(oval);
 
-        //this should now only do anything if the scale changed
         updateIconSize();
 
         g2.dispose();
@@ -225,15 +215,16 @@ public class Bubble extends JPanel {
         if (zoom == lastZoom) return;
 
         lastZoom = zoom;
-        int size = (int) (80 * zoom);
+        int size = (int) (ICON_BASE_SIZE * zoom);
 
+        scaleIcon(icon, iconLabel, size);
+        scaleIcon(editIcon, editIconLabel, size);
+    }
+
+    private void scaleIcon(Icon icon, JLabel label, int size) {
         if (icon instanceof ImageIcon imgIcon) {
-            Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
-            iconLabel.setIcon(new ImageIcon(scaledImage));
-        }
-        if (editIcon instanceof ImageIcon imgIcon) {
-            Image scaledImage = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT);
-            editIconLabel.setIcon(new ImageIcon(scaledImage));
+            Image scaled = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            label.setIcon(new ImageIcon(scaled));
         }
     }
 
@@ -241,15 +232,7 @@ public class Bubble extends JPanel {
         System.out.println("About to edit: " + title);
     }
 
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
+    public String getFilePath() { return filePath; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
 }
