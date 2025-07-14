@@ -20,6 +20,7 @@ public class MiniBubble extends JPanel {
     public MiniBubble(int depth, int count, String path, boolean isCurrent) {
         this.isCurrent = isCurrent;
         this.depth = depth;
+        //TODO - make this use the language color of the bubble its from.
         this.fillColor = isCurrent ? ColorPalette.ColorCategory.SUCCESS.getColor() : ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
         this.bubblePath = path;
 

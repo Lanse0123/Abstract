@@ -37,13 +37,13 @@ public class WorkSpaceScreen extends JPanel {
         worldMap.initializeListeners(this);
 
         if (Settings.selectedProjectPath != null) {
-            initProject(bgColor);
+            initProject();
         } else {
             displayNoProjectMessage();
         }
     }
 
-    private void initProject(Color bgColor) {
+    private void initProject() {
         Storage.selectedBubblePath = new Stack<>();
         Storage.selectedBubblePath.push(Settings.selectedProjectPath);
 

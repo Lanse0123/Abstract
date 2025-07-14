@@ -92,17 +92,15 @@ public class LSPManager implements LanguageClient {
     }
 
     public static Stream<DocumentSymbol> flattenSymbols(Stream<DocumentSymbol> symbolStream) {
-        return symbolStream.flatMap(symbol ->
-                {
-                    try {
-                        Stream<DocumentSymbol> children = flattenSymbols(symbol.getChildren().stream());
-                        return Stream.concat(Stream.of(symbol), children);
-                    }
-                    catch (NullPointerException e) {
-                        return Stream.of(symbol);
-                    }
-                }
-        );
+        return symbolStream.flatMap(symbol -> {
+            try {
+                Stream<DocumentSymbol> children = flattenSymbols(symbol.getChildren().stream());
+                return Stream.concat(Stream.of(symbol), children);
+            }
+            catch (NullPointerException e) {
+                return Stream.of(symbol);
+            }
+        });
     }
 
     @Override

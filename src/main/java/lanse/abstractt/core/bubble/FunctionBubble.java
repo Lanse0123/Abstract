@@ -82,4 +82,6 @@ public class FunctionBubble extends Bubble {
             throw new RuntimeException(e);
         }
     }
+
+    public int getLineSpan() {return endLine.map(end -> Math.max(1, end - startLine + 1)).orElse(1); }
 }
