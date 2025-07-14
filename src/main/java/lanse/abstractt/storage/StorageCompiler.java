@@ -96,10 +96,12 @@ public class StorageCompiler {
             }
 
             processedItems++;
-            SwingUtilities.invokeLater(() -> {
-                ProgressBarPanel.setProgress((double) processedItems / totalItems);
-                ProgressBarPanel.getPanel().repaint();
-            });
+            if (processedItems % 25 == 0) {
+                SwingUtilities.invokeLater(() -> {
+                    ProgressBarPanel.setProgress((double) processedItems / totalItems);
+                    ProgressBarPanel.getPanel().repaint();
+                });
+            }
         }
     }
 
