@@ -28,4 +28,12 @@ public class AbstractImageManager {
     public static ImageIcon getMainTitleIcon(){
         return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/Abstract Logo 1.png")));
     }
+
+    public static Image getCreditsBackground() {
+        try {
+            return ImageIO.read(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/Abstract Credits Background.png")));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load credits background image", e);
+        }
+    }
 }

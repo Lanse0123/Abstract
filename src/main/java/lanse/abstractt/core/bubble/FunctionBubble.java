@@ -51,12 +51,11 @@ public class FunctionBubble extends Bubble {
     }
 
     public void generateDescription() {
-        if (description == null || description.isEmpty()) {
-            doGenerateDescription();
-        }
-    }
+        if (description != null || !description.isEmpty()) return;
 
-    protected void doGenerateDescription() {
+        //TODO - i want to limit the ai on doing too big stuff. For example, if theres a bubble with like 2000 lines of code,
+        // it might not be good to have ai try to make sense of it.
+
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(filePath)))) {
             int i;
             for (i = 0; i < startLine; ++i) {

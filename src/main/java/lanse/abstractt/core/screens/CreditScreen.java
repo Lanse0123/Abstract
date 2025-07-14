@@ -1,11 +1,13 @@
 package lanse.abstractt.core.screens;
 
+import lanse.abstractt.storage.AbstractImageManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Objects;
 
-public class CreditScreen extends JPanel {
+public class CreditScreen extends BackgroundPanel {
 
     private final JFrame frame;
 
@@ -18,12 +20,15 @@ public class CreditScreen extends JPanel {
     // also also might put patreon / donation link here eventually
 
     public CreditScreen(JFrame frame, Color bgColor) {
+        super(AbstractImageManager.getCreditsBackground().getScaledInstance(1980, 1080, Image.SCALE_SMOOTH));
+
         this.frame = frame;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(bgColor);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         //TODO - add text next to icon
+        // Clicking the icon should send them here: https://www.youtube.com/@lanse012
         ImageIcon lanseLogoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/LanseIcon.png")));
         Image image = lanseLogoIcon.getImage().getScaledInstance(161, 151, Image.SCALE_SMOOTH);
         lanseLogoIcon = new ImageIcon(image);
@@ -31,6 +36,7 @@ public class CreditScreen extends JPanel {
         logo.setAlignmentX(LEFT_ALIGNMENT);
 
         //TODO - add text next to icon
+        // Clicking the icon should send them here: https://github.com/jamesMFelder
         ImageIcon jamesLogoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/JamesIcon.png")));
         Image image2 = jamesLogoIcon.getImage().getScaledInstance(146, 146, Image.SCALE_SMOOTH);
         jamesLogoIcon = new ImageIcon(image2);
@@ -38,6 +44,7 @@ public class CreditScreen extends JPanel {
         logo2.setAlignmentX(LEFT_ALIGNMENT);
 
         //TODO - add text next to icon
+        // Clicking the icon should send them here: https://www.youtube.com/watch?v=byYseUyndIw&list=PLLRPIrDElQHdqIyZXCS2L0IQfGZRpvqqp
         ImageIcon ytIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/ytIcon.png")));
         Image image3 = ytIcon.getImage().getScaledInstance(168, 116, Image.SCALE_SMOOTH);
         ytIcon = new ImageIcon(image3);
@@ -45,6 +52,7 @@ public class CreditScreen extends JPanel {
         logo3.setAlignmentX(LEFT_ALIGNMENT);
 
         //TODO - add text next to icon
+        // Clicking the icon should send them here: https://discord.gg/qsbJrBdw5V
         ImageIcon discordIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/credits/discordIcon.png")));
         Image image4 = discordIcon.getImage().getScaledInstance(170, 111, Image.SCALE_SMOOTH);
         discordIcon = new ImageIcon(image4);
