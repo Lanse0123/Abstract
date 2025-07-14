@@ -97,7 +97,7 @@ public class Storage {
     }
 
     public static void save(Bubble bubble) {
-        if (isAbstractionFile(bubble.getFilePath())) return;
+        if (ExcludedBubbleList.isExcludedFile(bubble.getFilePath())) return;
         JSONObject json = loadOrCreateJson(bubble.getFilePath());
         json.put("path", bubble.getFilePath());
         json.put("name", bubble.getTitle());
@@ -121,7 +121,7 @@ public class Storage {
     }
 
     public static void addStructure(String filePath, String structure, String name, String desc, int start, Optional<Integer> end) {
-        if (isAbstractionFile(filePath)) return;
+        if (ExcludedBubbleList.isExcludedFile(filePath)) return;
         JSONObject json = loadOrCreateJson(filePath);
         json.put("compiled", true);
         JSONObject arr = json.optJSONObject(structure);
@@ -139,7 +139,7 @@ public class Storage {
     }
 
     public static void updateStructure(String filePath, String structure, String name, Optional<String> desc, Optional<Integer> start, Optional<Integer> end) {
-        if (isAbstractionFile(filePath)) return;
+        if (ExcludedBubbleList.isExcludedFile(filePath)) return;
         JSONObject json = loadOrCreateJson(filePath);
         JSONObject arr = json.optJSONObject(structure);
         if (arr == null) json.put(structure, arr = new JSONObject());
@@ -191,10 +191,6 @@ public class Storage {
 
     // helper functions below
 
-
-    private static boolean isAbstractionFile(String filePath) {
-        return filePath.contains("AbstractionVisualizerStorage");
-    }
 
     private static boolean isMetaKey(String key) {
         return Set.of("path","name","desc","compiled").contains(key);
