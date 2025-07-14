@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
 public class StorageCompiler {
@@ -127,18 +128,22 @@ public class StorageCompiler {
     }
 
     private static int countItems(File dir) {
+        if (dir == null || !dir.exists()) return 0;
+
         File[] entries = dir.listFiles();
         if (entries == null) return 0;
 
-        int count = 0;
-        for (File entry : entries) {
-            if (entry.getName().equals("AbstractionVisualizerStorage")) continue;
-            count++;
-            if (entry.isDirectory()) {
-                count += countItems(entry);
-            }
-        }
-        return count;
+        return Arrays.stream(entries)
+                .parallel()
+                //TODO - make sure this filter uses ExcludedBubbleList
+                .filter(entry -> !entry.getName().equals("AbstractionVisualizerStorage"))
+                .mapToInt(entry -> {
+                    if (entry.isDirectory()) {
+                        return 1 + countItems(entry);
+                    } else {
+                        return 1;
+                    }
+                }).sum();
     }
 
 }

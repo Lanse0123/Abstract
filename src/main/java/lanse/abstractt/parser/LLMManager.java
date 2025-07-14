@@ -24,6 +24,9 @@ import java.util.stream.Stream;
 
 public class LLMManager {
     private static Process llamaProcess;
+
+    //TODO - add the model String to Settings as an option so people can use any ai model they want.
+    // Default should be "codegemma:latest"
     private static final String model = "codegemma:latest";
 
     public static boolean tryStartOllama() {
