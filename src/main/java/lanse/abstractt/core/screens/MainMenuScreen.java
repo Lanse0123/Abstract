@@ -1,6 +1,7 @@
 package lanse.abstractt.core.screens;
 
 import lanse.abstractt.core.ColorPalette;
+import lanse.abstractt.storage.AbstractStaticImageManager;
 import lanse.abstractt.storage.Settings;
 import lanse.abstractt.storage.Storage;
 
@@ -8,17 +9,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.Objects;
 import java.util.Stack;
 
-public class MainMenuScreen extends JPanel {
+public class MainMenuScreen extends BackgroundPanel {
     public MainMenuScreen(JFrame frame, Color bgColor) {
+        super(AbstractStaticImageManager.getMainMenuBackground().getScaledInstance(2800, 928, Image.SCALE_SMOOTH));
+
         setBackground(bgColor);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Abstract Logo 1.png")));
-        Image image = logoIcon.getImage().getScaledInstance(692, 360, Image.SCALE_SMOOTH);
-        logoIcon = new ImageIcon(image);
+        ImageIcon logoIcon = AbstractStaticImageManager.getMainTitleIcon();
+        Image logoImage = logoIcon.getImage().getScaledInstance(692, 360, Image.SCALE_SMOOTH);
+        logoIcon = new ImageIcon(logoImage);
         JLabel title = new JLabel(logoIcon);
         title.setAlignmentX(CENTER_ALIGNMENT);
 

@@ -5,6 +5,7 @@ import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
+import lanse.abstractt.storage.AbstractStaticImageManager;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.parser.UniversalParser;
 import lanse.abstractt.storage.languages.LanguageManager;
@@ -46,7 +47,7 @@ public class Bubble extends JPanel {
         this.description = description;
         this.filePath = filePath;
         this.icon = LanguageManager.getIconFromPath(filePath);
-        this.editIcon = LanguageManager.getEditIcon();
+        this.editIcon = AbstractStaticImageManager.getEditIcon();
         this.color = LanguageManager.getLanguageColorFromPath(filePath, false);
 
         setPreferredSize(new Dimension(width, height));
