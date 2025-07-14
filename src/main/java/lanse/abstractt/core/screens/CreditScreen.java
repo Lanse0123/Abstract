@@ -78,7 +78,12 @@ public class CreditScreen extends BackgroundPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     try {
-                        Desktop.getDesktop().browse(new URI(url));
+                        if (Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                            Desktop.getDesktop().browse(new URI(url));
+                        }
+                        else {
+                            Runtime.getRuntime().exec(new String[] {"xdg-open", url});
+                        }
                     }
                     catch (Exception ex) {
                         ex.printStackTrace();
