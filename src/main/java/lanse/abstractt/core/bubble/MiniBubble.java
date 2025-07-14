@@ -70,6 +70,7 @@ public class MiniBubble extends JPanel {
 
     private void handleClick() {
         if (isCurrent || ProgressBarPanel.isLoading()) return;
+        if (Bubble.isABubbleBeingEdited) return;
 
         // Set current depth
         Storage.setCurrentDepth(depth);
