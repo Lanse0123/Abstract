@@ -252,7 +252,7 @@ public class Bubble extends JPanel {
 
             System.out.println("Stopping editing " + title);
             if (this instanceof FunctionBubble) {
-                Storage.updateStructure(this.filePath, ((FunctionBubble) this).structure, this.getName(),
+                Storage.updateStructure(this.filePath, ((FunctionBubble) this).structure, this.title,
                         Optional.ofNullable(this.description), Optional.empty(), Optional.empty());
             } else {
                 Storage.save(this);
@@ -266,6 +266,7 @@ public class Bubble extends JPanel {
 
             JTextArea textArea = new JTextArea(this.description);
             textArea.setEditable(true);
+            textArea.setLineWrap(true);
             this.descriptionLabel = textArea;
         }
 
