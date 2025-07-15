@@ -141,7 +141,7 @@ public class StorageCompiler {
                 .filter(entry -> !entry.getName().equals("AbstractionVisualizerStorage"))
                 .mapToInt(entry -> {
                     if (entry.isDirectory()) {
-                        return 1 + countItems(entry);
+                        return countItems(entry);
                     } else {
                         return 1;
                     }

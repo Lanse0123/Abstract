@@ -82,8 +82,11 @@ public class TopBubble extends Bubble {
             if (!ext.startsWith(".")) ext = "." + ext;
 
             Color color = LanguageManager.getLanguageColorFromPath(ext, true);
-            if (color != null && !color.equals(Color.RED)) {
+            if (color != null && !color.equals(LanguageManager.UNKNOWN_FILE_COLOR)) {
                 cleanedMap.put(ext, cleanedMap.getOrDefault(ext, 0) + count);
+            }
+            else {
+                cleanedMap.put(".unknown", cleanedMap.getOrDefault(".unknown", 0) + count);
             }
         }
 
@@ -94,7 +97,7 @@ public class TopBubble extends Bubble {
             int count = entry.getValue();
 
             Color color = LanguageManager.getLanguageColorFromPath(ext, true);
-            if (color == null || color.equals(Color.RED)) continue;
+            if (color == null) continue;
 
             float percent = count / (float) total;
             languageExtensions.add(ext);

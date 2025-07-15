@@ -14,6 +14,8 @@ public class LanguageManager {
     private static final String ICON_BASE_PATH = "/images/languageicons/";
     private static final String DEFINITION_BASE_PATH = "/languagedefinitions/";
 
+    public static final Color UNKNOWN_FILE_COLOR = Color.WHITE;
+
     public static Icon getIconFromPath(String path) {
         String ext = resolveExtension(path);
         if (ext.equals("folder")) ext = "DefaultDirectory";
@@ -28,7 +30,7 @@ public class LanguageManager {
                 return Color.decode(def.getString("color"));
             } catch (Exception ignored) {}
         }
-        return isTopBar ? Color.RED : ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
+        return isTopBar ? UNKNOWN_FILE_COLOR : ColorPalette.ColorCategory.BUBBLES_AND_PROGRESS.getColor();
     }
 
     public static boolean isFileParsable(String path) {
