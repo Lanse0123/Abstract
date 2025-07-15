@@ -2,10 +2,6 @@ Things that I want to add next:
 
 ---------------------------------------------------------------------------------
 
-*Make a new button on each bubble that will let you edit it's description
-
-*Might make a new screen or window that shows up when you edit a description so its easier to see
-
 *Make the description of a bubble fit in the oval, not a rectangle
 
 *Make new layout presets other than just top down file list, these are listed in the displayLogic folder with TODOs to explain them more
@@ -23,8 +19,6 @@ Things that I want to add next:
 *Auto LSP link downloader for languages you dont have it for
 
 *Sort Function bubbles and have them point to their respective Line numbers. They can be alternating colors or something.
-
-*Make Bubbles and FunctionBubbles have an option to edit their description
 
 *Make Code Bubbles have an option to edit their code (might be dangerous or unsafe for now)
 
