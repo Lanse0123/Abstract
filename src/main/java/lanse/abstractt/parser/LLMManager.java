@@ -165,7 +165,7 @@ public class LLMManager {
                 // log something?
                 continue;
             }
-            File f = new File(targetDir.getName() + "/" + entry.getName());
+            File f = new File(targetDir.toString() + "/" + entry.getName());
             if (entry.isDirectory()) {
                 if (!f.isDirectory() && !f.mkdirs()) {
                     throw new IOException("failed to create directory " + f);
