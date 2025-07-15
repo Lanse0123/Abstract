@@ -1,5 +1,6 @@
 package lanse.abstractt.storage;
 
+import lanse.abstractt.Main;
 import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.bubble.TopBubble;
@@ -116,19 +117,27 @@ public class Storage {
         writeJson(bubble.getFilePath(), json);
     }
 
-    public static void saveAllBubbles(Container parent, boolean clearBubbles){
-        for (Component comp : parent.getComponents()) {
-            if (comp instanceof Bubble) {
-                if (comp instanceof FunctionBubble functionBubble){
-                    Storage.saveFunctionBubble(functionBubble);
-                } else {
-                    Storage.save((Bubble) comp);
-                }
-                if (clearBubbles){
-                    parent.remove(comp);
-                }
+    public static void saveAllBubbles(boolean clearBubbles){
+        for (Component comp : getAllBubbles()) {
+            if (comp instanceof FunctionBubble functionBubble){
+                Storage.saveFunctionBubble(functionBubble);
+            } else {
+                Storage.save((Bubble) comp);
+            }
+            if (clearBubbles){
+                Main.frame.remove(comp);
             }
         }
+    }
+
+    public static Bubble[] getAllBubbles() {
+        List<Bubble> bubbles = new ArrayList<>();
+        for (Component comp : Main.frame.getComponents()) {
+            if (comp instanceof Bubble) {
+                bubbles.add((Bubble) comp);
+            }
+        }
+        return bubbles.toArray(new Bubble[0]);
     }
 
     public static void addStructure(String filePath, String structure, String name, String desc, int start, Optional<Integer> end) {

@@ -84,7 +84,7 @@ public class TopBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Storage.saveAllBubbles(Main.frame, true);
+            Storage.saveAllBubbles(true);
 
             Main.createMainMenuScreen();
         }

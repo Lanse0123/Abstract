@@ -33,26 +33,23 @@ public class Bubble extends JPanel {
         return t;
     };
     private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
-
     public static boolean isABubbleBeingEdited = false;
+
 
     protected JLabel cancelIconLabel;
     protected JLabel editIconLabel;
     protected JLabel iconLabel;
-
     protected Icon cancelIcon;
     protected Icon editIcon;
     protected Icon icon;
-
     protected String title;
     protected String description;
     protected final String filePath;
     protected Color color;
-
     protected JComponent descriptionLabel;
-
     protected int width = DEFAULT_WIDTH;
     protected int height = DEFAULT_HEIGHT;
+    protected int scale = 1;
     private double lastZoom = -40404;
 
     public Bubble(String title, String description, String filePath, boolean isClickable) {
@@ -196,8 +193,8 @@ public class Bubble extends JPanel {
     @Override
     public void setSize(int width, int height) {
         if (this.width != width || this.height != height) {
-            this.width = width;
-            this.height = height;
+            this.width = width * this.scale;
+            this.height = height * this.scale;
             setPreferredSize(new Dimension(width, height));
         }
     }
@@ -307,7 +304,7 @@ public class Bubble extends JPanel {
             Container parent = getParent();
             if (parent == null) return;
 
-            Storage.saveAllBubbles(parent, true);
+            Storage.saveAllBubbles(true);
 
             if (file.isDirectory()) {
                 handleDirectory(file, parent);

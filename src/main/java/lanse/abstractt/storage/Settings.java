@@ -137,8 +137,8 @@ public class Settings {
 
         DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.FILE_LIST;
 
-        BubbleSorter.sorter = BubbleSorter.Sorter.FILE_LIST_SORT;
-        BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.FILE_LIST_SORT;
+        BubbleSorter.sorter = BubbleSorter.Sorter.NOTHING;
+        BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.NOTHING;
 
         // recentProjects not cleared
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////

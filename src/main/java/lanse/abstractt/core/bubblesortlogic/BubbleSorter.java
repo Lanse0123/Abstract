@@ -14,25 +14,16 @@ public class BubbleSorter {
         FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING //TODO - add other options or something
     }
 
-    public static Sorter sorter = Sorter.FILE_LIST_SORT;
-    public static FunctionSorter functionSorter = FunctionSorter.FILE_LIST_SORT;
+    public static Sorter sorter = Sorter.NOTHING;
+    public static FunctionSorter functionSorter = FunctionSorter.NOTHING;
 
     public static void Sort(boolean isFunctionBubble){
 
-        if (!isFunctionBubble) {
-            switch (sorter) {
-                case FILE_LIST_SORT: FileListSort.sort(false);
-                case SIZE_SORT: SizeSort.sort(false);
-                case TODO_VIEW_SORT: TODOViewSort.sort(false);
-                case NOTHING: return;
-            }
-        } else {
-            switch (functionSorter){
-                case FILE_LIST_SORT: FileListSort.sort(true);
-                case SIZE_SORT: SizeSort.sort(true);
-                case TODO_VIEW_SORT: TODOViewSort.sort(true);
-                case NOTHING: return;
-            }
+        switch (functionSorter){
+            case FILE_LIST_SORT: FileListSort.sort(isFunctionBubble);
+            case SIZE_SORT: SizeSort.sort(isFunctionBubble);
+            case TODO_VIEW_SORT: TODOViewSort.sort(isFunctionBubble);
+            case NOTHING: return;
         }
     }
 }
