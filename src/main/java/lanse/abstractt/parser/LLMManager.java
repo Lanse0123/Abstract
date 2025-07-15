@@ -1,5 +1,6 @@
 package lanse.abstractt.parser;
 
+import dev.dirs.ProjectDirectories;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
 import io.github.ollama4j.models.response.Model;
@@ -46,7 +47,7 @@ public class LLMManager {
                 llamaProcess = server.start();
             }
             catch (IOException e) {
-                server = new ProcessBuilder(List.of("./llama/" + bindir + "ollama" + binary_extension, "serve"));
+                server = new ProcessBuilder(List.of(ProjectDirectories.from("dev", "Lanse", "Abstract").dataDir + "/llama/" + bindir + "ollama" + binary_extension, "serve"));
                 llamaProcess = server.start();
             }
             Runtime.getRuntime().addShutdownHook(new Thread(LLMManager::stopServer));
@@ -107,14 +108,14 @@ public class LLMManager {
         }
 
         // If we've already installed it, we don't need to install it again!
-        File executable =  new File("llama/" + bindir + "ollama" + binary_extension);
+        File executable =  new File(ProjectDirectories.from("dev", "Lanse", "Abstract").dataDir + "/llama/" + bindir + "ollama" + binary_extension);
         if (executable.exists() && executable.canExecute()) {
             UniversalParser.aiCompiled = true;
             return;
         }
 
         URL url = new URL("https://github.com/ollama/ollama/releases/latest/download/ollama-" + osName + "-amd64" + extension);
-        Path compressed = Paths.get("llama/ollama-" + osName + "-amd64" + extension);
+        Path compressed = Paths.get(ProjectDirectories.from("dev", "Lanse", "Abstract").cacheDir + "/llama/ollama-" + osName + "-amd64" + extension);
         if (!compressed.toFile().exists()) {
             System.out.println("Downloading " + url);
             try (InputStream download = url.openStream()) {
@@ -124,7 +125,8 @@ public class LLMManager {
         }
 
         System.out.println("Extracting " + compressed);
-        File targetDir = new File("llama");
+        File targetDir = Paths.get(ProjectDirectories.from("dev", "Lanse", "Abstract").dataDir + "/llama").toFile();
+        System.out.println("Extracting to " + targetDir);
         if (osName.equals("windows")) {
             try (ArchiveInputStream i = new ZipArchiveInputStream(new BufferedInputStream(compressed.toUri().toURL().openStream()))) {
                 extractFile(i, targetDir);
