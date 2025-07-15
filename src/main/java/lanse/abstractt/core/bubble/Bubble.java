@@ -3,7 +3,6 @@ package lanse.abstractt.core.bubble;
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
-import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.parser.UniversalParser;
@@ -220,6 +219,9 @@ public class Bubble extends JPanel {
     }
 
     private void handleEditClick(boolean isEditButton) {
+
+        //TODO - somehow, it sometimes takes the empty pixel and brings it here, labeling it as the edit button
+
         JPanel centerPanel = (JPanel) Arrays.stream(this.getComponents()).filter(comp ->
                 comp instanceof JPanel && comp.getName() != null && comp.getName().contains("centerPanel")).findFirst().get();
 
@@ -300,7 +302,6 @@ public class Bubble extends JPanel {
             }
 
             Storage.increaseDepth(filePath);
-            DisplayModeSelector.clearBubbles();
 
             Container parent = getParent();
             if (parent == null) return;

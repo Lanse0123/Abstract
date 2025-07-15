@@ -12,6 +12,8 @@ import lanse.abstractt.storage.StorageCompiler;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Stack;
 
 public class WorkSpaceScreen extends JPanel {
@@ -81,30 +83,37 @@ public class WorkSpaceScreen extends JPanel {
             progressBar.setBounds(0, getHeight() - ProgressBarPanel.HEIGHT, getWidth(), ProgressBarPanel.HEIGHT);
         }
 
-        DisplayModeSelector.clearBubbles();
+        Component[] comps = getComponents();
+        java.util.List<Bubble> visualBubbles = new ArrayList<>();
 
-        for (Component comp : getComponents()) {
+        for (Component comp : comps) {
             if (isVisualBubble(comp)) {
-                //TODO - this is being called like every tick!
-                layoutBubble(comp);
+                visualBubbles.add((Bubble) comp);
             } else if (comp != sidebar && comp != topBar && comp != progressBar) {
-                // fallback layout
                 comp.setBounds(SIDEBAR_WIDTH, 0, getWidth() - SIDEBAR_WIDTH, getHeight());
             }
         }
+
+        //TODO - this is being called a LOT, this probably is the laggiest part of Abstract
+        layoutAllBubbles(visualBubbles.toArray(new Bubble[0]));
     }
 
-    private void layoutBubble(Component comp) {
-        boolean isCode = comp instanceof CodeBubble;
-        Point worldPos = DisplayModeSelector.getNewBubblePosition(isCode);
-        Point screenPos = worldMap.transform(worldPos.x, worldPos.y);
+    public void layoutAllBubbles(Bubble[] allBubbles) {
+        Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles);
+
         double zoom = worldMap.getZoom();
 
-        int width = (int) (comp.getPreferredSize().width * zoom);
-        int height = (int) (comp.getPreferredSize().height * zoom);
+        for (Bubble bubble : allBubbles) {
+            Point worldPos = layoutMap.getOrDefault(bubble, new Point(0, 0));
+            Point screenPos = worldMap.transform(worldPos.x, worldPos.y);
 
-        comp.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, width, height);
+            int width = (int) (bubble.getPreferredSize().width * zoom);
+            int height = (int) (bubble.getPreferredSize().height * zoom);
+
+            bubble.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, width, height);
+        }
     }
+
 
     private boolean isVisualBubble(Component comp) {
         return comp instanceof Bubble || comp instanceof PictureBubble || comp instanceof CodeBubble;
