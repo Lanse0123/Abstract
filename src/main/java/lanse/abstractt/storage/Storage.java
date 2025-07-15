@@ -1,8 +1,6 @@
 package lanse.abstractt.storage;
 
-import lanse.abstractt.core.bubble.Bubble;
-import lanse.abstractt.core.bubble.FunctionBubble;
-import lanse.abstractt.core.bubble.TopBubble;
+import lanse.abstractt.core.bubble.*;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,33 +112,18 @@ public class Storage {
     }
 
     public static void saveAllBubbles(boolean clearBubbles, Container parent){
-        for (Component comp : getAllBubbles(parent)) {
+        for (Component comp : parent.getComponents()) {
             if (comp instanceof FunctionBubble functionBubble){
                 Storage.saveFunctionBubble(functionBubble);
-            } else {
+            } else if (comp instanceof Bubble) {
                 Storage.save((Bubble) comp);
             }
             if (clearBubbles){
-                parent.remove(comp);
+                if (comp instanceof Bubble || comp instanceof PictureBubble || comp instanceof CodeBubble) {
+                    parent.remove(comp);
+                }
             }
         }
-    }
-
-    public static Bubble[] getAllBubbles(Container parent) {
-        List<Bubble> bubbles = new ArrayList<>();
-
-        for (Component comp : parent.getComponents()) {
-            if (comp instanceof WorkSpaceScreen){
-                parent = (Container) comp;
-            }
-        }
-
-        for (Component comp : parent.getComponents()) {
-            if (comp instanceof Bubble) {
-                bubbles.add((Bubble) comp);
-            }
-        }
-        return bubbles.toArray(new Bubble[0]);
     }
 
     public static void addStructure(String filePath, String structure, String name, String desc, int start, Optional<Integer> end) {

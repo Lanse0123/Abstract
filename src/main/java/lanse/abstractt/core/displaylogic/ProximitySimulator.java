@@ -11,7 +11,7 @@ public class ProximitySimulator {
         return new Point();
     }
 
-    public static Map<Bubble, Point> getLayout(Bubble[] bubbles) {
+    public static Map<Bubble, Point> getLayout(Bubble[] bubbles, Component[] staticBubbles) {
         return null;
     }
 

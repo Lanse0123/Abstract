@@ -19,7 +19,7 @@ import java.util.Stack;
 
 public class WorkSpaceScreen extends JPanel {
 
-    private static final int SIDEBAR_WIDTH = 200;
+    public static final int SIDEBAR_WIDTH = 200;
 
     private final WorldMap worldMap = new WorldMap();
     private final SideBar sidebar = new SideBar(worldMap);
@@ -86,21 +86,24 @@ public class WorkSpaceScreen extends JPanel {
 
         Component[] comps = getComponents();
         java.util.List<Bubble> visualBubbles = new ArrayList<>();
+        java.util.List<Component> staticBubbles = new ArrayList<>();
 
         for (Component comp : comps) {
-            if (isVisualBubble(comp)) {
+            if (comp instanceof Bubble) {
                 visualBubbles.add((Bubble) comp);
+            } else if (comp instanceof CodeBubble || comp instanceof PictureBubble){
+                staticBubbles.add(comp);
             } else if (comp != sidebar && comp != topBar && comp != progressBar) {
                 comp.setBounds(SIDEBAR_WIDTH, 0, getWidth() - SIDEBAR_WIDTH, getHeight());
             }
         }
 
         //TODO - this is being called a LOT, this probably is the laggiest part of Abstract
-        layoutAllBubbles(visualBubbles.toArray(new Bubble[0]));
+        layoutAllBubbles(visualBubbles.toArray(new Bubble[0]), staticBubbles.toArray(new Component[0]));
     }
 
-    public void layoutAllBubbles(Bubble[] allBubbles) {
-        Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles);
+    public void layoutAllBubbles(Bubble[] allBubbles, Component[] staticBubbles) {
+        Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles, staticBubbles, worldMap);
 
         BubbleSorter.sort(allBubbles);
 
@@ -115,10 +118,6 @@ public class WorkSpaceScreen extends JPanel {
 
             bubble.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, width, height);
         }
-    }
-
-    private boolean isVisualBubble(Component comp) {
-        return comp instanceof Bubble || comp instanceof PictureBubble || comp instanceof CodeBubble;
     }
 
     public void refreshSidebar() {

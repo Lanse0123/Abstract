@@ -1,5 +1,6 @@
 package lanse.abstractt.core.displaylogic;
 
+import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.Bubble;
 
 import java.awt.*;
@@ -21,13 +22,14 @@ public class DisplayModeSelector {
 
     public static DisplayMode displayMode = DisplayMode.FILE_LIST;
 
-    public static Map<Bubble, Point> getBubbleLayout(Bubble[] bubbles) {
+    public static Map<Bubble, Point> getBubbleLayout(Bubble[] bubbles, Component[] staticBubbles, WorldMap worldMap) {
+
         return switch (displayMode) {
-            case FILE_LIST -> FileList.getLayout(bubbles);
-            case MAIN_LIST_DOWN -> MainListDown.getLayout(bubbles);
-            case PROXIMITY_SIMULATOR -> ProximitySimulator.getLayout(bubbles);
-            case ANTI_COLLIDER -> AntiCollider.getLayout(bubbles);
-            case TODO_VIEW -> TodoView.getLayout(bubbles);
+            case FILE_LIST -> FileList.getLayout(bubbles, staticBubbles, worldMap);
+            case MAIN_LIST_DOWN -> MainListDown.getLayout(bubbles, staticBubbles);
+            case PROXIMITY_SIMULATOR -> ProximitySimulator.getLayout(bubbles, staticBubbles);
+            case ANTI_COLLIDER -> AntiCollider.getLayout(bubbles, staticBubbles);
+            case TODO_VIEW -> TodoView.getLayout(bubbles, staticBubbles);
 
             case GOURCE_MAP -> Collections.emptyMap(); // no layout yet
         };
