@@ -36,9 +36,11 @@ public class Bubble extends JPanel {
 
     public static boolean isABubbleBeingEdited = false;
 
+    protected JLabel cancelIconLabel;
     protected JLabel editIconLabel;
     protected JLabel iconLabel;
 
+    protected Icon cancelIcon;
     protected Icon editIcon;
     protected Icon icon;
 
@@ -60,6 +62,7 @@ public class Bubble extends JPanel {
 
         this.icon = LanguageManager.getIconFromPath(filePath);
         this.editIcon = AbstractImageManager.getEditIcon();
+        this.cancelIcon = AbstractImageManager.getEmptyIcon();
         this.color = LanguageManager.getLanguageColorFromPath(filePath, false);
 
         setPreferredSize(new Dimension(width, height));
@@ -75,46 +78,24 @@ public class Bubble extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 e.consume();
-                handleEditClick();
+                handleEditClick(true);
             }
         });
 
-        addMouseListener(new MouseAdapter() {
+        cancelIconLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!isClickable || ProgressBarPanel.isLoading()) return;
-                if (e.getSource() == editIconLabel) return;
-                if (isABubbleBeingEdited) return;
-
-                File file = new File(filePath);
-                if (!file.exists()) {
-                    JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
-                    error.setForeground(Color.RED);
-                    Container parent = getParent();
-                    if (parent != null) parent.add(error);
-                    return;
+                if (!isABubbleBeingEdited) {
+                    new HandleClick(true).mouseClicked(e);
                 }
-
-                Storage.increaseDepth(filePath);
-                DisplayModeSelector.clearBubbles();
-
-                Container parent = getParent();
-                if (parent == null) return;
-
-                Storage.saveAllBubbles(parent, true);
-
-                if (file.isDirectory()) {
-                    handleDirectory(file, parent);
-                } else {
-                    executor.submit(() -> UniversalParser.handleFile(filePath, parent));
+                else {
+                    e.consume();
+                    handleEditClick(false);
                 }
-
-                WorldMap.setCameraCoordinates(0, 0);
-                if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
-                parent.revalidate();
-                parent.repaint();
             }
         });
+
+        addMouseListener(new HandleClick(isClickable));
     }
 
     public static void handleDirectory(File file, Container parent) {
@@ -136,9 +117,11 @@ public class Bubble extends JPanel {
 
         iconLabel = new JLabel();
         editIconLabel = new JLabel();
+        cancelIconLabel = new JLabel();
 
         iconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         editIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        cancelIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         updateIconSize();
 
@@ -181,6 +164,7 @@ public class Bubble extends JPanel {
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setOpaque(false);
         rightPanel.add(editIconLabel, BorderLayout.EAST);
+        rightPanel.add(cancelIconLabel, BorderLayout.SOUTH);
 
         add(leftPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
@@ -227,6 +211,7 @@ public class Bubble extends JPanel {
 
         scaleIcon(icon, iconLabel, size);
         scaleIcon(editIcon, editIconLabel, size);
+        scaleIcon(cancelIcon, cancelIconLabel, size);
     }
 
     private void scaleIcon(Icon icon, JLabel label, int size) {
@@ -236,7 +221,7 @@ public class Bubble extends JPanel {
         }
     }
 
-    private void handleEditClick() {
+    private void handleEditClick(boolean isEditButton) {
         JPanel centerPanel = (JPanel) Arrays.stream(this.getComponents()).filter(comp ->
                 comp instanceof JPanel && comp.getName() != null && comp.getName().contains("centerPanel")).findFirst().get();
 
@@ -246,28 +231,38 @@ public class Bubble extends JPanel {
             //logic to stop the bubble from being edited
             isABubbleBeingEdited = false;
             this.editIcon = AbstractImageManager.getEditIcon();
-            description = ((JTextArea) descriptionLabel).getText();
+            this.cancelIcon = AbstractImageManager.getEmptyIcon();
+
+            if (!isEditButton) {
+                description = ((JTextArea) descriptionLabel).getText();
+
+                System.out.println("Stopping editing " + title);
+                if (this instanceof FunctionBubble) {
+                    Storage.updateStructure(this.filePath, ((FunctionBubble) this).structure, this.title,
+                            Optional.ofNullable(this.description), Optional.empty(), Optional.empty());
+                } else {
+                    Storage.save(this);
+                }
+            }
+            else {
+                System.out.println("Cancelling editing " + title);
+            }
 
             descriptionLabel = new JLabel("<html><body style='width: 220px'>" + description + "</body></html>");
-
-            System.out.println("Stopping editing " + title);
-            if (this instanceof FunctionBubble) {
-                Storage.updateStructure(this.filePath, ((FunctionBubble) this).structure, this.title,
-                        Optional.ofNullable(this.description), Optional.empty(), Optional.empty());
-            } else {
-                Storage.save(this);
-            }
         }
         else {
-            //logic for starting to edit a description
-            isABubbleBeingEdited = true;
-            this.editIcon = AbstractImageManager.getCheckMarkIcon();
-            System.out.println("About to edit: " + title);
+            if (isEditButton) {
+                //logic for starting to edit a description
+                isABubbleBeingEdited = true;
+                this.editIcon = AbstractImageManager.getCheckMarkIcon();
+                this.cancelIcon = AbstractImageManager.getCancelIcon();
+                System.out.println("About to edit: " + title);
 
-            JTextArea textArea = new JTextArea(this.description);
-            textArea.setEditable(true);
-            textArea.setLineWrap(true);
-            this.descriptionLabel = textArea;
+                JTextArea textArea = new JTextArea(this.description);
+                textArea.setEditable(true);
+                textArea.setLineWrap(true);
+                this.descriptionLabel = textArea;
+            }
         }
 
         descriptionLabel.setForeground(Color.DARK_GRAY);
@@ -283,4 +278,47 @@ public class Bubble extends JPanel {
     public String getFilePath() { return filePath; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
+
+    private class HandleClick extends MouseAdapter {
+        private final boolean isClickable;
+
+        public HandleClick(boolean isClickable) {
+            this.isClickable = isClickable;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (!isClickable || ProgressBarPanel.isLoading()) return;
+            if (e.getSource() == editIconLabel) return;
+            if (isABubbleBeingEdited) return;
+
+            File file = new File(filePath);
+            if (!file.exists()) {
+                JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
+                error.setForeground(Color.RED);
+                Container parent = getParent();
+                if (parent != null) parent.add(error);
+                return;
+            }
+
+            Storage.increaseDepth(filePath);
+            DisplayModeSelector.clearBubbles();
+
+            Container parent = getParent();
+            if (parent == null) return;
+
+            Storage.saveAllBubbles(parent, true);
+
+            if (file.isDirectory()) {
+                handleDirectory(file, parent);
+            } else {
+                executor.submit(() -> UniversalParser.handleFile(filePath, parent));
+            }
+
+            WorldMap.setCameraCoordinates(0, 0);
+            if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
+            parent.revalidate();
+            parent.repaint();
+        }
+    }
 }

@@ -42,7 +42,7 @@ public class CreditScreen extends BackgroundPanel {
     }
 
     public CreditScreen(JFrame frame, Color bgColor) {
-        super(AbstractImageManager.getCreditsBackground());
+        super(AbstractImageManager.getCreditsBackground().getImage());
 
         this.frame = frame;
         setBackground(bgColor);

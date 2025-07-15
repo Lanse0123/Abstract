@@ -14,7 +14,7 @@ import java.util.Stack;
 public class MainMenuScreen extends BackgroundPanel {
 
     public MainMenuScreen(JFrame frame, Color bgColor) {
-        super(AbstractImageManager.getMainMenuBackground().getScaledInstance(2800, 928, Image.SCALE_SMOOTH));
+        super(AbstractImageManager.getMainMenuBackground().getImage().getScaledInstance(2800, 928, Image.SCALE_SMOOTH));
         setBackground(bgColor);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

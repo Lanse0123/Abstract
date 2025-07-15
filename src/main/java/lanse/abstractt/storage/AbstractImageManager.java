@@ -2,45 +2,49 @@ package lanse.abstractt.storage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
 public class AbstractImageManager {
 
-    public static ImageIcon getEditIcon() {
-        return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Green Edit Button.png")));
-    }
-
-    public static ImageIcon getCheckMarkIcon() {
-        return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Check Mark Button.png")));
-    }
-
-    public static ImageIcon getCancelIcon() {
-        return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Red Undo Button.png")));
-    }
-
-    public static Image getMainMenuBackground() {
+    private static ImageIcon getIcon(String resource_path) {
         try {
-            return ImageIO.read(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Abstract MainMenu Background.png")));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load main menu background image", e);
+            return new ImageIcon(ImageIO.read(Objects.requireNonNull(AbstractImageManager.class.getResource(resource_path))));
         }
+        catch (IOException e) {
+            throw new RuntimeException("Failed to load image resource", e);
+        }
+    }
+
+    public static Icon getEmptyIcon() {
+        return getIcon("/images/abstract/Empty Pixel.png");
+    }
+
+    public static Icon getEditIcon() {
+        return getIcon("/images/abstract/Green Edit Button.png");
+    }
+
+    public static Icon getCheckMarkIcon() {
+        return getIcon("/images/abstract/Check Mark Button.png");
+    }
+
+    public static Icon getCancelIcon() {
+        return getIcon("/images/abstract/Red Undo Button.png");
+    }
+
+    public static ImageIcon getMainMenuBackground() {
+        return getIcon("/images/abstract/Abstract MainMenu Background.png");
     }
 
     public static ImageIcon getLogoIcon() {
-        return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Abstract Logo Icon small.png")));
+        return getIcon("/images/abstract/Abstract Logo Icon small.png");
     }
 
     public static ImageIcon getMainTitleIcon(){
-        return new ImageIcon(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Abstract Logo 1.png")));
+        return getIcon("/images/abstract/Abstract Logo 1.png");
     }
 
-    public static Image getCreditsBackground() {
-        try {
-            return ImageIO.read(Objects.requireNonNull(AbstractImageManager.class.getResource("/images/abstract/Abstract Credits Background.png")));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load credits background image", e);
-        }
+    public static ImageIcon getCreditsBackground() {
+        return getIcon("/images/abstract/Abstract Credits Background.png");
     }
 }
