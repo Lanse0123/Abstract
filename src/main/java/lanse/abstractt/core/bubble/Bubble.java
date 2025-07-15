@@ -233,7 +233,7 @@ public class Bubble extends JPanel {
             this.editIcon = AbstractImageManager.getEditIcon();
             this.cancelIcon = AbstractImageManager.getEmptyIcon();
 
-            if (!isEditButton) {
+            if (isEditButton) {
                 description = ((JTextArea) descriptionLabel).getText();
 
                 System.out.println("Stopping editing " + title);
