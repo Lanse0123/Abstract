@@ -137,11 +137,9 @@ public class Storage {
 
         for (Component comp : parent.getComponents()) {
             if (comp instanceof Bubble) {
-                System.out.println(((Bubble) comp).getTitle());
                 bubbles.add((Bubble) comp);
             }
         }
-        System.out.println("_________________");
         return bubbles.toArray(new Bubble[0]);
     }
 

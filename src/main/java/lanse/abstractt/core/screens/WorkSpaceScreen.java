@@ -2,6 +2,7 @@ package lanse.abstractt.core.screens;
 
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.*;
+import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.bars.SideBar;
@@ -101,19 +102,20 @@ public class WorkSpaceScreen extends JPanel {
     public void layoutAllBubbles(Bubble[] allBubbles) {
         Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles);
 
+        BubbleSorter.sort(allBubbles);
+
         double zoom = worldMap.getZoom();
 
         for (Bubble bubble : allBubbles) {
             Point worldPos = layoutMap.getOrDefault(bubble, new Point(0, 0));
             Point screenPos = worldMap.transform(worldPos.x, worldPos.y);
 
-            int width = (int) (bubble.getPreferredSize().width * zoom);
-            int height = (int) (bubble.getPreferredSize().height * zoom);
+            int width = (int) (bubble.getPreferredSize().width * bubble.scale * zoom);
+            int height = (int) (bubble.getPreferredSize().height * bubble.scale * zoom);
 
             bubble.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, width, height);
         }
     }
-
 
     private boolean isVisualBubble(Component comp) {
         return comp instanceof Bubble || comp instanceof PictureBubble || comp instanceof CodeBubble;

@@ -24,10 +24,12 @@ public class TopBar {
         file.setOpaque(true);
 
         CloseProject closeProject = new CloseProject();
+        //SettingsButton settings = new SettingsButton();
         ResetCamera resetCamera = new ResetCamera();
         Exit exit = new Exit();
 
         file.add(closeProject);
+        //file.add(settings);
         file.add(resetCamera);
         file.add(exit);
 
@@ -74,6 +76,24 @@ public class TopBar {
             WorldMap.setZoom(1.0);
         }
     }
+
+//    private static class SettingsButton extends AbstractAction {
+//        public SettingsButton() {
+//            super("Settings", UIManager.getIcon("quit"));
+//            //putValue(MNEMONIC_KEY, KeyEvent.VK_E); Keybind?
+//            //putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Q")); Keybind?
+//        }
+//
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            //TODO - i need this to return you to the place you left off, not the main menu.
+//            Storage.saveAllBubbles(true, Main.frame);
+//
+//            Main.createMainMenuScreen();
+//
+//            MainMenuScreen.switchScreen(frame, new SettingsScreen(frame, bgColor));
+//        }
+//    }
 
     private static class CloseProject extends AbstractAction {
         public CloseProject() {

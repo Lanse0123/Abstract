@@ -26,23 +26,31 @@ public class BubbleSorter {
 
     public static void sort(Bubble[] bubbles){
         if (isSorted) return;
+
         ProgressBarPanel.setLoading(true, "Sorting Bubbles");
         ProgressBarPanel.show();
 
         boolean isFunctionBubble = false;
-
         for (Bubble bubble : bubbles){
             if (bubble instanceof FunctionBubble){
                 isFunctionBubble = true;
                 break;
             }
         }
-
-        switch (functionSorter){
-            case FILE_LIST_SORT: FileListSort.sort(isFunctionBubble, bubbles);
-            case SIZE_SORT: SizeSort.sort(isFunctionBubble, bubbles);
-            case TODO_VIEW_SORT: TODOViewSort.sort(isFunctionBubble, bubbles);
-            case NOTHING: break;
+        if (isFunctionBubble) {
+            switch (functionSorter) {
+                case FILE_LIST_SORT: FileListSort.sort(isFunctionBubble, bubbles);
+                case SIZE_SORT: SizeSort.sort(isFunctionBubble, bubbles);
+                case TODO_VIEW_SORT: TODOViewSort.sort(isFunctionBubble, bubbles);
+                case NOTHING: break;
+            }
+        } else {
+            switch (sorter) {
+                case FILE_LIST_SORT: FileListSort.sort(isFunctionBubble, bubbles);
+                case SIZE_SORT: SizeSort.sort(isFunctionBubble, bubbles);
+                case TODO_VIEW_SORT: TODOViewSort.sort(isFunctionBubble, bubbles);
+                case NOTHING: break;
+            }
         }
 
         ProgressBarPanel.setProgress(1);
