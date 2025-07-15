@@ -3,7 +3,6 @@ package lanse.abstractt.core.bubblesortlogic;
 import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
-import lanse.abstractt.storage.Storage;
 
 import java.awt.*;
 
@@ -25,14 +24,12 @@ public class BubbleSorter {
     public static FunctionSorter functionSorter = FunctionSorter.NOTHING;
     public static boolean isSorted = false;
 
-    public static void sort(Container parent){
+    public static void sort(Bubble[] bubbles){
         if (isSorted) return;
         ProgressBarPanel.setLoading(true, "Sorting Bubbles");
         ProgressBarPanel.show();
 
         boolean isFunctionBubble = false;
-
-        Bubble[] bubbles = Storage.getAllBubbles(parent);
 
         for (Bubble bubble : bubbles){
             if (bubble instanceof FunctionBubble){

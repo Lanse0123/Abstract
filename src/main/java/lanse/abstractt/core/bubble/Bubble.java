@@ -271,8 +271,9 @@ public class Bubble extends JPanel {
         descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         centerPanel.add(descriptionLabel);
-        this.revalidate();
-        this.repaint();
+        getParent().revalidate();
+        getParent().repaint();
+        lastZoom = -40404;
     }
 
     public String getFilePath() { return filePath; }
