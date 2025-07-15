@@ -70,8 +70,8 @@ public class FunctionBubble extends Bubble {
                     context.append(reader.readLine());
                 }
             }
-            System.out.println(prompt.formatted(LanguageManager.languageID(filePath), context));
-            Optional<String> response = LLMManager.runLLM(prompt.formatted(LanguageManager.languageID(filePath), context));
+            System.out.println(prompt.formatted(LanguageManager.getLanguageName(filePath), context));
+            Optional<String> response = LLMManager.runLLM(prompt.formatted(LanguageManager.getLanguageName(filePath), context));
             if (response.isPresent()) {
                 description = response.get();
                 System.out.println(description);

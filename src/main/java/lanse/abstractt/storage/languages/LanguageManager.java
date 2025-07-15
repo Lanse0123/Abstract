@@ -36,7 +36,7 @@ public class LanguageManager {
         return def != null && def.optBoolean("parse", false);
     }
 
-    public static String languageID(String path) {
+    public static String getLanguageName(String path) {
         JSONObject def = loadLanguageDefinition(resolveExtension(path));
         return def != null ? def.optString("language", "false") : "false";
     }

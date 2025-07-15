@@ -32,7 +32,7 @@ public class UniversalParser {
             return;
         }
 
-        if (LanguageManager.languageID(filePath).equals("image")){
+        if (LanguageManager.getLanguageName(filePath).equals("image")){
             PictureBubble.createPictureBubble(filePath, parent);
             return;
         } else {
@@ -58,7 +58,7 @@ public class UniversalParser {
             ProgressBarPanel.setLoading(true, "Generating Function Bubbles");
             ProgressBarPanel.show();
 
-            structuralList = LSPManager.doStuff(LSPLink, LanguageManager.languageID(filePath), file);
+            structuralList = LSPManager.doStuff(LSPLink, LanguageManager.getLanguageName(filePath), file);
 
             ProgressBarPanel.hide();
 
@@ -105,16 +105,13 @@ public class UniversalParser {
             }
 
             // Determine language from file extension
-            String extension = LanguageManager.getExtension(filePath);
-            if (!extension.startsWith(".")) extension = "." + extension;
+            String language = LanguageManager.getLanguageName(filePath);
 
             ProgressBarPanel.setLoading(true, "Generating Function Bubbles");
             ProgressBarPanel.show();
             int maxLen = prompts.size();
             int count = 1;
 
-            // Print full prompts with template
-            System.out.println("=== TEMPLATED PROMPTS FOR: " + file.getName() + " ===");
             for (String prompt : prompts) {
                 String mergedPrompt = """
                         You are part of a universal coding IDE. Your job is to define structural code information from a file written in %s.
@@ -131,7 +128,7 @@ public class UniversalParser {
                         - Use only one line in your response.
                         - Do not add explanations or extra formatting.
                         - Do not say anything other than from these rules.
-                        """.formatted(extension, prompt);
+                        """.formatted(language, prompt);
 
                 System.out.println(mergedPrompt);
 
