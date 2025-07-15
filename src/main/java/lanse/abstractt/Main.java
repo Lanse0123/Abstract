@@ -56,7 +56,7 @@ public class Main {
         frame.setVisible(true);
     }
 
-    public static void serverTick() {
+    private static void serverTick() {
         // This runs 10 times per second, just like normal minecraft java redstone ticks.
 
         tickCount++;

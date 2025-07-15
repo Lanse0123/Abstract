@@ -76,7 +76,7 @@ public class CodeBubble extends JPanel {
             }
 
             //TODO - might need more testing, but these magical numbers somehow work, as well as base font being 16??
-            width = widestLine * 12 + 20;
+            width = widestLine * 13 + 20;
             height = lineNumber * 22 + 40;
 
         } catch (IOException e) {
