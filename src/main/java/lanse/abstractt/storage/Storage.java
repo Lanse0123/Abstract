@@ -1,9 +1,9 @@
 package lanse.abstractt.storage;
 
-import lanse.abstractt.Main;
 import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.bubble.TopBubble;
+import lanse.abstractt.core.screens.WorkSpaceScreen;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,8 +17,6 @@ import java.util.List;
 
 public class Storage {
 
-    //TODO - eventually, add this to the project structure using Storage class
-//    private static final Map<Integer, List<Bubble>> depthToBubbles = new HashMap<>();
     public static Stack<String> selectedBubblePath;
     private static int currentDepth = 1;
 
@@ -77,9 +75,7 @@ public class Storage {
         selectedBubblePath.pop();
     }
 
-    //TODO - this will be used when opening a new project / workspace.
     public static void reset() {
-//        depthToBubbles.clear();
         currentDepth = 1;
         selectedBubblePath.clear();
         TopBubble.languageMap.clear();
@@ -117,26 +113,35 @@ public class Storage {
         writeJson(bubble.getFilePath(), json);
     }
 
-    public static void saveAllBubbles(boolean clearBubbles){
-        for (Component comp : getAllBubbles()) {
+    public static void saveAllBubbles(boolean clearBubbles, Container parent){
+        for (Component comp : getAllBubbles(parent)) {
             if (comp instanceof FunctionBubble functionBubble){
                 Storage.saveFunctionBubble(functionBubble);
             } else {
                 Storage.save((Bubble) comp);
             }
             if (clearBubbles){
-                Main.frame.remove(comp);
+                parent.remove(comp);
             }
         }
     }
 
-    public static Bubble[] getAllBubbles() {
+    public static Bubble[] getAllBubbles(Container parent) {
         List<Bubble> bubbles = new ArrayList<>();
-        for (Component comp : Main.frame.getComponents()) {
+
+        for (Component comp : parent.getComponents()) {
+            if (comp instanceof WorkSpaceScreen){
+                parent = (Container) comp;
+            }
+        }
+
+        for (Component comp : parent.getComponents()) {
             if (comp instanceof Bubble) {
+                System.out.println(((Bubble) comp).getTitle());
                 bubbles.add((Bubble) comp);
             }
         }
+        System.out.println("_________________");
         return bubbles.toArray(new Bubble[0]);
     }
 

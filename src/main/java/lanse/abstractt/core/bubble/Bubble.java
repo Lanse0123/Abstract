@@ -2,6 +2,7 @@ package lanse.abstractt.core.bubble;
 
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.WorldMap;
+import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
@@ -49,7 +50,7 @@ public class Bubble extends JPanel {
     protected JComponent descriptionLabel;
     protected int width = DEFAULT_WIDTH;
     protected int height = DEFAULT_HEIGHT;
-    protected int scale = 1;
+    public double scale = 1;
     private double lastZoom = -40404;
 
     public Bubble(String title, String description, String filePath, boolean isClickable) {
@@ -193,8 +194,8 @@ public class Bubble extends JPanel {
     @Override
     public void setSize(int width, int height) {
         if (this.width != width || this.height != height) {
-            this.width = width * this.scale;
-            this.height = height * this.scale;
+            this.width = (int) (width * this.scale);
+            this.height = (int) (height * this.scale);
             setPreferredSize(new Dimension(width, height));
         }
     }
@@ -304,7 +305,7 @@ public class Bubble extends JPanel {
             Container parent = getParent();
             if (parent == null) return;
 
-            Storage.saveAllBubbles(true);
+            Storage.saveAllBubbles(true, parent);
 
             if (file.isDirectory()) {
                 handleDirectory(file, parent);
@@ -316,6 +317,7 @@ public class Bubble extends JPanel {
             if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
             parent.revalidate();
             parent.repaint();
+            BubbleSorter.isSorted = false;
         }
     }
 }

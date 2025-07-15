@@ -12,7 +12,6 @@ import lanse.abstractt.storage.StorageCompiler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 import java.util.Stack;
 
 public class WorkSpaceScreen extends JPanel {
@@ -86,6 +85,7 @@ public class WorkSpaceScreen extends JPanel {
 
         for (Component comp : getComponents()) {
             if (isVisualBubble(comp)) {
+                //TODO - this is being called like every tick!
                 layoutBubble(comp);
             } else if (comp != sidebar && comp != topBar && comp != progressBar) {
                 // fallback layout
@@ -108,16 +108,6 @@ public class WorkSpaceScreen extends JPanel {
 
     private boolean isVisualBubble(Component comp) {
         return comp instanceof Bubble || comp instanceof PictureBubble || comp instanceof CodeBubble;
-    }
-
-    public void removeBubbles() {
-        //this is such a smart way of doing this, I didnt realize you could have a Set of classes...
-        Set<Class<?>> bubbleTypes = Set.of(Bubble.class, CodeBubble.class, PictureBubble.class, BubbleBridge.class);
-        for (Component comp : getComponents()) {
-            if (bubbleTypes.contains(comp.getClass())) {
-                remove(comp);
-            }
-        }
     }
 
     public void refreshSidebar() {

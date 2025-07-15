@@ -43,6 +43,7 @@ public class Main {
             frame.setIconImage(AbstractImageManager.getLogoIcon().getImage());
         }
         else {
+            Storage.reset();
             frame.getContentPane().removeAll();
         }
 

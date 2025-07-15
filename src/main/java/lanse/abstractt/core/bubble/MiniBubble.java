@@ -2,6 +2,7 @@ package lanse.abstractt.core.bubble;
 
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.WorldMap;
+import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 import lanse.abstractt.storage.Storage;
@@ -84,7 +85,7 @@ public class MiniBubble extends JPanel {
         }
 
         if (parent instanceof WorkSpaceScreen workspace) {
-            workspace.removeBubbles();
+            Storage.saveAllBubbles(true, workspace);
 
             //forced to use java.util here since java.awt also has Lists that work differently
             java.util.List<Bubble> bubbles = Storage.getBubblesAtCurDepth();
@@ -99,6 +100,7 @@ public class MiniBubble extends JPanel {
             workspace.refreshSidebar(); // Also updates MiniBubbles
             workspace.revalidate();
             workspace.repaint();
+            BubbleSorter.isSorted = false;
         }
     }
 }
