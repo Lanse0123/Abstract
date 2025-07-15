@@ -26,6 +26,12 @@ public class UniversalParser {
 
     public static void handleFile(String filePath, Container parent) {
 
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.println("File does not exist: " + filePath);
+            return;
+        }
+
         if (LanguageManager.languageID(filePath).equals("image")){
             PictureBubble.createPictureBubble(filePath, parent);
             return;
@@ -35,13 +41,13 @@ public class UniversalParser {
 
         // Check if the file is parseable via its language definition
         if (!LanguageManager.isFileParsable(filePath)) {
-            System.out.println("Skipping file (not parseable): " + filePath);
-            return;
-        }
+            Bubble bubble = Storage.load(filePath, false);
+            parent.setLayout(null);
+            parent.add(bubble);
 
-        File file = new File(filePath);
-        if (!file.exists()) {
-            System.out.println("File does not exist: " + filePath);
+            parent.revalidate();
+            parent.repaint();
+            System.out.println("Skipping file (not parseable): " + filePath);
             return;
         }
 

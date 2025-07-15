@@ -12,7 +12,6 @@ import lanse.abstractt.storage.StorageCompiler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.Set;
 import java.util.Stack;
 
@@ -56,7 +55,7 @@ public class WorkSpaceScreen extends JPanel {
             StorageCompiler.waitForRoot();
         } catch (InterruptedException ignored) {}
 
-        Storage.load(Settings.selectedProjectPath);
+        Storage.load(Settings.selectedProjectPath, true);
         Storage.setCurrentDepth(1);
 
         bubble.setSize(bubble.getPreferredSize());

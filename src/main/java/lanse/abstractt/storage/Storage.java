@@ -28,14 +28,14 @@ public class Storage {
         //TODO - I want this to get all the JSON files at that depth, so like this includes folders, files, and functions.
         File dir = new File(selectedBubblePath.peek());
         if (!dir.isDirectory()) {
-            return List.of(load(dir.getPath()));
+            return List.of(load(dir.getPath(), true));
         }
         List<Bubble> bubbles = new ArrayList<>();
         for (File f : Objects.requireNonNull(dir.listFiles())){
             if (f.getName().equals("AbstractionVisualizerStorage")) {
                 continue;
             }
-            bubbles.add(load(f.getPath()));
+            bubbles.add(load(f.getPath(), true));
         }
         return bubbles;
     }
@@ -97,14 +97,14 @@ public class Storage {
         return new TopBubble(name, description, path);
     }
 
-    public static Bubble load(String filePath) {
+    public static Bubble load(String filePath, boolean isClickable) {
         JSONObject json = loadJson(filePath);
-        if (json == null) return new Bubble("", "", "", false);
+        if (json == null) return new Bubble("", "", "", isClickable);
 
         String path = json.optString("path", "");
         String name = json.optString("name", "");
         String description = json.optString("desc", "");
-        return new Bubble(name, description, path, true);
+        return new Bubble(name, description, path, isClickable);
     }
 
     public static void save(Bubble bubble) {
