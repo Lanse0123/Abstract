@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -250,6 +251,12 @@ public class Bubble extends JPanel {
             descriptionLabel = new JLabel("<html><body style='width: 220px'>" + description + "</body></html>");
 
             System.out.println("Stopping editing " + title);
+            if (this instanceof FunctionBubble) {
+                Storage.updateStructure(this.filePath, ((FunctionBubble) this).structure, this.getName(),
+                        Optional.ofNullable(this.description), Optional.empty(), Optional.empty());
+            } else {
+                Storage.save(this);
+            }
         }
         else {
             //logic for starting to edit a description

@@ -86,6 +86,17 @@ public class Storage {
         TopBubble.languageColors.clear();
     }
 
+    public static TopBubble loadTopBubble() {
+        String filePath = Settings.selectedProjectPath;
+        JSONObject json = loadJson(filePath);
+        if (json == null) return new TopBubble(new File(filePath).getName(), "Unable to load project", filePath);
+
+        String path = json.optString("path", "");
+        String name = json.optString("name", "");
+        String description = json.optString("desc", "");
+        return new TopBubble(name, description, path);
+    }
+
     public static Bubble load(String filePath) {
         JSONObject json = loadJson(filePath);
         if (json == null) return new Bubble("", "", "", false);

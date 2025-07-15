@@ -47,13 +47,9 @@ public class WorkSpaceScreen extends JPanel {
         Storage.selectedBubblePath = new Stack<>();
         Storage.selectedBubblePath.push(Settings.selectedProjectPath);
 
-        File folder = new File(Settings.selectedProjectPath);
-        String projectName = folder.getName();
-        String description = "Description: (TODO: load real description)";
-
         StorageCompiler.generateProjectDefaults();
 
-        TopBubble bubble = new TopBubble(projectName, description, Settings.selectedProjectPath);
+        TopBubble bubble = Storage.loadTopBubble();
         Settings.topBubble = bubble;
 
         try {
