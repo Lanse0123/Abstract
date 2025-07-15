@@ -47,9 +47,9 @@ public class Settings {
                     json.optString("displayMode", DisplayModeSelector.DisplayMode.FILE_LIST.toString()));
 
             BubbleSorter.sorter = BubbleSorter.Sorter.valueOf(
-                    json.optString("sortMode", BubbleSorter.Sorter.FILE_LIST_SORT.toString()));
+                    json.optString("sortMode", BubbleSorter.Sorter.NOTHING.toString()));
             BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.valueOf(
-                    json.optString("functionSortMode", BubbleSorter.FunctionSorter.FILE_LIST_SORT.toString()));
+                    json.optString("functionSortMode", BubbleSorter.FunctionSorter.NOTHING.toString()));
 
             if (json.has("recentProjects")) {
                 recentProjects.clear();
