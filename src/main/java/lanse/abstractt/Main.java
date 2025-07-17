@@ -9,14 +9,14 @@ import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.Executors;
+//import java.util.concurrent.ScheduledExecutorService;
+//import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    public static int tickCount;
-    public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//    public static int tickCount;
+//    public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     public static JFrame frame;
 
     public static void main(String[] args) {
@@ -25,8 +25,8 @@ public class Main {
 
         SwingUtilities.invokeLater(Main::createMainMenuScreen);
 
-        // Start server tick loop (10 times per second)
-        scheduler.scheduleAtFixedRate(Main::serverTick, 0, 100, TimeUnit.MILLISECONDS);
+//        // Start tick loop (10 times per second)
+//        scheduler.scheduleAtFixedRate(Main::tick, 0, 100, TimeUnit.MILLISECONDS);
 
         if (!LLMManager.tryStartOllama()) {
             System.err.println("Unable to start ollama, AI features will not work!");
@@ -57,13 +57,13 @@ public class Main {
         frame.setVisible(true);
     }
 
-    private static void serverTick() {
-        // This runs 10 times per second, just like normal minecraft java redstone ticks.
-
-        tickCount++;
-        if (tickCount > 1000000000) tickCount = 0;
-
-        //TODO - make more use of this in the future.
-
-    }
+//    private static void tick() {
+//        // This runs 10 times per second
+//
+//        tickCount++;
+//        if (tickCount > 1000000000) tickCount = 0;
+//
+//        //TODO - make more use of this in the future.
+//
+//    }
 }
