@@ -7,7 +7,7 @@ build:
     ./gradlew shadowJar
 
 run:
-    java -jar build/libs/Abstract-1.0-SNAPSHOT-all.jar
+    java -jar build/libs/Abstract-1.0-Alpha-all.jar
 
 clean:
     rm -fr build/
