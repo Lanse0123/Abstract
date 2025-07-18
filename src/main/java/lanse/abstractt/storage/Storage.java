@@ -184,10 +184,39 @@ public class Storage {
                 } catch (JSONException e) {
                     endLine = Optional.empty();
                 }
-                list.add(new FunctionBubble(name, desc, filePath, startLine, endLine, structure,false));
+                list.add(new FunctionBubble(name, desc, filePath, startLine, endLine, structure,true));
             }
         }
         return list.toArray(new FunctionBubble[0]);
+    }
+
+    public static FunctionSubBubble loadFunctionSubBubbles(String filePath) {
+        //TODO - might need new json structure for this D: (if it becomes serious enough)
+        // Also, this code is still BS
+        FunctionSubBubble bubble = null;
+        JSONObject json = loadJson(filePath);
+        if (json == null) return new FunctionSubBubble("", "", "", 0, Optional.empty(), "", false);
+
+        List<FunctionBubble> list = new ArrayList<>();
+        for (String structure : json.keySet()) {
+            if (isMetaKey(structure)) continue;
+            JSONObject arr = json.optJSONObject(structure);
+            if (arr == null) continue;
+
+            for (String name : arr.keySet()) {
+                JSONObject obj = arr.getJSONObject(name);
+                String desc  = obj.optString("desc", "");
+                int startLine  = obj.getInt("start");
+                Optional<Integer> endLine;
+                try {
+                    endLine = Optional.of(obj.getInt("end"));
+                } catch (JSONException e) {
+                    endLine = Optional.empty();
+                }
+                bubble = new FunctionSubBubble(name, desc, filePath, startLine, endLine, structure,true);
+            }
+        }
+        return bubble;
     }
 
     public static void saveFunctionBubble(FunctionBubble fb) {

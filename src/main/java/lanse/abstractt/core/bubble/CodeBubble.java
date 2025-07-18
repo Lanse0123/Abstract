@@ -5,13 +5,15 @@ import lanse.abstractt.core.WorldMap;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+//import java.awt.event.MouseAdapter;
+//import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Optional;
 
 public class CodeBubble extends JPanel {
 
@@ -48,8 +50,7 @@ public class CodeBubble extends JPanel {
 //        });
     }
 
-    public static void createCodeBubble(String filePath, Container parent){
-
+    public static void createCodeBubble(String filePath, Container parent, Optional<Integer[]> lines) {
         File file = new File(filePath);
         if (!file.exists()) {
             System.out.println("File does not exist: " + filePath);
@@ -59,35 +60,49 @@ public class CodeBubble extends JPanel {
         int width;
         int height;
         StringBuilder fileContents = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            int lineNumber = 1;
-            int widestLine = (int) -0XABCDEL;
-            String line;
+        int widestLine = (int) -0XABCDEL;
 
-            while ((line = reader.readLine()) != null) {
+        try {
+            List<String> totalFile = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
 
-                if (widestLine <= line.length()) widestLine = line.length();
+            if (lines.isEmpty()) {
+                int lineNumber = 1;
+                for (String line : totalFile) {
+                    if (widestLine < line.length()) widestLine = line.length();
 
-                //TODO - if the language is assembly, use hexadecimal to represent the line number, because funny
-                String lineWithNumber = "  " + lineNumber + "." + " ".repeat(8 - Integer.valueOf(lineNumber).toString().length()) + line + "<br>";
+                    //TODO - if the language is assembly, use hexadecimal to represent the line number, because funny
+                    String lineWithNumber = "  " + lineNumber + "." + " ".repeat(8 - String.valueOf(lineNumber).length()) + line + "<br>";
+                    fileContents.append(lineWithNumber);
+                    lineNumber++;
+                }
 
-                fileContents.append(lineWithNumber);
-                lineNumber++;
+            } else {
+                Integer[] span = lines.get(); //unwrapper
+                int startLine = span[0];
+                int endLine = span[1];
+
+                for (int i = startLine; i < endLine; i++) {
+                    String line = totalFile.get(i);
+                    if (widestLine < line.length()) widestLine = line.length();
+
+                    int lineNumber = i + 1; // to display 1-based line numbers
+                    String lineWithNumber = "  " + lineNumber + "." + " ".repeat(8 - String.valueOf(lineNumber).length()) + line + "<br>";
+                    fileContents.append(lineWithNumber);
+                }
             }
 
-            //TODO - might need more testing, but these magical numbers somehow work, as well as base font being 16??
+            //TODO - might need more testing, but these magical numbers somehow work, as well as base font being 16?
             width = widestLine * 13 + 20;
-            height = lineNumber * 22 + 40;
+            height = fileContents.toString().split("<br>").length * 22 + 40;
+
+            CodeBubble codeBubble = new CodeBubble(fileContents.toString(), width, height);
+            parent.add(codeBubble);
+            System.out.println(fileContents);
 
         } catch (IOException e) {
             System.err.println("Failed to read file: " + filePath);
             e.printStackTrace();
-            return;
         }
-
-        CodeBubble codeBubble = new CodeBubble(fileContents.toString(), width, height);
-        parent.add(codeBubble);
-        System.out.println(fileContents);
     }
 
     protected void initUI() {

@@ -32,7 +32,7 @@ public class Bubble extends JPanel {
         t.setDaemon(true);
         return t;
     };
-    private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
+    protected static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), DAEMON_THREAD_FACTORY);
     public static boolean isABubbleBeingEdited = false;
 
 

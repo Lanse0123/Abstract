@@ -6,9 +6,7 @@ Things that I want to add next:
 
 *Make new layout presets other than just top down file list, these are listed in the displayLogic folder with TODOs to explain them more
 
-*Fill out the list of language JSONs and PNGs
-
-*Add more languages to the JSON list
+*Add more languages to the JSON list and corresponding PNG list
 
 *Add more LSP alternatives for languages to offload work from the AI
 
@@ -21,6 +19,12 @@ Things that I want to add next:
 *Sort Function bubbles and have them point to their respective Line numbers. They can be alternating colors or something.
 
 *Make Code Bubbles have an option to edit their code (might be dangerous or unsafe for now)
+
+*Make saving FunctionBubbles descriptions more consistent so it never does LSP and AI when it doesnt need to.
+
+*Fix SubFunctionBubbles
+
+*Add brackets for FunctionBubbles so they point to the lines of code they represent.
 
 ---------------------------------------------------------------------------------
 

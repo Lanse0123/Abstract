@@ -1,10 +1,18 @@
 package lanse.abstractt.core.bubble;
 
+import lanse.abstractt.core.WorldMap;
+import lanse.abstractt.core.screens.WorkSpaceScreen;
+import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class FunctionBubble extends Bubble {
@@ -35,6 +43,8 @@ public class FunctionBubble extends Bubble {
         this.startLine = startLine;
         this.endLine = endLine;
         this.structure = structure;
+
+        registerMouseListeners(isClickable);
     }
 
     public String getStructureType() {
@@ -87,4 +97,55 @@ public class FunctionBubble extends Bubble {
 
     //TODO - endLine maybe shouldnt be optional. That or calculate the endline here.
     public int[] getLineSpan(){return new int[]{startLine, endLine.orElse(-40404)};}
+
+
+    private void registerMouseListeners(boolean isClickable) {
+
+        addMouseListener(new FunctionBubble.HandleClick(isClickable));
+    }
+
+    private class HandleClick extends MouseAdapter {
+        private final boolean isClickable;
+
+        public HandleClick(boolean isClickable) {
+            this.isClickable = isClickable;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (!isClickable || ProgressBarPanel.isLoading()) return;
+            if (e.getSource() == editIconLabel) return;
+            if (isABubbleBeingEdited) return;
+
+            File file = new File(filePath);
+            if (!file.exists()) {
+                JLabel error = new JLabel("Invalid file path: " + title, SwingConstants.CENTER);
+                error.setForeground(Color.RED);
+                Container parent = getParent();
+                if (parent != null) parent.add(error);
+                return;
+            }
+
+            Storage.increaseDepth(filePath);
+
+            Container parent = getParent();
+            if (parent == null) return;
+
+            Storage.saveAllBubbles(true, parent);
+
+            new FunctionSubBubble(title, description, filePath, startLine, endLine, structure, false);
+            //Storage.loadFunctionSubBubbles(filePath);
+
+            int[] span = getLineSpan(); //optionals is pain
+            Integer[] wrapperArray = Arrays.stream(span).boxed().toArray(Integer[]::new);
+            Optional<Integer[]> wrapperSpan = Optional.of(wrapperArray);
+
+            CodeBubble.createCodeBubble(filePath, parent, wrapperSpan);
+
+            WorldMap.setCameraCoordinates(0, 0);
+            if (parent instanceof WorkSpaceScreen workspace) workspace.refreshSidebar();
+            parent.revalidate();
+            parent.repaint();
+        }
+    }
 }

@@ -36,7 +36,7 @@ public class UniversalParser {
             PictureBubble.createPictureBubble(filePath, parent);
             return;
         } else {
-            CodeBubble.createCodeBubble(filePath, parent);
+            CodeBubble.createCodeBubble(filePath, parent, Optional.empty());
         }
 
         // Check if the file is parseable via its language definition

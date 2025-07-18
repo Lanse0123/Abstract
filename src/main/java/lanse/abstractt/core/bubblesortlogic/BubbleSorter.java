@@ -4,7 +4,6 @@ import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.FunctionBubble;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 
-import java.awt.*;
 
 public class BubbleSorter {
 
