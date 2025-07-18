@@ -83,5 +83,8 @@ public class FunctionBubble extends Bubble {
         }
     }
 
-    public int getLineSpan() {return endLine.map(end -> Math.max(1, end - startLine + 1)).orElse(1); }
+    public int getLineCount() {return endLine.map(end -> Math.max(1, end - startLine + 1)).orElse(1); }
+
+    //TODO - endLine maybe shouldnt be optional. That or calculate the endline here.
+    public int[] getLineSpan(){return new int[]{startLine, endLine.orElse(-40404)};}
 }

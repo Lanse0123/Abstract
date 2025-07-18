@@ -180,7 +180,7 @@ public class UniversalParser {
         int count = 1;
 
         //this should sort the bubbles by size, so the smallest are used first. (NEEDS TO BE TESTED)
-        Arrays.sort(newBubbles, Comparator.comparingInt(FunctionBubble::getLineSpan));
+        Arrays.sort(newBubbles, Comparator.comparingInt(FunctionBubble::getLineCount));
 
         for (FunctionBubble bubble : newBubbles) {
             bubble.generateDescription();
