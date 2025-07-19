@@ -200,7 +200,7 @@ public class Bubble extends JPanel {
     }
 
     public void updateIconSize() {
-        double zoom = WorldMap.getZoomStatic();
+        double zoom = WorldMap.getZoom();
         if (zoom == lastZoom) return;
 
         lastZoom = zoom;

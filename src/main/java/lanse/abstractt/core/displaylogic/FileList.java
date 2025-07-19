@@ -24,7 +24,7 @@ public class FileList {
             layout.put(bubble, new Point(x, y));
         }
 
-        double zoom = worldMap.getZoom();
+        double zoom = WorldMap.getZoom();
 
         for (Component bubble : staticBubbles){
             Point screenPos = worldMap.transform(1500, 480);

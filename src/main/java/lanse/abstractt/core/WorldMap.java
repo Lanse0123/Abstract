@@ -58,6 +58,7 @@ public class WorldMap {
 
         component.addMouseMotionListener(new MouseMotionAdapter() {
             WorldMap map = m;
+
             @Override
             public void mouseDragged(MouseEvent e) {
                 map.mouseDragged(e);
@@ -70,9 +71,7 @@ public class WorldMap {
         //Zoomer
         component.addMouseWheelListener(e -> {
             double zoomFactor = 1.1;
-            //double oldZoom = zoom;
-            //TODO - i might want to make use of oldZoom to add a limit to how far in and out you can zoom.
-            // Max is 100, Min is 0.001
+            double newZoom = zoom;
 
             int mouseX = e.getX();
             int mouseY = e.getY();
@@ -80,38 +79,32 @@ public class WorldMap {
             double worldX = (mouseX / zoom) - offsetX;
             double worldY = (mouseY / zoom) - offsetY;
 
-            // Apply zoom
+            // Calculate new zoom
             if (e.getPreciseWheelRotation() < 0) {
-                zoom *= zoomFactor;
+                newZoom *= zoomFactor;
             } else {
-                zoom /= zoomFactor;
+                newZoom /= zoomFactor;
             }
 
-            // this makes it zoom centered on the mouse instead of an arbitrary point
-            offsetX = (mouseX / zoom) - worldX;
-            offsetY = (mouseY / zoom) - worldY;
+            //TODO - make sure this clamps properly
+            newZoom = Math.max(0.001, Math.min(100.0, newZoom));
 
-            component.revalidate();
-            component.repaint();
+            // Only apply changes if zoom actually changed (prevents jump if already at limit)
+            if (newZoom != zoom) {
+                zoom = newZoom;
+
+                // Adjust offsets to keep mouse position anchored
+                offsetX = (mouseX / zoom) - worldX;
+                offsetY = (mouseY / zoom) - worldY;
+
+                //TODO - call a centralized optimized call to rescale all icons on screen. This way, bubbles that have
+                // the same icon don't need to recalculate it numerous times for no reason.
+
+                component.revalidate();
+                component.repaint();
+            }
         });
     }
-
-    //TODO - this would be nice to have in some way but it doesnt work yet. Or just having a way to get all components in use from anywhere.
-//    public static void updateScreen(){
-//        Container parent = getParent();
-//        if (parent == null) return;
-//
-//        for (Component comp : parent.getComponents()) {
-//            if (comp instanceof Bubble) {
-//                if (comp instanceof FunctionBubble functionBubble){
-//                    Storage.saveFunctionBubble(functionBubble);
-//                } else {
-//                    Storage.save((Bubble) comp);
-//                }
-//                parent.remove(comp);
-//            }
-//        }
-//    }
 
     public Point transform(double x, double y) {
         int screenX = (int) ((x + offsetX) * zoom);
@@ -119,21 +112,15 @@ public class WorldMap {
         return new Point(screenX, screenY);
     }
 
-    public double getX() {
-        return offsetX;
-    }
-
-    public double getY() {
-        return offsetY;
-    }
-
     public static void setCameraCoordinates(int x, int y){
         offsetX = x;
         offsetY = y;
     }
 
-    //TODO - I somehow ended up with 2 getZooms, which is kinda annoying
-    public double getZoom() { return zoom; }
-    public static double getZoomStatic() { return instance != null ? instance.zoom : 1.0; }
-    public static void setZoom(double zoom) { instance.zoom = zoom; }
+    public static double getZoom() { return instance != null ? instance.zoom : 1.0; }
+
+    //TODO - in bubble sort or file list, have this zoom to the center of the average bubble position, with the appropriate scale.
+    public static void setZoom(double zoom) {
+        instance.zoom = zoom;
+    }
 }

@@ -177,7 +177,7 @@ public class CodeBubble extends JPanel {
     }
 
     private void updateCodeLabelFont() {
-        double zoom = WorldMap.getZoomStatic();
+        double zoom = WorldMap.getZoom();
         if (zoom == lastZoom) return;
         lastZoom = zoom;
 

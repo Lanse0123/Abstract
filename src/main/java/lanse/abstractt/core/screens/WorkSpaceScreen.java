@@ -107,7 +107,7 @@ public class WorkSpaceScreen extends JPanel {
 
         BubbleSorter.sort(allBubbles);
 
-        double zoom = worldMap.getZoom();
+        double zoom = WorldMap.getZoom();
 
         for (Bubble bubble : allBubbles) {
             Point worldPos = layoutMap.getOrDefault(bubble, new Point(0, 0));
