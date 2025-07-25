@@ -29,7 +29,7 @@ public class WorkSpaceScreen extends JPanel {
         setBackground(bgColor);
         setLayout(null);
 
-        topBar = TopBar.createMenuBar(bgColor, Color.WHITE);
+        topBar = TopBar.createMenuBar(this, bgColor, Color.WHITE);
         add(topBar);
         add(sidebar);
         ProgressBarPanel.attachTo(this);

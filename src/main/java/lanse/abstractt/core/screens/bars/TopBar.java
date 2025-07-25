@@ -3,6 +3,8 @@ package lanse.abstractt.core.screens.bars;
 import lanse.abstractt.Main;
 import lanse.abstractt.core.ColorPalette;
 import lanse.abstractt.core.WorldMap;
+import lanse.abstractt.core.screens.ScreenHandler;
+import lanse.abstractt.core.screens.SettingsScreen;
 import lanse.abstractt.storage.Storage;
 
 import javax.swing.*;
@@ -12,7 +14,7 @@ import java.awt.event.KeyEvent;
 
 public class TopBar {
 
-    public static JMenuBar createMenuBar(Color bgColor, Color fgColor) {
+    public static JMenuBar createMenuBar(JPanel currentPanel, Color bgColor, Color fgColor) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setSize(new Dimension(100, 25));
         menuBar.setBackground(bgColor);
@@ -24,12 +26,12 @@ public class TopBar {
         file.setOpaque(true);
 
         CloseProject closeProject = new CloseProject();
-        //SettingsButton settings = new SettingsButton();
+        SettingsButton settings = new SettingsButton(currentPanel);
         ResetCamera resetCamera = new ResetCamera();
         Exit exit = new Exit();
 
         file.add(closeProject);
-        //file.add(settings);
+        file.add(settings);
         file.add(resetCamera);
         file.add(exit);
 
@@ -77,23 +79,21 @@ public class TopBar {
         }
     }
 
-//    private static class SettingsButton extends AbstractAction {
-//        public SettingsButton() {
-//            super("Settings", UIManager.getIcon("quit"));
-//            //putValue(MNEMONIC_KEY, KeyEvent.VK_E); Keybind?
-//            //putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Q")); Keybind?
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            //TODO - i need this to return you to the place you left off, not the main menu.
-//            Storage.saveAllBubbles(true, Main.frame);
-//
-//            Main.createMainMenuScreen();
-//
-//            MainMenuScreen.switchScreen(frame, new SettingsScreen(frame, bgColor));
-//        }
-//    }
+    private static class SettingsButton extends AbstractAction {
+        private final JPanel previousScreen;
+
+        public SettingsButton(JPanel currentPanel) {
+            super("Settings", UIManager.getIcon("quit"));
+            this.previousScreen = currentPanel;
+            //putValue(MNEMONIC_KEY, KeyEvent.VK_E); Keybind?
+            //putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Q")); Keybind?
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ScreenHandler.switchScreen(Main.frame, new SettingsScreen(Main.frame, previousScreen, ColorPalette.ColorCategory.PRIMARY_BACKGROUND.getColor()));
+        }
+    }
 
     private static class CloseProject extends AbstractAction {
         public CloseProject() {

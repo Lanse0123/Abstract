@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 public class SettingsScreen extends JPanel {
 
     private final JFrame frame;
+    private final JPanel previousScreen;
+
 //    private final JSlider volumeSlider;
 //    private final JComboBox<String> backgroundSelector;
 //    private final JCheckBox showDeathMarkersBox;
@@ -19,8 +21,9 @@ public class SettingsScreen extends JPanel {
     private final JComboBox<BubbleSorter.Sorter> bubbleSorterModeSelector;
     private final JComboBox<BubbleSorter.FunctionSorter> functionBubbleSorterModeSelector;
 
-    public SettingsScreen(JFrame frame, Color bgColor) {
+    public SettingsScreen(JFrame frame, JPanel previousScreen, Color bgColor) {
         this.frame = frame;
+        this.previousScreen = previousScreen;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(bgColor);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
@@ -96,7 +99,7 @@ public class SettingsScreen extends JPanel {
         else
             JOptionPane.showMessageDialog(this, "Settings unable to be saved.", "Error", JOptionPane.INFORMATION_MESSAGE);
 
-        returnToMainMenu();
+        returnToParent();
     }
 
     private void returnToDefaultSettings(ActionEvent e) {
@@ -108,7 +111,7 @@ public class SettingsScreen extends JPanel {
         Settings.returnToDefaultSettings();
 
         JOptionPane.showMessageDialog(this, "Returned to Default Settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        returnToMainMenu();
+        returnToParent();
     }
 
     private void addLabeled(String label, JComponent comp) {
@@ -129,9 +132,10 @@ public class SettingsScreen extends JPanel {
 //        box.setAlignmentX(Component.LEFT_ALIGNMENT);
 //    }
 
-    private void returnToMainMenu() {
+    private void returnToParent() {
+        //TODO - this is currently logic to return to the main menu. I need it to return to the screen it came from
         frame.getContentPane().removeAll();
-        frame.getContentPane().add(new MainMenuScreen(frame, getBackground()));
+        frame.getContentPane().add(previousScreen);
         frame.revalidate();
         frame.repaint();
     }

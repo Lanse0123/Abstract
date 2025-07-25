@@ -27,9 +27,9 @@ public class MainMenuScreen extends BackgroundPanel {
         // Buttons
         JButton openWorkspace = createStyledButton("Open Project", () -> openProject(frame, bgColor));
         JButton openRecent = createStyledButton("Open Recent Project", () -> openRecentProject(frame, bgColor));
-        JButton settings = createStyledButton("Settings", () -> switchScreen(frame, new SettingsScreen(frame, bgColor)));
-        JButton talkToA = createStyledButton("TalkToA", () -> switchScreen(frame, new TalkToChatbotScreen(frame, bgColor)));
-        JButton credits = createStyledButton("Credits", () -> switchScreen(frame, new CreditScreen(frame, bgColor)));
+        JButton settings = createStyledButton("Settings", () -> ScreenHandler.switchScreen(frame, new SettingsScreen(frame, this, bgColor)));
+        JButton talkToA = createStyledButton("TalkToA", () -> ScreenHandler.switchScreen(frame, new TalkToChatbotScreen(frame, bgColor)));
+        JButton credits = createStyledButton("Credits", () -> ScreenHandler.switchScreen(frame, new CreditScreen(frame, bgColor)));
         JButton exit = createStyledButton("Exit", () -> System.exit(0));
 
         // Layout
@@ -79,7 +79,7 @@ public class MainMenuScreen extends BackgroundPanel {
             Storage.selectedBubblePath = new Stack<>();
             Storage.selectedBubblePath.push(Settings.selectedProjectPath);
 
-            switchScreen(frame, new WorkSpaceScreen(bgColor));
+            ScreenHandler.switchScreen(frame, new WorkSpaceScreen(bgColor));
         }
     }
 
@@ -106,17 +106,10 @@ public class MainMenuScreen extends BackgroundPanel {
                 Storage.selectedBubblePath = new Stack<>();
                 Storage.selectedBubblePath.push(Settings.selectedProjectPath);
 
-                switchScreen(frame, new WorkSpaceScreen(bgColor));
+                ScreenHandler.switchScreen(frame, new WorkSpaceScreen(bgColor));
             } else {
                 JOptionPane.showMessageDialog(frame, "Selected folder doesn't exist.");
             }
         }
-    }
-
-    private void switchScreen(JFrame frame, JPanel screen) {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(screen);
-        frame.revalidate();
-        frame.repaint();
     }
 }
