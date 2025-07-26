@@ -13,7 +13,6 @@ public class BubbleSorter {
     //no this will not use bubble sort to sort the bubbles in bubble sorter because bubble sorter sorts the bubbles and isn't the
     //algorithm name of bubble sort 💀💀💀
 
-    //TODO - this class will be called after placing all the bubbles on screen.
 
     public enum Sorter{
         FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS
@@ -58,7 +57,7 @@ public class BubbleSorter {
                 case SIZE_SORT -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, null);
                 case SIZE_SORT_LtS -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "lts");
                 case SIZE_SORT_StL -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "stl");
-                case TODO_VIEW_SORT -> TODOViewSort.sort(isFunctionBubble, bubbles);
+                case TODO_VIEW_SORT -> layoutOverride = TODOViewSort.sort(isFunctionBubble, bubbles);
                 case NOTHING -> { break; }
             }
         }
