@@ -98,7 +98,6 @@ public class WorkSpaceScreen extends JPanel {
             }
         }
 
-        //TODO - this is being called a LOT, this probably is the laggiest part of Abstract
         layoutAllBubbles(visualBubbles.toArray(new Bubble[0]), staticBubbles.toArray(new Component[0]));
     }
 

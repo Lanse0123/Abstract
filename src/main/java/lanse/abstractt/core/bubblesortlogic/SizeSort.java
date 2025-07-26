@@ -14,7 +14,7 @@ import java.util.List;
 
 public class SizeSort {
 
-    public static Map<Bubble, Point> sort(boolean isFunctionBubble, Bubble[] bubbles) {
+    public static Map<Bubble, Point> sort(boolean isFunctionBubble, Bubble[] bubbles, String sizeOrder) {
         if (!isFunctionBubble) {
             for (Bubble bubble : bubbles) {
 
@@ -63,8 +63,13 @@ public class SizeSort {
         }
         // Bubbles are repositioned below.
 
-        //OPTIONAL: SORTED BY SIZE. (MAKE THIS A DIFFERENT SORT SETTING)
-        //Arrays.sort(bubbles, Comparator.comparingDouble(b -> -b.scale));
+        if (sizeOrder != null){
+            if (sizeOrder.equals("lts")){
+                Arrays.sort(bubbles, Comparator.comparingDouble(b -> -b.scale));
+            } else if (sizeOrder.equals("stl")){
+                Arrays.sort(bubbles, Comparator.comparingDouble(b -> b.scale));
+            }
+        }
 
         Map<Bubble, Point> layout = new HashMap<>();
 

@@ -16,10 +16,10 @@ public class BubbleSorter {
     //TODO - this class will be called after placing all the bubbles on screen.
 
     public enum Sorter{
-        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING
+        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS
     }
     public enum FunctionSorter{
-        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING //TODO - add other options or something
+        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS //TODO - add other options or something
     }
 
     public static Sorter sorter = Sorter.NOTHING;
@@ -45,17 +45,21 @@ public class BubbleSorter {
         }
         if (isFunctionBubble) {
             switch (functionSorter) {
-                case FILE_LIST_SORT: FileListSort.sort(isFunctionBubble, bubbles);
-                case SIZE_SORT: layoutOverride = SizeSort.sort(isFunctionBubble, bubbles);
-                case TODO_VIEW_SORT: TODOViewSort.sort(isFunctionBubble, bubbles);
-                case NOTHING: break;
+                case FILE_LIST_SORT -> FileListSort.sort(isFunctionBubble, bubbles);
+                case SIZE_SORT -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, null);
+                case SIZE_SORT_LtS -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "lts");
+                case SIZE_SORT_StL -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "stl");
+                case TODO_VIEW_SORT -> TODOViewSort.sort(isFunctionBubble, bubbles);
+                case NOTHING -> { break; }
             }
         } else {
             switch (sorter) {
-                case FILE_LIST_SORT: FileListSort.sort(isFunctionBubble, bubbles);
-                case SIZE_SORT: layoutOverride = SizeSort.sort(isFunctionBubble, bubbles);
-                case TODO_VIEW_SORT: TODOViewSort.sort(isFunctionBubble, bubbles);
-                case NOTHING: break;
+                case FILE_LIST_SORT -> FileListSort.sort(isFunctionBubble, bubbles);
+                case SIZE_SORT -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, null);
+                case SIZE_SORT_LtS -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "lts");
+                case SIZE_SORT_StL -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "stl");
+                case TODO_VIEW_SORT -> TODOViewSort.sort(isFunctionBubble, bubbles);
+                case NOTHING -> { break; }
             }
         }
 
