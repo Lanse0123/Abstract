@@ -1,21 +1,27 @@
 package lanse.abstractt.storage;
 
+import lanse.abstractt.core.bubble.Bubble;
 import lanse.abstractt.core.bubble.TopBubble;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.storage.languages.LanguageManager;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 public class StorageCompiler {
 
     private static int totalItems = 0;
     private static int processedItems = 0;
+    private static final Set<Bubble> bubbles = new HashSet<>();
     private static final Semaphore rootWritten = new Semaphore(0);
 
     public static void waitForRoot() throws InterruptedException {
@@ -24,7 +30,7 @@ public class StorageCompiler {
         }
     }
 
-    public static void generateProjectDefaults() {
+    public static void generateProjectDefaults(Container parent) {
         //This is asynchronous. Took a few tries to get working
         SwingWorker<Void, Double> worker = new SwingWorker<>() {
             @Override
@@ -53,6 +59,12 @@ public class StorageCompiler {
                 rootWritten.release();
                 processDirectory(selectedProjectPath, storageRoot);
 
+                bubbles.clear();
+                if (DisplayModeSelector.staticMapList.contains(DisplayModeSelector.displayMode)) {
+                    ProgressBarPanel.setLoading(true, "Generating Bubbles");
+                    generateStaticBubbleMap(selectedProjectPath);
+                }
+
                 return null;
             }
 
@@ -60,6 +72,11 @@ public class StorageCompiler {
             protected void done() {
                 TopBubble.calculateLanguageBar();
                 ProgressBarPanel.hide();
+
+                for (Bubble bubble : bubbles) parent.add(bubble);
+                parent.doLayout();
+                parent.revalidate();
+                parent.repaint();
             }
         };
 
@@ -137,7 +154,6 @@ public class StorageCompiler {
 
         return Arrays.stream(entries)
                 .parallel()
-                //TODO - make sure this filter uses ExcludedBubbleList
                 .filter(entry -> !ExcludedBubbleList.isExcludedFile(entry.getPath()))
                 .mapToInt(entry -> {
                     if (entry.isDirectory()) {
@@ -148,4 +164,21 @@ public class StorageCompiler {
                 }).sum();
     }
 
+    private static void generateStaticBubbleMap(File file) {
+        File[] children = file.listFiles();
+        if (children == null) return;
+
+        for (File child : children) {
+            if (ExcludedBubbleList.isExcludedFile(child.getPath())) continue;
+
+            if (child.isDirectory()){
+                generateStaticBubbleMap(child);
+                Bubble newBubble = Storage.load(child.getPath(), false);
+                bubbles.add(newBubble);
+            } else {
+                Bubble newBubble = Storage.load(child.getPath(), true);
+                bubbles.add(newBubble);
+            }
+        }
+    }
 }

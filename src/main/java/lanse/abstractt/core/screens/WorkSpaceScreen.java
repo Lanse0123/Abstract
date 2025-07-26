@@ -48,7 +48,7 @@ public class WorkSpaceScreen extends JPanel {
         Storage.selectedBubblePath = new Stack<>();
         Storage.selectedBubblePath.push(Settings.selectedProjectPath);
 
-        StorageCompiler.generateProjectDefaults();
+        StorageCompiler.generateProjectDefaults(this);
 
         TopBubble bubble = Storage.loadTopBubble();
         Settings.topBubble = bubble;

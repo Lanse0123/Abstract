@@ -239,7 +239,6 @@ public class Bubble extends JPanel {
         }
     }
 
-
     private void handleEditClick(boolean isEditButton) {
 
         JPanel centerPanel = (JPanel) Arrays.stream(this.getComponents()).filter(comp ->
