@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Optional;
@@ -214,14 +215,24 @@ public class Bubble extends JPanel {
 
     private void scaleIcon(Icon icon, JLabel label, int size) {
         if (icon instanceof ImageIcon imgIcon) {
-            Image scaled = imgIcon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
-            label.setIcon(new ImageIcon(scaled));
+            Image image = imgIcon.getImage();
+
+            BufferedImage scaledImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = scaledImage.createGraphics();
+
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2d.drawImage(image, 0, 0, size, size, null);
+            g2d.dispose();
+
+            label.setIcon(new ImageIcon(scaledImage));
         }
     }
 
-    private void handleEditClick(boolean isEditButton) {
 
-        //TODO - somehow, it sometimes takes the empty pixel and brings it here, labeling it as the edit button
+    private void handleEditClick(boolean isEditButton) {
 
         JPanel centerPanel = (JPanel) Arrays.stream(this.getComponents()).filter(comp ->
                 comp instanceof JPanel && comp.getName() != null && comp.getName().contains("centerPanel")).findFirst().get();
