@@ -221,11 +221,12 @@ public class Bubble extends JPanel {
             Image image = imgIcon.getImage();
             //TODO - make sure this isnt hogging too much memory now, since I traded space for speed
 
-            //Overly optimized icon scaling
+            // Clamp size to avoid width/height = 0
+            int safeSize = Math.max(1, size);
+
             ImageIcon cached = scaledCache
                     .computeIfAbsent(image, k -> new HashMap<>())
-                    .computeIfAbsent(size, sz -> {
-                        //TODO - this has an error if you zoom out too far, saying width can not be 0.
+                    .computeIfAbsent(safeSize, sz -> {
                         BufferedImage scaledImage = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
                         Graphics2D g2d = scaledImage.createGraphics();
                         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -237,6 +238,7 @@ public class Bubble extends JPanel {
             label.setIcon(cached);
         }
     }
+
 
     private void handleEditClick(boolean isEditButton) {
 
