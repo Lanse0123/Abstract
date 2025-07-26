@@ -1,7 +1,6 @@
 package lanse.abstractt.storage;
 
 import lanse.abstractt.core.bubble.*;
-import lanse.abstractt.core.screens.WorkSpaceScreen;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,11 +27,11 @@ public class Storage {
             return List.of(load(dir.getPath(), true));
         }
         List<Bubble> bubbles = new ArrayList<>();
-        for (File f : Objects.requireNonNull(dir.listFiles())){
-            if (f.getName().equals("AbstractionVisualizerStorage")) {
+        for (File entry : Objects.requireNonNull(dir.listFiles())){
+            if (ExcludedBubbleList.isExcludedFile(entry.getPath())) {
                 continue;
             }
-            bubbles.add(load(f.getPath(), true));
+            bubbles.add(load(entry.getPath(), true));
         }
         return bubbles;
     }

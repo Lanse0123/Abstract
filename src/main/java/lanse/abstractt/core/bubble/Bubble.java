@@ -7,6 +7,7 @@ import lanse.abstractt.core.screens.WorkSpaceScreen;
 import lanse.abstractt.core.screens.bars.ProgressBarPanel;
 import lanse.abstractt.parser.UniversalParser;
 import lanse.abstractt.storage.AbstractImageManager;
+import lanse.abstractt.storage.ExcludedBubbleList;
 import lanse.abstractt.storage.Storage;
 import lanse.abstractt.storage.languages.LanguageManager;
 
@@ -100,7 +101,7 @@ public class Bubble extends JPanel {
         if (children == null) return;
 
         for (File child : children) {
-            if (child.getName().equals("AbstractionVisualizerStorage")) continue;
+            if (ExcludedBubbleList.isExcludedFile(child.getPath())) continue;
 
             Bubble newBubble = Storage.load(child.getPath(), true);
             parent.setLayout(null);

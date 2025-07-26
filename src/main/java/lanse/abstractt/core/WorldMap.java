@@ -23,7 +23,7 @@ public class WorldMap {
         lastMouseY = e.getY();
     }
 
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased() {
         dragging = false;
     }
 
@@ -43,7 +43,7 @@ public class WorldMap {
     public void initializeListeners(Component component) {
         WorldMap m = this;
         component.addMouseListener(new MouseAdapter() {
-            WorldMap map = m;
+            final WorldMap map = m;
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -52,12 +52,12 @@ public class WorldMap {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                map.mouseReleased(e);
+                map.mouseReleased();
             }
         });
 
         component.addMouseMotionListener(new MouseMotionAdapter() {
-            WorldMap map = m;
+            final WorldMap map = m;
 
             @Override
             public void mouseDragged(MouseEvent e) {

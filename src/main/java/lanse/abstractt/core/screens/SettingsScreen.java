@@ -2,18 +2,22 @@ package lanse.abstractt.core.screens;
 
 import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
+import lanse.abstractt.storage.ExcludedBubbleList;
 import lanse.abstractt.storage.Settings;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SettingsScreen extends JPanel {
 
     private final JFrame frame;
     private final JPanel previousScreen;
+    private final JTextArea excludedExtensionsArea;
 
-//    private final JSlider volumeSlider;
+    //    private final JSlider volumeSlider;
 //    private final JComboBox<String> backgroundSelector;
 //    private final JCheckBox showDeathMarkersBox;
 //    private final JCheckBox playIllegalMoveSoundBox;
@@ -51,6 +55,20 @@ public class SettingsScreen extends JPanel {
 //        playIllegalMoveSoundBox = new JCheckBox("Play Illegal Move Sound", Settings.isPlayIllegalMoveSound());
 //        styleCheckBox(playIllegalMoveSoundBox);
 //        add(playIllegalMoveSoundBox);
+
+        excludedExtensionsArea = new JTextArea(5, 30);
+        excludedExtensionsArea.setLineWrap(true);
+        excludedExtensionsArea.setWrapStyleWord(true);
+
+        StringBuilder initial = new StringBuilder();
+        for (String ext : ExcludedBubbleList.getExcludedEndings()) {
+            if (!ext.equals("AbstractionVisualizerStorage"))
+                initial.append(ext).append("\n");
+        }
+        excludedExtensionsArea.setText(initial.toString().trim());
+
+        addLabeled("Excluded Extensions (one per line):", new JScrollPane(excludedExtensionsArea));
+
 
         // Display Mode
         displayModeSelector = new JComboBox<>(DisplayModeSelector.DisplayMode.values());
@@ -93,6 +111,14 @@ public class SettingsScreen extends JPanel {
         BubbleSorter.sorter = (BubbleSorter.Sorter) bubbleSorterModeSelector.getSelectedItem();
         BubbleSorter.functionSorter = (BubbleSorter.FunctionSorter) functionBubbleSorterModeSelector.getSelectedItem();
 
+        Set<String> userExtensions = new HashSet<>();
+        for (String line : excludedExtensionsArea.getText().split("\\R")) {
+            String trimmed = line.trim();
+            if (!trimmed.isEmpty())
+                userExtensions.add(trimmed);
+        }
+        ExcludedBubbleList.setExcludedEndings(userExtensions);
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (Settings.save()) // Attempt save to file
             JOptionPane.showMessageDialog(this, "Settings saved!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -133,7 +159,6 @@ public class SettingsScreen extends JPanel {
 //    }
 
     private void returnToParent() {
-        //TODO - this is currently logic to return to the main menu. I need it to return to the screen it came from
         frame.getContentPane().removeAll();
         frame.getContentPane().add(previousScreen);
         frame.revalidate();

@@ -4,12 +4,15 @@ import dev.dirs.ProjectDirectories;
 import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.bubble.TopBubble;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Settings {
 
@@ -51,13 +54,21 @@ public class Settings {
             BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.valueOf(
                     json.optString("functionSortMode", BubbleSorter.FunctionSorter.NOTHING.toString()));
 
-            if (json.has("recentProjects")) {
-                recentProjects.clear();
-                for (Object obj : json.getJSONArray("recentProjects")) {
-                    if (obj instanceof String pathStr) {
-                        recentProjects.add(pathStr);
-                    }
+            recentProjects.clear();
+            JSONArray recentArray = json.optJSONArray("recentProjects");
+            if (recentArray != null) {
+                for (int i = 0; i < recentArray.length(); i++) {
+                    recentProjects.add(recentArray.optString(i));
                 }
+            }
+
+            Set<String> excludedSet = new HashSet<>();
+            JSONArray excludedArray = json.optJSONArray("excludedFileEndings");
+            if (excludedArray != null) {
+                for (int i = 0; i < excludedArray.length(); i++) {
+                    excludedSet.add(excludedArray.optString(i));
+                }
+                ExcludedBubbleList.setExcludedEndings(excludedSet);
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +111,15 @@ public class Settings {
 
             json.put("recentProjects", recentProjects);
 
+            //excluded file list
+            JSONArray excludedArray = new JSONArray();
+            for (String ext : ExcludedBubbleList.getExcludedEndings()) {
+                if (!ext.equals("AbstractionVisualizerStorage")) {
+                    excludedArray.put(ext);
+                }
+            }
+            json.put("excludedFileEndings", excludedArray);
+
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
             try (FileWriter file = new FileWriter(SETTINGS_PATH)) {
                 file.write(json.toString(4));
@@ -141,6 +161,8 @@ public class Settings {
         BubbleSorter.functionSorter = BubbleSorter.FunctionSorter.NOTHING;
 
         // recentProjects not cleared
+
+        ExcludedBubbleList.setExcludedEndings(new HashSet<>());
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         save();
     }

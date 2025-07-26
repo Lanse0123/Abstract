@@ -58,8 +58,8 @@ public class StorageCompiler {
 
             @Override
             protected void done() {
-                ProgressBarPanel.hide();
                 TopBubble.calculateLanguageBar();
+                ProgressBarPanel.hide();
             }
         };
 
@@ -74,7 +74,7 @@ public class StorageCompiler {
         if (entries == null) return;
 
         for (File entry : entries) {
-            if (entry.getName().contains("AbstractionVisualizerStorage")) continue;
+            if (ExcludedBubbleList.isExcludedFile(entry.getPath())) continue;
 
             if (entry.isDirectory()) {
                 File newDir = new File(mirroredDir, entry.getName());
@@ -138,7 +138,7 @@ public class StorageCompiler {
         return Arrays.stream(entries)
                 .parallel()
                 //TODO - make sure this filter uses ExcludedBubbleList
-                .filter(entry -> !entry.getName().equals("AbstractionVisualizerStorage"))
+                .filter(entry -> !ExcludedBubbleList.isExcludedFile(entry.getPath()))
                 .mapToInt(entry -> {
                     if (entry.isDirectory()) {
                         return countItems(entry);
