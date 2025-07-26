@@ -97,9 +97,6 @@ public class WorldMap {
                 offsetX = (mouseX / zoom) - worldX;
                 offsetY = (mouseY / zoom) - worldY;
 
-                //TODO - call a centralized optimized call to rescale all icons on screen. This way, bubbles that have
-                // the same icon don't need to recalculate it numerous times for no reason.
-
                 component.revalidate();
                 component.repaint();
             }
