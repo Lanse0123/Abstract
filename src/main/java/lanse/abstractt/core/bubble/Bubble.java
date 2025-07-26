@@ -225,7 +225,7 @@ public class Bubble extends JPanel {
             ImageIcon cached = scaledCache
                     .computeIfAbsent(image, k -> new HashMap<>())
                     .computeIfAbsent(size, sz -> {
-                        //TODO - this has an error if you zoom out too far
+                        //TODO - this has an error if you zoom out too far, saying width can not be 0.
                         BufferedImage scaledImage = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
                         Graphics2D g2d = scaledImage.createGraphics();
                         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);

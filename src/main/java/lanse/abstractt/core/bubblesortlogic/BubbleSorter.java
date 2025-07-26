@@ -15,10 +15,10 @@ public class BubbleSorter {
 
 
     public enum Sorter{
-        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS
+        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS, CODE_LINE_COUNT_SORT
     }
-    public enum FunctionSorter{
-        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS //TODO - add other options or something
+    public enum FunctionSorter{ //TODO - add other options or something
+        FILE_LIST_SORT, SIZE_SORT, TODO_VIEW_SORT, NOTHING, SIZE_SORT_StL, SIZE_SORT_LtS, CODE_LINE_COUNT_SORT
     }
 
     public static Sorter sorter = Sorter.NOTHING;
@@ -48,7 +48,8 @@ public class BubbleSorter {
                 case SIZE_SORT -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, null);
                 case SIZE_SORT_LtS -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "lts");
                 case SIZE_SORT_StL -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "stl");
-                case TODO_VIEW_SORT -> TODOViewSort.sort(isFunctionBubble, bubbles);
+                case TODO_VIEW_SORT -> layoutOverride = TODOViewSort.sort(isFunctionBubble, bubbles);
+                case CODE_LINE_COUNT_SORT -> layoutOverride = CodeLineCountSort.sort(isFunctionBubble, bubbles);
                 case NOTHING -> { break; }
             }
         } else {
@@ -58,6 +59,7 @@ public class BubbleSorter {
                 case SIZE_SORT_LtS -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "lts");
                 case SIZE_SORT_StL -> layoutOverride = SizeSort.sort(isFunctionBubble, bubbles, "stl");
                 case TODO_VIEW_SORT -> layoutOverride = TODOViewSort.sort(isFunctionBubble, bubbles);
+                case CODE_LINE_COUNT_SORT -> layoutOverride = CodeLineCountSort.sort(isFunctionBubble, bubbles);
                 case NOTHING -> { break; }
             }
         }
