@@ -11,12 +11,21 @@ import java.util.*;
 import java.util.List;
 
 public class GourceMap {
+    //TODO - eventually, I want to connect lines to each bubble using the BubbleBridge class.
+    // each bubble should make a bubbleBridge to it's parent. Once this was done for all,
+    // remove all of the directory bubbles except TopBubble.
     private static final int ITERATIONS = 500; //TODO - this should be at 500 by default. Make something to change this.
     private static final double WIDTH = 1920, HEIGHT = 1080;
-    private static final double AREA = WIDTH * HEIGHT;
-    private static final double K = Math.sqrt(AREA / 100); // nominal edge length (?)
+    private static double K; // nominal edge length (?)
     private static final Point2D.Double CENTER = new Point2D.Double(WIDTH/2, HEIGHT/2);
+
     private static final double GRAVITY = 0.05;
+    private static final double MIN_DIST = 1000; // Prevent overlap radius
+    private static final double MAX_DISP = 750; // Allow wider motion per step
+    private static final double REPULSION_MULT = 12;
+    private static final double CLOSE_REPULSION_BOOST = 42.0;
+    private static final double ATTRACTION_MULT = 0.5;
+
 
     // Internal node representation
     private static class Node {
@@ -30,6 +39,7 @@ public class GourceMap {
     private static List<Bubble> bubblesRef;
 
     private static void init(Bubble[] bubbles) {
+        K = computeK(bubbles.length);
         bubblesRef = Arrays.asList(bubbles);
         int n = bubbles.length;
         nodes = new Node[n];
@@ -62,45 +72,54 @@ public class GourceMap {
         int n = nodes.length;
 
         // reset displacements
-        for (Node v: nodes) v.disp.setLocation(0,0);
+        for (Node v : nodes) v.disp.setLocation(0, 0);
 
-        // repulsive forces //TODO - probably needs more balancing to overcome clustering when too grouped together
+        // repulsive forces
         for (int i = 0; i < n; i++) {
-            for (int j = i+1; j < n; j++) {
+            for (int j = i + 1; j < n; j++) {
                 Node vi = nodes[i], vj = nodes[j];
                 double dx = vi.pos.x - vj.pos.x, dy = vi.pos.y - vj.pos.y;
-                double dist = Math.max(0.01, Math.hypot(dx,dy));
-                double f = (K*K)/dist;
-                double fx = (dx/dist)*f, fy = (dy/dist)*f;
+                double dist = Math.max(0.01, Math.hypot(dx, dy));
+
+                // Boost repulsion if too close
+                double boost = dist < MIN_DIST ? CLOSE_REPULSION_BOOST : REPULSION_MULT;
+                double force = ((K * K) / dist) * boost;
+
+                double fx = (dx / dist) * force;
+                double fy = (dy / dist) * force;
+
                 vi.disp.x += fx; vi.disp.y += fy;
                 vj.disp.x -= fx; vj.disp.y -= fy;
             }
         }
 
         // attractive forces along edges
-        for (Point e: edges) {
+        for (Point e : edges) {
             Node a = nodes[e.x], b = nodes[e.y];
             double dx = a.pos.x - b.pos.x, dy = a.pos.y - b.pos.y;
-            double dist = Math.max(0.01, Math.hypot(dx,dy));
-            double f = (dist*dist)/K;
-            double fx = (dx/dist)*f, fy = (dy/dist)*f;
+            double dist = Math.max(0.01, Math.hypot(dx, dy));
+            double force = (dist * dist / K) * ATTRACTION_MULT;
+
+            double fx = (dx / dist) * force;
+            double fy = (dy / dist) * force;
+
             a.disp.x -= fx; a.disp.y -= fy;
             b.disp.x += fx; b.disp.y += fy;
         }
 
         // gravity toward center
-        for (Node v: nodes) {
+        for (Node v : nodes) {
             double dx = CENTER.x - v.pos.x, dy = CENTER.y - v.pos.y;
-            v.disp.x += dx*GRAVITY;
-            v.disp.y += dy*GRAVITY;
+            v.disp.x += dx * GRAVITY;
+            v.disp.y += dy * GRAVITY;
         }
 
         // apply displacements
-        for (Node v: nodes) {
+        for (Node v : nodes) {
             double dlen = Math.max(0.01, Math.hypot(v.disp.x, v.disp.y));
-            double scale = Math.min(dlen, 10);
-            v.pos.x += (v.disp.x/dlen)*scale;
-            v.pos.y += (v.disp.y/dlen)*scale;
+            double scale = Math.min(dlen, MAX_DISP);
+            v.pos.x += (v.disp.x / dlen) * scale;
+            v.pos.y += (v.disp.y / dlen) * scale;
         }
     }
 
@@ -134,4 +153,9 @@ public class GourceMap {
 
         return layout;
     }
+
+    private static double computeK(int nodeCount) {
+        return Math.sqrt((WIDTH * HEIGHT) / (double) nodeCount);
+    }
+
 }
