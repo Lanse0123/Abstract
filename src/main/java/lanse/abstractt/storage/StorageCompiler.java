@@ -173,6 +173,8 @@ public class StorageCompiler {
 
             if (child.isDirectory()){
                 generateStaticBubbleMap(child);
+
+                //TODO - this should be a setting, whether it includes directories or just uses files
                 Bubble newBubble = Storage.load(child.getPath(), false);
                 bubbles.add(newBubble);
             } else {

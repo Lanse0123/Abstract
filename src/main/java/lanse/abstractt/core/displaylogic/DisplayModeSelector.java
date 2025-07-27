@@ -31,7 +31,8 @@ public class DisplayModeSelector {
             case ANTI_COLLIDER -> AntiCollider.getLayout(bubbles, staticBubbles);
             case TODO_VIEW -> TodoView.getLayout(bubbles, staticBubbles);
 
-            case GOURCE_MAP -> Collections.emptyMap(); // no layout yet
+            //static maps below here
+            case GOURCE_MAP -> GourceMap.getLayout(bubbles, staticBubbles, worldMap);
         };
     }
 
