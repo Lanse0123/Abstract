@@ -11,17 +11,20 @@ import java.util.*;
 import java.util.List;
 
 public class GourceMap {
-    private static final int WIDTH = 1920;
-    private static final int HEIGHT = 1080;
     private static final int ITERATIONS = 500;
+    private static final double WIDTH = 1920;
+    private static final double HEIGHT = 1080;
     private static final double AREA = WIDTH * HEIGHT;
     private static final double K = Math.sqrt(AREA / 100); // optimal distance
+    private static final Point2D.Double CENTER = new Point2D.Double(WIDTH / 2, HEIGHT / 2);
+    private static final double GRAVITY = 0.05;
 
     private static class Node {
-        Point2D.Double pos, disp = new Point2D.Double();
+        Point2D.Double pos;
+        Point2D.Double disp = new Point2D.Double();
 
         Node(double x, double y) {
-            pos = new Point2D.Double(x, y);
+            this.pos = new Point2D.Double(x, y);
         }
     }
 
@@ -33,10 +36,11 @@ public class GourceMap {
         Node[] nodes = new Node[nodeCount];
         Random rnd = new Random();
 
-        // Map: absolutePath → index in bubbles
+        // Map file path to index
         Map<String, Integer> pathToIndex = new HashMap<>();
         for (int i = 0; i < nodeCount; i++) {
-            pathToIndex.put(new File(bubbles[i].getFilePath()).getAbsolutePath(), i);
+            String absPath = new File(bubbles[i].getFilePath()).getAbsolutePath();
+            pathToIndex.put(absPath, i);
             nodes[i] = new Node(rnd.nextDouble() * WIDTH, rnd.nextDouble() * HEIGHT);
         }
 
@@ -45,18 +49,18 @@ public class GourceMap {
             File file = new File(bubbles[i].getFilePath());
             File parent = file.getParentFile();
             if (parent != null) {
-                String parentPath = parent.getAbsolutePath();
-                Integer parentIndex = pathToIndex.get(parentPath);
+                Integer parentIndex = pathToIndex.get(parent.getAbsolutePath());
                 if (parentIndex != null) {
                     edges.add(new Point(parentIndex, i));
                 }
             }
         }
 
-        // Run force-directed layout
+        // Force-directed layout
         for (int iter = 0; iter < ITERATIONS; iter++) {
-            for (Node v : nodes) v.disp.setLocation(0, 0);
+            for (Node node : nodes) node.disp.setLocation(0, 0);
 
+            // Repulsion
             for (int i = 0; i < nodeCount; i++) {
                 for (int j = i + 1; j < nodeCount; j++) {
                     Node v = nodes[i], u = nodes[j];
@@ -66,44 +70,49 @@ public class GourceMap {
                     double force = (K * K) / dist;
                     double fx = (dx / dist) * force;
                     double fy = (dy / dist) * force;
-                    v.disp.x += fx;
-                    v.disp.y += fy;
-                    u.disp.x -= fx;
-                    u.disp.y -= fy;
+                    v.disp.x += fx; v.disp.y += fy;
+                    u.disp.x -= fx; u.disp.y -= fy;
                 }
             }
 
-            for (Point e : edges) {
-                Node v = nodes[e.x], u = nodes[e.y];
+            // Attraction
+            for (Point edge : edges) {
+                Node v = nodes[edge.x], u = nodes[edge.y];
                 double dx = v.pos.x - u.pos.x;
                 double dy = v.pos.y - u.pos.y;
                 double dist = Math.max(0.01, Math.hypot(dx, dy));
                 double force = (dist * dist) / K;
                 double fx = (dx / dist) * force;
                 double fy = (dy / dist) * force;
-                v.disp.x -= fx;
-                v.disp.y -= fy;
-                u.disp.x += fx;
-                u.disp.y += fy;
+                v.disp.x -= fx; v.disp.y -= fy;
+                u.disp.x += fx; u.disp.y += fy;
             }
 
+            // Gravity pull to center
+            for (Node v : nodes) {
+                double dx = CENTER.x - v.pos.x;
+                double dy = CENTER.y - v.pos.y;
+                v.disp.x += dx * GRAVITY;
+                v.disp.y += dy * GRAVITY;
+            }
+
+            // Apply displacement
             for (Node v : nodes) {
                 double dispLength = Math.max(0.01, Math.hypot(v.disp.x, v.disp.y));
-                double min = Math.min(dispLength, 10);
-                v.pos.x += (v.disp.x / dispLength) * min;
-                v.pos.y += (v.disp.y / dispLength) * min;
-                v.pos.x = Math.min(WIDTH, Math.max(0, v.pos.x));
-                v.pos.y = Math.min(HEIGHT, Math.max(0, v.pos.y));
+                double scale = Math.min(dispLength, 10);
+                v.pos.x += (v.disp.x / dispLength) * scale;
+                v.pos.y += (v.disp.y / dispLength) * scale;
+                // No clamping here — nodes can sprawl
             }
         }
 
+        // Final layout map
         for (int i = 0; i < nodeCount; i++) {
-            Bubble b = bubbles[i];
             Point2D.Double pos = nodes[i].pos;
-            layout.put(b, new Point((int) pos.x, (int) pos.y));
+            layout.put(bubbles[i], new Point((int) pos.x, (int) pos.y));
         }
 
-        // Static components
+        // Position static components
         double zoom = WorldMap.getZoom();
         for (Component bubble : staticBubbles) {
             Point screenPos = worldMap.transform(1500, 480);
