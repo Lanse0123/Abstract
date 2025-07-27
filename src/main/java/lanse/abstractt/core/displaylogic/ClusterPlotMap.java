@@ -7,10 +7,14 @@ import lanse.abstractt.core.screens.WorkSpaceScreen;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
-public class GourceMap {
+public class ClusterPlotMap {
+
+    //This is a snapshot of time of my first semi working static map. Lance was making GourceMap at the time, and wanted
+    // to save this for nostalgia purposes or something
+
     private static final int ITERATIONS = 500; //TODO - this should be at 500 by default. Make something to change this.
     private static final double WIDTH = 1920, HEIGHT = 1080;
     private static final double AREA = WIDTH * HEIGHT;

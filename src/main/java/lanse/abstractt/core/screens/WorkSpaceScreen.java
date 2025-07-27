@@ -101,6 +101,7 @@ public class WorkSpaceScreen extends JPanel {
         layoutAllBubbles(visualBubbles.toArray(new Bubble[0]), staticBubbles.toArray(new Component[0]));
     }
 
+    //TODO - this is called many times, and is probably the laggiest part of Abstract.
     public void layoutAllBubbles(Bubble[] allBubbles, Component[] staticBubbles) {
         Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles, staticBubbles, worldMap);
 

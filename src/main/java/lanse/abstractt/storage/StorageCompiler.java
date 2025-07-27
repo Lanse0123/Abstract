@@ -62,6 +62,7 @@ public class StorageCompiler {
                 bubbles.clear();
                 if (DisplayModeSelector.staticMapList.contains(DisplayModeSelector.displayMode)) {
                     ProgressBarPanel.setLoading(true, "Generating Bubbles");
+                    DisplayModeSelector.clearStaticMaps();
                     generateStaticBubbleMap(selectedProjectPath);
                 }
 

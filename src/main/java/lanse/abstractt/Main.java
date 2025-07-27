@@ -1,6 +1,8 @@
 package lanse.abstractt;
 
 import lanse.abstractt.core.ColorPalette;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
+import lanse.abstractt.core.displaylogic.GourceMap;
 import lanse.abstractt.core.screens.MainMenuScreen;
 import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.AbstractImageManager;
@@ -63,7 +65,15 @@ public class Main {
 //        tickCount++;
 //        if (tickCount > 1000000000) tickCount = 0;
 //
-//        //TODO - make more use of this in the future.
+//        if (DisplayModeSelector.displayMode == DisplayModeSelector.DisplayMode.GOURCE_MAP){
+//            for (int i = 0; i < 20; i++) {
+//                GourceMap.step();
+//            }
+//            frame.revalidate();
+//            frame.repaint();
+//        }
+//
+//        //TODO - make more use of this in the future. This might be good for moving static bubble maps
 //
 //    }
 }
