@@ -14,11 +14,14 @@ public class BubbleBridge extends JPanel {
     private static final int BASE_WIDTH = 4;
     private static final Map<Set<Bubble>, BubbleBridge> allBridges = new HashMap<>();
 
-    public BubbleBridge(Bubble a, Bubble b) {
+    public BubbleBridge(Bubble a, Bubble b, Container parent) {
         this.a = a;
         this.b = b;
         this.width = BASE_WIDTH;
-        setOpaque(false);
+        setOpaque(false); // set transparent for custom drawing
+
+        parent.setLayout(null);
+        parent.add(this);
     }
 
     @Override
@@ -29,9 +32,19 @@ public class BubbleBridge extends JPanel {
         Point centerA = getBubbleCenter(a);
         Point centerB = getBubbleCenter(b);
 
+        // Offset line to local coordinates
+        Point offset = getLocation();
+        int ax = centerA.x - offset.x;
+        int ay = centerA.y - offset.y;
+        int bx = centerB.x - offset.x;
+        int by = centerB.y - offset.y;
+
         g2.setStroke(new BasicStroke(width));
-        g2.setColor(new Color(250, 250, 250, 0));
-        g2.drawLine(centerA.x, centerA.y, centerB.x, centerB.y);
+        g2.setColor(new Color(200, 200, 200, 180));
+        g2.drawLine(ax, ay, bx, by);
+
+        g2.setColor(Color.YELLOW);
+        g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
         g2.dispose();
     }
@@ -40,6 +53,25 @@ public class BubbleBridge extends JPanel {
         Rectangle bounds = bubble.getBounds();
         return new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
     }
+
+    public void updateBridgeBounds() {
+        Point aCenter = getBubbleCenter(a);
+        Point bCenter = getBubbleCenter(b);
+
+        int minX = Math.min(aCenter.x, bCenter.x);
+        int minY = Math.min(aCenter.y, bCenter.y);
+        int maxX = Math.max(aCenter.x, bCenter.x);
+        int maxY = Math.max(aCenter.y, bCenter.y);
+
+        int bridgeWidth = Math.max(1, maxX - minX);
+        int bridgeHeight = Math.max(1, maxY - minY);
+
+        int pad = width + 4;
+
+        // Set bounds in parent coordinates
+        setBounds(minX - pad, minY - pad, bridgeWidth + pad * 2, bridgeHeight + pad * 2);
+    }
+
 
     public void applyPullForce(Point2D.Double posA, Point2D.Double posB, Point2D.Double dispA, Point2D.Double dispB) {
         double dx = posA.x - posB.x;
@@ -53,10 +85,10 @@ public class BubbleBridge extends JPanel {
         double force;
 
         if (dist < MIN_DISTANCE) {
-            // Too close — push apart strongly
+            // Too close, push apart strongly
             force = (MIN_DISTANCE - dist) * PUSH_STRENGTH * width;
         } else {
-            // Far apart — pull together weakly
+            // Far apart, pull together weakly
             force = (dist - MIN_DISTANCE) * PULL_STRENGTH * width;
         }
 
@@ -69,15 +101,14 @@ public class BubbleBridge extends JPanel {
         dispB.y += fy;
     }
 
-
-    public static void getOrCreate(Bubble a, Bubble b) {
+    public static void getOrCreate(Bubble a, Bubble b, Container parent) {
         Set<Bubble> pair = Set.of(a, b); // unordered
         BubbleBridge bridge = allBridges.get(pair);
         if (bridge != null) {
             bridge.increaseWidth(1);
             return;
         }
-        bridge = new BubbleBridge(a, b);
+        bridge = new BubbleBridge(a, b, parent);
         allBridges.put(pair, bridge);
     }
 

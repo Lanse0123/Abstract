@@ -39,7 +39,7 @@ public class GourceMap {
     private static List<Point> edges;
     private static List<Bubble> bubblesRef;
 
-    private static void init(Bubble[] bubbles) {
+    private static void init(Bubble[] bubbles, Container parent) {
         K = computeK(bubbles.length);
         bubblesRef = Arrays.asList(bubbles);
         int n = bubbles.length;
@@ -64,7 +64,7 @@ public class GourceMap {
                 Integer pi = pathToIndex.get(p.getAbsolutePath());
                 if (pi != null){
                     edges.add(new Point(pi, i));
-                    BubbleBridge.getOrCreate(bubbles[pi], bubbles[i]);
+                    BubbleBridge.getOrCreate(bubbles[pi], bubbles[i], parent);
                 }
             }
         }
@@ -148,9 +148,9 @@ public class GourceMap {
         edges = null;
     }
 
-    public static Map<Bubble,Point> getLayout(Bubble[] bubbles, Component[] staticBubbles, WorldMap worldMap) {
+    public static Map<Bubble,Point> getLayout(Bubble[] bubbles, Component[] staticBubbles, WorldMap worldMap, Container parent) {
         if (!initialized || !bubblesRef.equals(Arrays.asList(bubbles))){
-            init(bubbles);
+            init(bubbles, parent);
             for (int i = 0; i < ITERATIONS; i++) step();
         }
 

@@ -87,10 +87,13 @@ public class WorkSpaceScreen extends JPanel {
         Component[] comps = getComponents();
         java.util.List<Bubble> visualBubbles = new ArrayList<>();
         java.util.List<Component> staticBubbles = new ArrayList<>();
+        java.util.List<Component> otherObjectComponents = new ArrayList<>();
 
         for (Component comp : comps) {
             if (comp instanceof Bubble) {
                 visualBubbles.add((Bubble) comp);
+            } else if (comp instanceof BubbleBridge){
+                otherObjectComponents.add(comp);
             } else if (comp instanceof CodeBubble || comp instanceof PictureBubble){
                 staticBubbles.add(comp);
             } else if (comp != sidebar && comp != topBar && comp != progressBar) {
@@ -98,12 +101,12 @@ public class WorkSpaceScreen extends JPanel {
             }
         }
 
-        layoutAllBubbles(visualBubbles.toArray(new Bubble[0]), staticBubbles.toArray(new Component[0]));
+        layoutAllBubbles(visualBubbles.toArray(new Bubble[0]), staticBubbles.toArray(new Component[0]), otherObjectComponents.toArray(new Component[0]));
     }
 
     //TODO - this is called many times, and is probably the laggiest part of Abstract.
-    public void layoutAllBubbles(Bubble[] allBubbles, Component[] staticBubbles) {
-        Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles, staticBubbles, worldMap);
+    public void layoutAllBubbles(Bubble[] allBubbles, Component[] staticBubbles, Component[] otherObjectComponents) {
+        Map<Bubble, Point> layoutMap = DisplayModeSelector.getBubbleLayout(allBubbles, staticBubbles, worldMap, this);
 
         BubbleSorter.sort(allBubbles);
 
@@ -112,6 +115,7 @@ public class WorkSpaceScreen extends JPanel {
         double zoom = WorldMap.getZoom();
 
         for (Bubble bubble : allBubbles) {
+
             Point worldPos = layoutMap.getOrDefault(bubble, new Point(0, 0));
             Point screenPos = worldMap.transform(worldPos.x, worldPos.y);
 
@@ -119,6 +123,12 @@ public class WorkSpaceScreen extends JPanel {
             int height = (int) (bubble.getPreferredSize().height * bubble.scale * zoom);
 
             bubble.setBounds(screenPos.x + SIDEBAR_WIDTH, screenPos.y, width, height);
+        }
+
+        for (Component comp : otherObjectComponents) {
+            if (comp instanceof BubbleBridge bubbleBridge) {
+                bubbleBridge.updateBridgeBounds();
+            }
         }
     }
 

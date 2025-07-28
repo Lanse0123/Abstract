@@ -19,7 +19,7 @@ public class DisplayModeSelector {
 
     public static DisplayMode displayMode = DisplayMode.FILE_LIST;
 
-    public static Map<Bubble, Point> getBubbleLayout(Bubble[] bubbles, Component[] staticBubbles, WorldMap worldMap) {
+    public static Map<Bubble, Point> getBubbleLayout(Bubble[] bubbles, Component[] staticBubbles, WorldMap worldMap, Container parent) {
 
         return switch (displayMode) {
             case FILE_LIST -> FileList.getLayout(bubbles, staticBubbles, worldMap);
@@ -28,7 +28,7 @@ public class DisplayModeSelector {
             case ANTI_COLLIDER -> AntiCollider.getLayout(bubbles, staticBubbles);
 
             //static maps below here
-            case GOURCE_MAP -> GourceMap.getLayout(bubbles, staticBubbles, worldMap);
+            case GOURCE_MAP -> GourceMap.getLayout(bubbles, staticBubbles, worldMap, parent);
             case CLUSTERPLOT_MAP -> ClusterPlotMap.getLayout(bubbles, staticBubbles, worldMap);
         };
     }
