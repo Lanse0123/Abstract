@@ -224,6 +224,8 @@ public class Bubble extends JPanel {
             // Clamp size to avoid width/height = 0
             int safeSize = Math.max(1, size);
 
+            //TODO - dont make this render if the size is below 10x10 pixels or so, just to save space / time
+
             ImageIcon cached = scaledCache
                     .computeIfAbsent(image, k -> new HashMap<>())
                     .computeIfAbsent(safeSize, sz -> {

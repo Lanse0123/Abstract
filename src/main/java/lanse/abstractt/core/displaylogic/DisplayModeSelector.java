@@ -10,7 +10,7 @@ import java.util.Map;
 public class DisplayModeSelector {
 
     public enum DisplayMode {
-        FILE_LIST, MAIN_LIST_DOWN, PROXIMITY_SIMULATOR, ANTI_COLLIDER, TODO_VIEW, GOURCE_MAP, CLUSTERPLOT_MAP
+        FILE_LIST, MAIN_LIST_DOWN, PROXIMITY_SIMULATOR, ANTI_COLLIDER, GOURCE_MAP, CLUSTERPLOT_MAP
     }
 
     public static List<DisplayMode> staticMapList = List.of(
@@ -26,7 +26,6 @@ public class DisplayModeSelector {
             case MAIN_LIST_DOWN -> MainListDown.getLayout(bubbles, staticBubbles);
             case PROXIMITY_SIMULATOR -> ProximitySimulator.getLayout(bubbles, staticBubbles);
             case ANTI_COLLIDER -> AntiCollider.getLayout(bubbles, staticBubbles);
-            case TODO_VIEW -> TodoView.getLayout(bubbles, staticBubbles);
 
             //static maps below here
             case GOURCE_MAP -> GourceMap.getLayout(bubbles, staticBubbles, worldMap);

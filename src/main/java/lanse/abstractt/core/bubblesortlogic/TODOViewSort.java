@@ -54,6 +54,11 @@ public class TODOViewSort {
                             }
                         }
 
+                        if (todoCount == 0){
+                            //bubbles.remove(bubble);
+                            //TODO = destroy the bubble / remove it from parent
+                        }
+
                         bubble.scale = 1 + Math.log(todoCount + 1);
 
                     } catch (IOException e) {

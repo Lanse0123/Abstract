@@ -2,6 +2,7 @@ package lanse.abstractt.core.displaylogic;
 
 import lanse.abstractt.core.WorldMap;
 import lanse.abstractt.core.bubble.Bubble;
+import lanse.abstractt.core.bubble.BubbleBridge;
 import lanse.abstractt.core.screens.WorkSpaceScreen;
 
 import java.awt.*;
@@ -14,7 +15,7 @@ public class GourceMap {
     //TODO - eventually, I want to connect lines to each bubble using the BubbleBridge class.
     // each bubble should make a bubbleBridge to it's parent. Once this was done for all,
     // remove all of the directory bubbles except TopBubble.
-    private static final int ITERATIONS = 500; //TODO - this should be at 500 by default. Make something to change this.
+    private static final int ITERATIONS = 1000; //TODO - this should be at 500 by default. Make something to change this.
     private static final double WIDTH = 1920, HEIGHT = 1080;
     private static double K; // nominal edge length (?)
     private static final Point2D.Double CENTER = new Point2D.Double(WIDTH/2, HEIGHT/2);
@@ -53,16 +54,20 @@ public class GourceMap {
             nodes[i] = new Node(rnd.nextDouble()*WIDTH, rnd.nextDouble()*HEIGHT);
         }
 
+        BubbleBridge.clearAll();
+
         // parent→child edges
         for (int i = 0; i < n; i++) {
             File f = new File(bubbles[i].getFilePath());
             File p = f.getParentFile();
             if (p != null) {
                 Integer pi = pathToIndex.get(p.getAbsolutePath());
-                if (pi != null) edges.add(new Point(pi, i));
+                if (pi != null){
+                    edges.add(new Point(pi, i));
+                    BubbleBridge.getOrCreate(bubbles[pi], bubbles[i]);
+                }
             }
         }
-
         initialized = true;
     }
 
@@ -105,6 +110,20 @@ public class GourceMap {
 
             a.disp.x -= fx; a.disp.y -= fy;
             b.disp.x += fx; b.disp.y += fy;
+        }
+
+        //TODO - make sure bubble bridges and attraction / repulsion is balanced.
+
+        // bubble bridge attraction
+        for (BubbleBridge bridge : BubbleBridge.getAllBridges()) {
+            int ai = bubblesRef.indexOf(bridge.getA());
+            int bi = bubblesRef.indexOf(bridge.getB());
+            if (ai == -1 || bi == -1) continue;
+
+            Node na = nodes[ai];
+            Node nb = nodes[bi];
+
+            bridge.applyPullForce(na.pos, nb.pos, na.disp, nb.disp);
         }
 
         // gravity toward center
