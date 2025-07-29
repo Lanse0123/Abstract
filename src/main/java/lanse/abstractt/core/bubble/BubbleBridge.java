@@ -27,24 +27,39 @@ public class BubbleBridge extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        updateBridgeBounds(); // still needed to adjust size
+
         Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Point centerA = getBubbleCenter(a);
         Point centerB = getBubbleCenter(b);
 
-        // Offset line to local coordinates
         Point offset = getLocation();
         int ax = centerA.x - offset.x;
         int ay = centerA.y - offset.y;
         int bx = centerB.x - offset.x;
         int by = centerB.y - offset.y;
 
-        g2.setStroke(new BasicStroke(width));
-        g2.setColor(new Color(200, 200, 200, 180));
-        g2.drawLine(ax, ay, bx, by);
+        // Draw rectangle "bridge" between points A and B
+        double dx = bx - ax;
+        double dy = by - ay;
+        double len = Math.hypot(dx, dy);
+        double angle = Math.atan2(dy, dx);
 
-        g2.setColor(Color.YELLOW);
-        g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        Graphics2D bridgeG = (Graphics2D) g2.create();
+        bridgeG.translate(ax, ay);
+        bridgeG.rotate(angle);
+
+        bridgeG.setColor(Color.RED);
+        bridgeG.drawRect(0, -getWidth() / 2, (int) len, getHeight());
+
+        bridgeG.dispose();
+//
+//        // Debug yellow border
+//        g2.setColor(Color.YELLOW);
+//        g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
         g2.dispose();
     }
@@ -71,7 +86,6 @@ public class BubbleBridge extends JPanel {
         // Set bounds in parent coordinates
         setBounds(minX - pad, minY - pad, bridgeWidth + pad * 2, bridgeHeight + pad * 2);
     }
-
 
     public void applyPullForce(Point2D.Double posA, Point2D.Double posB, Point2D.Double dispA, Point2D.Double dispB) {
         double dx = posA.x - posB.x;
