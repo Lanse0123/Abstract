@@ -10,11 +10,11 @@ import java.util.Map;
 public class DisplayModeSelector {
 
     public enum DisplayMode {
-        FILE_LIST, MAIN_LIST_DOWN, PROXIMITY_SIMULATOR, ANTI_COLLIDER, GOURCE_MAP, CLUSTERPLOT_MAP
+        FILE_LIST, MAIN_LIST_DOWN, PROXIMITY_SIMULATOR, ANTI_COLLIDER, GOURCE_MAP, CLUSTERPLOT_MAP, PROXIMITY_MAP
     }
 
     public static List<DisplayMode> staticMapList = List.of(
-            DisplayMode.GOURCE_MAP
+            DisplayMode.GOURCE_MAP, DisplayMode.PROXIMITY_MAP
     );
 
     public static DisplayMode displayMode = DisplayMode.FILE_LIST;
@@ -29,6 +29,7 @@ public class DisplayModeSelector {
 
             //static maps below here
             case GOURCE_MAP -> GourceMap.getLayout(bubbles, staticBubbles, worldMap, parent);
+            case PROXIMITY_MAP -> ProximityMap.getLayout(bubbles, staticBubbles, worldMap, parent);
             case CLUSTERPLOT_MAP -> ClusterPlotMap.getLayout(bubbles, staticBubbles, worldMap);
         };
     }
@@ -36,5 +37,6 @@ public class DisplayModeSelector {
     public static void clearStaticMaps() {
         GourceMap.clear();
         ClusterPlotMap.clear();
+        ProximityMap.clear();
     }
 }

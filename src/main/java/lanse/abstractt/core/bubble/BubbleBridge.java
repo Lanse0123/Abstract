@@ -20,7 +20,9 @@ public class BubbleBridge extends JPanel {
         this.width = BASE_WIDTH;
         setOpaque(false); // set transparent for custom drawing
 
-        parent.setLayout(null);
+        //TODO - setPreferredSize(new Dimension(width, height)); never happens here
+
+        setLayout(new BorderLayout());
         parent.add(this);
     }
 
@@ -85,6 +87,9 @@ public class BubbleBridge extends JPanel {
 
         // Set bounds in parent coordinates
         setBounds(minX - pad, minY - pad, bridgeWidth + pad * 2, bridgeHeight + pad * 2);
+
+        repaint();
+        revalidate();
     }
 
     public void applyPullForce(Point2D.Double posA, Point2D.Double posB, Point2D.Double dispA, Point2D.Double dispB) {

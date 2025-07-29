@@ -7,22 +7,24 @@ import lanse.abstractt.core.screens.WorkSpaceScreen;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class GourceMap {
+public class ProximityMap {
+
+    //TODO - the goal of this is to make a map showing the most connected bubbles.
+    // This was copied from GourceMap and edited, and still incomplete.
+
     private static final int ITERATIONS = 1000; //TODO - this should be at 500 by default. Make something to change this.
     private static final double WIDTH = 1920, HEIGHT = 1080;
-    private static double K; // nominal edge length (?)
     private static final Point2D.Double CENTER = new Point2D.Double(WIDTH/2, HEIGHT/2);
 
     private static final double GRAVITY = 0.05;
-    private static final double MIN_DIST = 1000; // Prevent overlap radius
     private static final double MAX_DISP = 750; // Allow wider motion per step
-    private static final double REPULSION_MULT = 12;
-    private static final double CLOSE_REPULSION_BOOST = 42.0;
-    private static final double ATTRACTION_MULT = 0.5;
 
 
     // Internal node representation
@@ -33,15 +35,12 @@ public class GourceMap {
 
     private static boolean initialized = false;
     private static Node[] nodes;
-    private static List<Point> edges;
     private static List<Bubble> bubblesRef;
 
     private static void init(Bubble[] bubbles, Container parent) {
-        K = computeK(bubbles.length);
         bubblesRef = Arrays.asList(bubbles);
         int n = bubbles.length;
         nodes = new Node[n];
-        edges = new ArrayList<>(n);
 
         // random start positions
         Random rnd = new Random();
@@ -53,16 +52,36 @@ public class GourceMap {
 
         BubbleBridge.clearAll();
 
-        // parent→child edges
-        for (int i = 0; i < n; i++) {
-            File f = new File(bubbles[i].getFilePath());
-            File p = f.getParentFile();
-            if (p != null) {
-                Integer pi = pathToIndex.get(p.getAbsolutePath());
-                if (pi != null){
-                    edges.add(new Point(pi, i));
-                    BubbleBridge.getOrCreate(bubbles[pi], bubbles[i], parent);
+        //TODO - ::
+        // make a list of all bubble names (NO EXTENSIONS)
+        // for each bubble, get all references to other bubbles (like to_do sort)
+        // getOrCreate a BubbleBridge to each pair it finds
+        // repeat
+
+        Map<String, Bubble> nameToBubble = new HashMap<>();
+        for (Bubble bubble : bubbles) {
+            String name = bubble.getName(); //TODO - (NO EXTENSIONS) ((make sure to remove extensions))
+            nameToBubble.put(name, bubble);
+        }
+
+        // Step 2: For each bubble, read lines and find references to other bubble names
+        for (Bubble bubble : bubbles) {
+            File file = new File(bubble.getFilePath());
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    for (Map.Entry<String, Bubble> entry : nameToBubble.entrySet()) {
+                        String targetName = entry.getKey();
+                        Bubble target = entry.getValue();
+                        if (target == bubble) continue; // the bubble referencing itself doesn't count
+                        if (line.contains(targetName)) {
+                            BubbleBridge.getOrCreate(bubble, target, parent);
+                        }
+                    }
                 }
+            } catch (IOException e) {
+                System.out.println("Failed to read file: " + file.getPath());
             }
         }
         initialized = true;
@@ -71,47 +90,11 @@ public class GourceMap {
     //its insane how computers can do this so fast
     public static void step() {
         if (!initialized) throw new IllegalStateException("GourceMap not initialized");
-        int n = nodes.length;
 
         // reset displacements
         for (Node v : nodes) v.disp.setLocation(0, 0);
 
-        // repulsive forces
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                Node vi = nodes[i], vj = nodes[j];
-                double dx = vi.pos.x - vj.pos.x, dy = vi.pos.y - vj.pos.y;
-                double dist = Math.max(0.01, Math.hypot(dx, dy));
-
-                // Boost repulsion if too close
-                double boost = dist < MIN_DIST ? CLOSE_REPULSION_BOOST : REPULSION_MULT;
-                double force = ((K * K) / dist) * boost;
-
-                double fx = (dx / dist) * force;
-                double fy = (dy / dist) * force;
-
-                vi.disp.x += fx; vi.disp.y += fy;
-                vj.disp.x -= fx; vj.disp.y -= fy;
-            }
-        }
-
-        // attractive forces along edges
-        for (Point e : edges) {
-            Node a = nodes[e.x], b = nodes[e.y];
-            double dx = a.pos.x - b.pos.x, dy = a.pos.y - b.pos.y;
-            double dist = Math.max(0.01, Math.hypot(dx, dy));
-            double force = (dist * dist / K) * ATTRACTION_MULT;
-
-            double fx = (dx / dist) * force;
-            double fy = (dy / dist) * force;
-
-            a.disp.x -= fx; a.disp.y -= fy;
-            b.disp.x += fx; b.disp.y += fy;
-        }
-
-        //TODO - make sure bubble bridges and attraction / repulsion is balanced.
-
-        // bubble bridge attraction
+        // bubble bridge attraction / repulsion
         for (BubbleBridge bridge : BubbleBridge.getAllBridges()) {
             int ai = bubblesRef.indexOf(bridge.getA());
             int bi = bubblesRef.indexOf(bridge.getB());
@@ -130,6 +113,8 @@ public class GourceMap {
             v.disp.y += dy * GRAVITY;
         }
 
+        //TODO - i dont know why I shortened everything, this is ridiculous to read
+
         // apply displacements
         for (Node v : nodes) {
             double dlen = Math.max(0.01, Math.hypot(v.disp.x, v.disp.y));
@@ -142,11 +127,11 @@ public class GourceMap {
     public static void clear() {
         initialized = false;
         nodes = null;
-        edges = null;
     }
 
     public static Map<Bubble,Point> getLayout(Bubble[] bubbles, Component[] staticBubbles, WorldMap worldMap, Container parent) {
         if (!initialized || !bubblesRef.equals(Arrays.asList(bubbles))){
+            bubbles = removeDirectoryBubbles(bubbles);
             init(bubbles, parent);
             for (int i = 0; i < ITERATIONS; i++) step();
         }
@@ -170,8 +155,14 @@ public class GourceMap {
         return layout;
     }
 
-    private static double computeK(int nodeCount) {
-        return Math.sqrt((WIDTH * HEIGHT) / (double) nodeCount);
+    public static Bubble[] removeDirectoryBubbles(Bubble[] bubbles){
+        Set<Bubble> filteredBubbles = new HashSet<>(Set.of(bubbles));
+        for (Bubble bubble : bubbles){
+            File file = new File(bubble.getFilePath());
+            if (!file.isDirectory()){
+                filteredBubbles.add(bubble);
+            }
+        }
+        return filteredBubbles.toArray(new Bubble[0]);
     }
-
 }
