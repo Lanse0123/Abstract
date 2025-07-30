@@ -14,7 +14,7 @@ public class DisplayModeSelector {
     }
 
     public static List<DisplayMode> staticMapList = List.of(
-            DisplayMode.GOURCE_MAP, DisplayMode.PROXIMITY_MAP
+            DisplayMode.GOURCE_MAP, DisplayMode.PROXIMITY_MAP, DisplayMode.CLUSTERPLOT_MAP
     );
 
     public static DisplayMode displayMode = DisplayMode.FILE_LIST;

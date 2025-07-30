@@ -22,7 +22,11 @@ Things that I want to add next:
 
 *Make saving FunctionBubbles descriptions more consistent so it never does LSP and AI when it doesnt need to.
 
-*Fix SubFunctionBubbles
+*Fix SubFunctionBubbles and BubbleBridge
+
+*Fix saving function bubbles immediately
+
+*Add an option to disable AI parsing and summarizing (this should probably just be a button by default)
 
 *Add brackets for FunctionBubbles so they point to the lines of code they represent.
 
