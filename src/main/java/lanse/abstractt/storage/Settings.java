@@ -4,6 +4,7 @@ import dev.dirs.ProjectDirectories;
 import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import lanse.abstractt.core.bubble.TopBubble;
+import lanse.abstractt.parser.LLMManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -40,11 +41,7 @@ public class Settings {
             JSONObject json = new JSONObject(jsonContent.toString());
             //TODO - remember to also add new things to SettingsScreen class when adding them here.
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//            volume = json.optInt("volume", 100);
-//            background = json.optString("background", "Warped Plane");
-//            showDeathMarkers = json.optBoolean("showDeathMarkers", true);
-//            playIllegalMoveSound = json.optBoolean("playIllegalMoveSound", false);
+            LLMManager.isAiEnabled = json.optBoolean("isAiEnabled", false);
 
             DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.valueOf(
                     json.optString("displayMode", DisplayModeSelector.DisplayMode.FILE_LIST.toString()));
@@ -98,11 +95,7 @@ public class Settings {
 
             JSONObject json = new JSONObject();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//            json.put("volume", volume);
-//            json.put("background", background);
-//            json.put("showDeathMarkers", showDeathMarkers);
-//            json.put("playIllegalMoveSound", playIllegalMoveSound);
+            json.put("isAiEnabled", LLMManager.isAiEnabled);
 
             json.put("displayMode", DisplayModeSelector.displayMode.name());
 
@@ -150,10 +143,7 @@ public class Settings {
 
     public static void returnToDefaultSettings() {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//        volume = 100;
-//        background = "Warped Plane";
-//        showDeathMarkers = true;
-//        playIllegalMoveSound = false;
+        LLMManager.isAiEnabled = false;
 
         DisplayModeSelector.displayMode = DisplayModeSelector.DisplayMode.FILE_LIST;
 

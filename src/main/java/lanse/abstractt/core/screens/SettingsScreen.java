@@ -2,6 +2,7 @@ package lanse.abstractt.core.screens;
 
 import lanse.abstractt.core.bubblesortlogic.BubbleSorter;
 import lanse.abstractt.core.displaylogic.DisplayModeSelector;
+import lanse.abstractt.parser.LLMManager;
 import lanse.abstractt.storage.ExcludedBubbleList;
 import lanse.abstractt.storage.Settings;
 
@@ -18,13 +19,14 @@ public class SettingsScreen extends JPanel {
     private final JTextArea excludedExtensionsArea;
 
     //    private final JSlider volumeSlider;
-//    private final JComboBox<String> backgroundSelector;
-//    private final JCheckBox showDeathMarkersBox;
-//    private final JCheckBox playIllegalMoveSoundBox;
+    //    private final JComboBox<String> backgroundSelector;
+
+    private final JCheckBox isAiEnabledBox;
     private final JComboBox<DisplayModeSelector.DisplayMode> displayModeSelector;
     private final JComboBox<BubbleSorter.Sorter> bubbleSorterModeSelector;
     private final JComboBox<BubbleSorter.FunctionSorter> functionBubbleSorterModeSelector;
 
+    //TODO - dont forget to add stuff to load AND save
     public SettingsScreen(JFrame frame, JPanel previousScreen, Color bgColor) {
         this.frame = frame;
         this.previousScreen = previousScreen;
@@ -45,17 +47,13 @@ public class SettingsScreen extends JPanel {
 //        backgroundSelector = new JComboBox<>(new String[]{"Warped Plane", "Void", "Space", "Solid"});
 //        backgroundSelector.setSelectedItem(Settings.getBackground());
 //        addLabeled("Background:", backgroundSelector);
-//
-//        // Death Markers Checkbox
-//        showDeathMarkersBox = new JCheckBox("Show Death Markers", Settings.isShowDeathMarkers());
-//        styleCheckBox(showDeathMarkersBox);
-//        add(showDeathMarkersBox);
 
-        // Illegal Move Sound Checkbox
-//        playIllegalMoveSoundBox = new JCheckBox("Play Illegal Move Sound", Settings.isPlayIllegalMoveSound());
-//        styleCheckBox(playIllegalMoveSoundBox);
-//        add(playIllegalMoveSoundBox);
+        // Enable or Disable AI Features Checkbox
+        isAiEnabledBox = new JCheckBox("Enable AI Features", LLMManager.isAiEnabled);
+        styleCheckBox(isAiEnabledBox);
+        add(isAiEnabledBox);
 
+        // Excluded extension list box
         excludedExtensionsArea = new JTextArea(5, 30);
         excludedExtensionsArea.setLineWrap(true);
         excludedExtensionsArea.setWrapStyleWord(true);
@@ -66,9 +64,7 @@ public class SettingsScreen extends JPanel {
                 initial.append(ext).append("\n");
         }
         excludedExtensionsArea.setText(initial.toString().trim());
-
         addLabeled("Excluded Extensions (one per line):", new JScrollPane(excludedExtensionsArea));
-
 
         // Display Mode
         displayModeSelector = new JComboBox<>(DisplayModeSelector.DisplayMode.values());
@@ -103,8 +99,8 @@ public class SettingsScreen extends JPanel {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //        Settings.setVolume(volumeSlider.getValue());
 //        Settings.setBackground((String) backgroundSelector.getSelectedItem());
-//        Settings.setShowDeathMarkers(showDeathMarkersBox.isSelected());
-//        Settings.setPlayIllegalMoveSound(playIllegalMoveSoundBox.isSelected());
+
+        LLMManager.isAiEnabled = isAiEnabledBox.isSelected();
 
         DisplayModeSelector.displayMode = (DisplayModeSelector.DisplayMode) displayModeSelector.getSelectedItem();
 
@@ -150,13 +146,12 @@ public class SettingsScreen extends JPanel {
         add(Box.createVerticalStrut(10));
     }
 
-    //TODO - this will be used for boolean values. example at line 44 or something
-//    private void styleCheckBox(JCheckBox box) {
-//        box.setForeground(Color.WHITE);
-//        box.setBackground(Color.DARK_GRAY);
-//        box.setFocusPainted(false);
-//        box.setAlignmentX(Component.LEFT_ALIGNMENT);
-//    }
+    private void styleCheckBox(JCheckBox box) {
+        box.setForeground(Color.WHITE);
+        box.setBackground(Color.DARK_GRAY);
+        box.setFocusPainted(false);
+        box.setAlignmentX(Component.LEFT_ALIGNMENT);
+    }
 
     private void returnToParent() {
         frame.getContentPane().removeAll();

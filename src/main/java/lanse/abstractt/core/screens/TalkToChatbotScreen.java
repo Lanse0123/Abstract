@@ -37,6 +37,11 @@ public class TalkToChatbotScreen extends JPanel {
 
     public static void responseLoop() {
 
+        if (!LLMManager.isAiEnabled){
+            System.out.println("Ai is disabled. If you want to talk to ollama, go to settings, and enable AI.");
+            return;
+        }
+
         System.out.println("Talk to ollama! Enter something below and it will respond. Enter help for help.");
 
         Scanner scanner = new Scanner(System.in);

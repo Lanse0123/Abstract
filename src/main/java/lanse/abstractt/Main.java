@@ -30,6 +30,11 @@ public class Main {
 //        // Start tick loop (10 times per second)
 //        scheduler.scheduleAtFixedRate(Main::tick, 0, 100, TimeUnit.MILLISECONDS);
 
+        if (!LLMManager.isAiEnabled){
+            System.out.println("Ai is not enabled. To enable it, go to settings and turn it on.");
+            return;
+        }
+
         if (!LLMManager.tryStartOllama()) {
             System.err.println("Unable to start ollama, AI features will not work!");
         }

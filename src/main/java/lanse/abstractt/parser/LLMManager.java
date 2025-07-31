@@ -3,7 +3,6 @@ package lanse.abstractt.parser;
 import dev.dirs.ProjectDirectories;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
-import io.github.ollama4j.models.response.Model;
 import io.github.ollama4j.models.response.OllamaResult;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -24,48 +23,47 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class LLMManager {
+
+    public static boolean isAiEnabled = false;
     private static Process llamaProcess;
 
     //TODO - add the model String to Settings as an option so people can use any ai model they want.
-    // Default should be "codegemma:latest"
+    // default should  be codegemma:latest
     private static final String model = "codegemma:latest";
+    private static final ProjectDirectories projectDirs = ProjectDirectories.from("dev", "Lanse", "Abstract");
 
     public static boolean tryStartOllama() {
-        if (llamaProcess != null) {
-            return true;
-        }
+        if (llamaProcess != null) return true;
+
         try {
+            //the os code looked scary, so I moved it to a function
+            OSInfo os = getOSInfo();
             installOllama();
-            String binary_extension = "";
-            String bindir = "bin/";
-            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                binary_extension = ".exe";
-                bindir = "";
-            }
-            ProcessBuilder server = new ProcessBuilder(List.of("ollama" + binary_extension, "serve"));
+
+            ProcessBuilder server = new ProcessBuilder(List.of("ollama" + os.binaryExtension(), "serve"));
             try {
                 llamaProcess = server.start();
-            }
-            catch (IOException e) {
-                server = new ProcessBuilder(List.of(ProjectDirectories.from("dev", "Lanse", "Abstract").dataDir + "/llama/" + bindir + "ollama" + binary_extension, "serve"));
+            } catch (IOException e) {
+                server = new ProcessBuilder(List.of(Paths.get(projectDirs.dataDir, "llama", os.binDir(), "ollama" + os.binaryExtension()).toString(), "serve"));
                 llamaProcess = server.start();
             }
+
             Runtime.getRuntime().addShutdownHook(new Thread(LLMManager::stopServer));
+
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
-            if (!ollamaAPI.listModels().stream().map(Model::toString).toList().contains(model)) {
+            boolean modelExists = ollamaAPI.listModels().stream().anyMatch(m -> m.toString().equals(model));
+            if (!modelExists) {
                 try {
                     System.out.println("Pulling " + model);
                     //TODO: add some progress bar
                     ollamaAPI.pullModel(model);
                     System.out.println("Pulled " + model);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     return false;
                 }
             }
-        }
-        catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             return false;
         } catch (OllamaBaseException e) {
             throw new RuntimeException(e);
@@ -77,27 +75,9 @@ public class LLMManager {
     }
 
     public static void installOllama() throws IOException, InterruptedException {
-        //Figure out what OS we're on, and set variables based on that.
-        String osType = System.getProperty("os.name");
-        String osName = "unknown";
-        String extension = ".tgz";
-        String binary_extension = "";
-        String bindir = "bin/";
-        if (osType.toLowerCase().contains("windows")) {
-            osName = "windows";
-            extension = ".zip";
-            binary_extension = ".exe";
-            bindir = "";
-        }
-        else if (osType.toLowerCase().contains("darwin")) {
-            osName = "darwin";
-        }
-        else if (osType.toLowerCase().contains("linux")) {
-            osName = "linux";
-        }
+        OSInfo os = getOSInfo();
 
-        // If it exists, we don't need to install it!
-        String exec = "ollama" + binary_extension;
+        String exec = "ollama" + os.binaryExtension();
         boolean ollamaExists = Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
                 .map(Paths::get)
                 .anyMatch(path -> Files.exists(path.resolve(exec)));
@@ -107,15 +87,16 @@ public class LLMManager {
             return;
         }
 
-        // If we've already installed it, we don't need to install it again!
-        File executable =  new File(ProjectDirectories.from("dev", "Lanse", "Abstract").dataDir + "/llama/" + bindir + "ollama" + binary_extension);
+        File executable = new File(Paths.get(projectDirs.dataDir, "llama", os.binDir(), "ollama" + os.binaryExtension()).toString());
         if (executable.exists() && executable.canExecute()) {
             UniversalParser.aiCompiled = true;
             return;
         }
 
-        URL url = new URL("https://github.com/ollama/ollama/releases/latest/download/ollama-" + osName + "-amd64" + extension);
-        Path compressed = Paths.get(ProjectDirectories.from("dev", "Lanse", "Abstract").cacheDir + "/llama/ollama-" + osName + "-amd64" + extension);
+        URL url = new URL("https://github.com/ollama/ollama/releases/latest/download/ollama-" + os.osName() + "-amd64" + os.archiveExtension());
+        Path compressed = Paths.get(projectDirs.cacheDir, "llama", "ollama-" + os.osName() + "-amd64" + os.archiveExtension());
+
+        // If we've already installed it, we don't need to install it again!
         if (!compressed.toFile().exists()) {
             System.out.println("Downloading " + url);
             try (InputStream download = url.openStream()) {
@@ -125,14 +106,14 @@ public class LLMManager {
         }
 
         System.out.println("Extracting " + compressed);
-        File targetDir = Paths.get(ProjectDirectories.from("dev", "Lanse", "Abstract").dataDir + "/llama").toFile();
+        File targetDir = Paths.get(projectDirs.dataDir, "llama").toFile();
         System.out.println("Extracting to " + targetDir);
-        if (osName.equals("windows")) {
+
+        if (os.osName().equals("windows")) {
             try (ArchiveInputStream i = new ZipArchiveInputStream(new BufferedInputStream(compressed.toUri().toURL().openStream()))) {
                 extractFile(i, targetDir);
             }
-        }
-        else {
+        } else {
             try (InputStream fi = Files.newInputStream(compressed);
                  InputStream bi = new BufferedInputStream(fi);
                  InputStream gzi = new GzipCompressorInputStream(bi);
@@ -147,11 +128,9 @@ public class LLMManager {
     public static Optional<String> runLLM(String prompt) {
         try {
             OllamaAPI ollamaAPI = new OllamaAPI("http://localhost:11434");
-
             OllamaResult result = ollamaAPI.generate(model, prompt, null);
             return Optional.of(result.getResponse());
-        }
-        catch (OllamaBaseException | IOException | InterruptedException e) {
+        } catch (OllamaBaseException | IOException | InterruptedException e) {
             System.err.println("Error generating result!");
             e.printStackTrace();
             return Optional.empty();
@@ -161,11 +140,8 @@ public class LLMManager {
     public static void extractFile(ArchiveInputStream i, File targetDir) throws IOException {
         ArchiveEntry entry;
         while ((entry = i.getNextEntry()) != null) {
-            if (!i.canReadEntryData(entry)) {
-                // log something?
-                continue;
-            }
-            File f = new File(targetDir.toString() + "/" + entry.getName());
+            if (!i.canReadEntryData(entry)) continue;
+            File f = new File(targetDir, entry.getName());
             if (entry.isDirectory()) {
                 if (!f.isDirectory() && !f.mkdirs()) {
                     throw new IOException("failed to create directory " + f);
@@ -177,10 +153,21 @@ public class LLMManager {
                 }
                 try (OutputStream o = Files.newOutputStream(f.toPath())) {
                     IOUtils.copy(i, o);
-                    f.setExecutable(true); //TODO: not safe for generically, but works for everything we currently extract
+                    f.setExecutable(true);
                 }
             }
         }
+    }
+
+    private record OSInfo(String osName, String archiveExtension, String binaryExtension, String binDir) {}
+
+    //the os code looked scary so I moved it here
+    private static OSInfo getOSInfo() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("windows")) return new OSInfo("windows", ".zip", ".exe", "");
+        if (os.contains("darwin")) return new OSInfo("darwin", ".tgz", "", "bin/");
+        if (os.contains("linux")) return new OSInfo("linux", ".tgz", "", "bin/");
+        return new OSInfo("unknown", ".tgz", "", "bin/");
     }
 
     public static void stopServer() {

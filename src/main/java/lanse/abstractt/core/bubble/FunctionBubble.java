@@ -63,6 +63,11 @@ public class FunctionBubble extends Bubble {
     public void generateDescription() {
         if (description != null && !description.isEmpty()) return;
 
+        if (!LLMManager.isAiEnabled) {
+            System.out.println("Ai is disabled. Skipping bubble description generation.");
+            return;
+        }
+
         //TODO - i want to limit the ai on doing too big stuff. For example, if theres a bubble with like 2000 lines of code,
         // it might not be good to have ai try to make sense of it.
 

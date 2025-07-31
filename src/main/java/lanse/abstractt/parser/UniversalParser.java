@@ -51,6 +51,9 @@ public class UniversalParser {
             return;
         }
 
+        //TODO - check if there is structure saved to json. If so, load from it. using LSP each time might be slow, especially
+        // if you just generated it. There should be buttons to regenerate a file, or just regenerate the screen you are at.
+
         String LSPLink = LanguageManager.languageHasLSP(filePath);
         List<DocumentSymbol> structuralList; //this will be used to store the functions and other important structural things
 
@@ -66,10 +69,16 @@ public class UniversalParser {
                 Storage.updateStructure(filePath, entry.getKind().toString(), entry.getName(), Optional.empty(), Optional.of(entry.getRange().getStart().getLine()), Optional.of(entry.getRange().getEnd().getLine()));
             }
         } else {
+            if (!LLMManager.isAiEnabled){
+                System.out.println("Ai is disabled. Skipping parsing.");
+                return;
+            }
+
             if (!aiCompiled){
                 System.out.println("Ai is not ready.");
                 return;
             }
+
             java.util.List<String> prompts = new java.util.ArrayList<>();
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 StringBuilder currentBlock = new StringBuilder();
