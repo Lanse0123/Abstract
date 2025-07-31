@@ -4,7 +4,7 @@ Things that I want to add next:
 
 *Make the description of a bubble fit in the oval, not a rectangle
 
-*Make new layout presets other than just top down file list, these are listed in the displayLogic folder with TODOs to explain them more
+*Make new layout presets other than just top down file list, these are listed in the displayLogic folder with TODOs to explain them more (GOOD PROGRESS SO FAR)
 
 *Add more languages to the JSON list and corresponding PNG list
 
@@ -24,9 +24,7 @@ Things that I want to add next:
 
 *Fix SubFunctionBubbles and BubbleBridge
 
-*Fix saving function bubbles immediately
-
-*Add an option to disable AI parsing and summarizing (this should probably just be a button by default)
+*Fix saving function bubbles immediately, so you do not need to redo LSP every time
 
 *Add brackets for FunctionBubbles so they point to the lines of code they represent.
 
