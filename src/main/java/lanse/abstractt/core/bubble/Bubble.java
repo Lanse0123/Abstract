@@ -185,11 +185,13 @@ public class Bubble extends JPanel {
 
         g2.fill(oval);
 
-        g2.setColor(ColorPalette.ColorCategory.OUTLINE.getColor());
-        g2.setStroke(new BasicStroke(8));
-        g2.draw(oval);
-
         updateIconSize();
+
+        if (lastZoom > 0.15) { // if you are zoomed out far enough, dont draw the outline
+            g2.setColor(ColorPalette.ColorCategory.OUTLINE.getColor());
+            g2.setStroke(new BasicStroke(8));
+            g2.draw(oval);
+        }
 
         g2.dispose();
         super.paintComponent(g);
@@ -217,27 +219,26 @@ public class Bubble extends JPanel {
     }
 
     private void scaleIcon(Icon icon, JLabel label, int size) {
-        if (icon instanceof ImageIcon imgIcon) {
-            Image image = imgIcon.getImage();
-            //TODO - make sure this isnt hogging too much memory now, since I traded space for speed
+        if (!(icon instanceof ImageIcon imgIcon)) return;
+        Image image = imgIcon.getImage();
+        //TODO - make sure this isnt hogging too much memory now, since I traded space for speed
 
-            // Clamp size to avoid width/height = 0
-            int safeSize = Math.max(1, size);
-
-            //TODO - dont make this render if the size is below 10x10 pixels or so, just to save space / time
-            ImageIcon cached = scaledCache
-                    .computeIfAbsent(image, k -> new HashMap<>())
-                    .computeIfAbsent(safeSize, sz -> {
-                        BufferedImage scaledImage = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D g2d = scaledImage.createGraphics();
-                        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                        g2d.drawImage(image, 0, 0, sz, sz, null);
-                        g2d.dispose();
-                        return new ImageIcon(scaledImage);
-                    });
-
-            label.setIcon(cached);
+        if (size < 15) {
+            label.setIcon(null); // Don't render icon at all if too zoomed out
+            return;
         }
+
+        ImageIcon cached = scaledCache
+                .computeIfAbsent(image, k -> new HashMap<>())
+                .computeIfAbsent(size, sz -> {
+                    BufferedImage scaledImage = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = scaledImage.createGraphics();
+                    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    g2d.drawImage(image, 0, 0, sz, sz, null);
+                    g2d.dispose();
+                    return new ImageIcon(scaledImage);
+                });
+        label.setIcon(cached);
     }
 
     private void handleEditClick(boolean isEditButton) {
