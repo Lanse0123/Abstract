@@ -16,8 +16,8 @@ public class TopBubble extends Bubble {
     public static final java.util.List<String> languageExtensions = new ArrayList<>();
     public static int totalFiles = 0;
 
-    public TopBubble(String title, String description, String filePath) {
-        super(title, description, filePath, true);
+    public TopBubble(String title, String description, String filePath, boolean isClickable) {
+        super(title, description, filePath, isClickable);
         addLanguageBarPlaceholder();
     }
 

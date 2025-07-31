@@ -1,6 +1,7 @@
 package lanse.abstractt.storage;
 
 import lanse.abstractt.core.bubble.*;
+import lanse.abstractt.core.displaylogic.DisplayModeSelector;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,12 +84,13 @@ public class Storage {
     public static TopBubble loadTopBubble() {
         String filePath = Settings.selectedProjectPath;
         JSONObject json = loadJson(filePath);
-        if (json == null) return new TopBubble(new File(filePath).getName(), "Unable to load project", filePath);
+        if (json == null) return new TopBubble(new File(filePath).getName(), "Unable to load project", filePath, false);
 
         String path = json.optString("path", "");
         String name = json.optString("name", "");
         String description = json.optString("desc", "");
-        return new TopBubble(name, description, path);
+        boolean isClickable = !(DisplayModeSelector.staticMapList.contains(DisplayModeSelector.displayMode));
+        return new TopBubble(name, description, path, isClickable);
     }
 
     public static Bubble load(String filePath, boolean isClickable) {
