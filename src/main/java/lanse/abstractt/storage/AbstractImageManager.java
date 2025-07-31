@@ -47,4 +47,6 @@ public class AbstractImageManager {
     public static ImageIcon getCreditsBackground() {
         return getIcon("/images/abstract/Abstract Credits Background.png");
     }
+
+    public static ImageIcon getRunButton(){ return getIcon("/images/abstract/Green Run Button.png"); }
 }

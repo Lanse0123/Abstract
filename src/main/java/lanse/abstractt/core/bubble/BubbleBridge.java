@@ -38,7 +38,9 @@ public class BubbleBridge extends JPanel {
         Point centerA = getBubbleCenter(a);
         Point centerB = getBubbleCenter(b);
 
+        //TODO - is this wrong? Nothing else uses getLocation
         Point offset = getLocation();
+
         int ax = centerA.x - offset.x;
         int ay = centerA.y - offset.y;
         int bx = centerB.x - offset.x;
