@@ -20,11 +20,7 @@ Things that I want to add next:
 
 *Make Code Bubbles have an option to edit their code (might be dangerous or unsafe for now)
 
-*Make saving FunctionBubbles descriptions more consistent so it never does LSP and AI when it doesnt need to.
-
 *Fix SubFunctionBubbles and BubbleBridge
-
-*Fix saving function bubbles immediately, so you do not need to redo LSP every time
 
 *Add brackets for FunctionBubbles so they point to the lines of code they represent.
 

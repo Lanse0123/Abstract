@@ -39,6 +39,16 @@ public class UniversalParser {
             CodeBubble.createCodeBubble(filePath, parent, Optional.empty());
         }
 
+        FunctionBubble[] oldBubbles = Storage.loadFunctionBubbles(filePath);
+        if (oldBubbles.length > 0) {
+            parent.setLayout(null);
+            for (Bubble bubble : oldBubbles) parent.add(bubble);
+
+            parent.revalidate();
+            parent.repaint();
+            return;
+        }
+
         // Check if the file is parseable via its language definition
         if (!LanguageManager.isFileParsable(filePath)) {
             Bubble bubble = Storage.load(filePath, false);
@@ -182,6 +192,11 @@ public class UniversalParser {
 
         parent.revalidate();
         parent.repaint();
+
+        if (!LLMManager.isAiEnabled) {
+            System.out.println("Ai is disabled. Skipping bubble description generation.");
+            return;
+        }
 
         ProgressBarPanel.setLoading(true, "Generating Function Bubble Descriptions");
         ProgressBarPanel.show();

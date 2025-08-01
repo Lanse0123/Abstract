@@ -65,6 +65,7 @@ public class FunctionBubble extends Bubble {
 
         if (!LLMManager.isAiEnabled) {
             System.out.println("Ai is disabled. Skipping bubble description generation.");
+            System.err.println("You should have checked this already before calling generateDescription");
             return;
         }
 

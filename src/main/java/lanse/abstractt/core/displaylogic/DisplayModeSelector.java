@@ -27,7 +27,7 @@ public class DisplayModeSelector {
             case MAIN_LIST_DOWN -> MainListDown.getLayout(bubbles, staticBubbles);
             case PROXIMITY_SIMULATOR -> ProximitySimulator.getLayout(bubbles, staticBubbles);
             case ANTI_COLLIDER -> AntiCollider.getLayout(bubbles, staticBubbles);
-            case DISTRIBUTOR -> GourceMap.getLayout(bubbles, staticBubbles, worldMap, parent);
+            case DISTRIBUTOR -> ClusterPlotMap.getLayout(bubbles, staticBubbles, worldMap);
 
             //static maps below here
             case GOURCE_MAP -> GourceMap.getLayout(bubbles, staticBubbles, worldMap, parent);
